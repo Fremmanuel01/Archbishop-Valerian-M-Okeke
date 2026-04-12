@@ -81,15 +81,15 @@ export async function Hero() {
           <div className="flex flex-wrap items-center gap-4 max-md:gap-3">
             <Link
               href={latestHref}
-              style={{ color: "#ffffff", ["--sweep-color" as string]: "#c9a664" }}
-              className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:text-ink focus-visible:text-ink"
+              style={{ ["--sweep-color" as string]: "#c9a664" }}
+              className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-[#fff] transition-colors hover:text-[#0a1b33] focus-visible:text-[#0a1b33]"
             >
               Read the Pastoral Letter →
             </Link>
             <Link
               href="/biography"
-              style={{ ["--sweep-color" as string]: "var(--ink)" }}
-              className="btn-sweep inline-flex min-h-12 items-center gap-3 border border-ink/25 bg-transparent px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink transition-colors hover:text-white hover:border-ink focus-visible:text-white focus-visible:border-ink"
+              style={{ ["--sweep-color" as string]: "#0a1b33" }}
+              className="btn-sweep inline-flex min-h-12 items-center gap-3 border border-ink/25 bg-transparent px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-[#0a1b33] transition-colors hover:text-[#fff] hover:border-ink focus-visible:text-[#fff] focus-visible:border-ink"
             >
               Meet His Grace
             </Link>

@@ -45,11 +45,9 @@ export async function Hero() {
         style={{
           background: [
             // Vertical liturgical column rules
-            "repeating-linear-gradient(90deg, rgba(176,136,64,0.055) 0px, rgba(176,136,64,0.055) 1px, transparent 1px, transparent 72px)",
+            "repeating-linear-gradient(90deg, rgba(176,136,64,0.06) 0px, rgba(176,136,64,0.06) 1px, transparent 1px, transparent 72px)",
             // Horizontal whisper rules
-            "repeating-linear-gradient(0deg, rgba(10,27,51,0.025) 0px, rgba(10,27,51,0.025) 1px, transparent 1px, transparent 72px)",
-            // Fade the pattern itself toward the photo
-            "linear-gradient(90deg, #000 0%, #000 30%, transparent 58%)",
+            "repeating-linear-gradient(0deg, rgba(10,27,51,0.03) 0px, rgba(10,27,51,0.03) 1px, transparent 1px, transparent 72px)",
           ].join(", "),
           WebkitMaskImage:
             "linear-gradient(90deg, #000 0%, #000 30%, transparent 58%)",

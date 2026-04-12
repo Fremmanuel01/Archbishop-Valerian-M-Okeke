@@ -4,7 +4,7 @@ import { NavOverlay } from "@/components/shell/nav-overlay";
 
 export function SiteHeader() {
   return (
-    <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between bg-[linear-gradient(180deg,rgba(10,27,51,0.45)_0%,rgba(10,27,51,0.25)_60%,transparent_100%)] px-10 pt-[22px] text-white max-lg:px-7 max-md:px-5 max-md:pt-4">
+    <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between bg-[linear-gradient(180deg,rgba(247,244,238,0.85)_0%,rgba(247,244,238,0.5)_60%,transparent_100%)] px-10 pt-[22px] text-ink max-lg:px-7 max-md:px-5 max-md:pt-4">
       <Link
         href="/"
         aria-label="Home — The Archbishop of Onitsha"
@@ -23,7 +23,7 @@ export function SiteHeader() {
 
       <div
         aria-hidden
-        className="absolute inset-x-10 -bottom-px h-px bg-white/20 max-lg:inset-x-7 max-md:inset-x-5"
+        className="absolute inset-x-10 -bottom-px h-px bg-ink/15 max-lg:inset-x-7 max-md:inset-x-5"
       />
     </header>
   );

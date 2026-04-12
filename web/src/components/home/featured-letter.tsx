@@ -33,7 +33,11 @@ export async function FeaturedLetter() {
       ) : null}
 
       <div className="relative mx-auto grid max-w-[1240px] grid-cols-[1.1fr_1fr] items-center gap-[100px] max-lg:grid-cols-1 max-lg:gap-14">
-        <div className="flex justify-center">
+        <Link
+          href={`/pastoral-letters/${slug}`}
+          className="group flex justify-center focus:outline-none"
+          aria-label={`Read ${latest.title}`}
+        >
           {cover ? (
             <Image
               src={cover}
@@ -41,10 +45,10 @@ export async function FeaturedLetter() {
               width={1200}
               height={1500}
               sizes="(max-width: 1024px) 100vw, 520px"
-              className="h-auto w-full max-w-[520px] [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.25))_drop-shadow(0_8px_24px_rgba(10,27,51,0.12))]"
+              className="book-tilt h-auto w-full max-w-[520px] [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.25))_drop-shadow(0_8px_24px_rgba(10,27,51,0.12))]"
             />
           ) : null}
-        </div>
+        </Link>
         <div>
           <SectionLabel>
             Latest Pastoral Letter
@@ -72,8 +76,8 @@ export async function FeaturedLetter() {
           ) : null}
           <Link
             href={`/pastoral-letters/${slug}`}
-            style={{ color: "#ffffff" }}
-            className="inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:bg-ink-soft focus-visible:bg-ink-soft"
+            style={{ color: "#ffffff", ["--sweep-color" as string]: "#c9a664" }}
+            className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:text-ink focus-visible:text-ink"
           >
             Read in Full →
           </Link>

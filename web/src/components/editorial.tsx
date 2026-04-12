@@ -89,6 +89,36 @@ export function SectionLabel({
   );
 }
 
+export function FleuronDivider({
+  className = "",
+}: {
+  className?: string;
+}) {
+  return (
+    <div
+      aria-hidden
+      className={`flex items-center justify-center gap-5 text-gold ${className}`}
+    >
+      <span className="block h-px flex-1 max-w-[140px] bg-[color:var(--rule)]" />
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.25}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-5 w-5 flex-shrink-0"
+      >
+        <path d="M4 12 L9 12" />
+        <path d="M15 12 L20 12" />
+        <path d="M12 7 Q 9.5 9.5 9.5 12 Q 9.5 14.5 12 17 Q 14.5 14.5 14.5 12 Q 14.5 9.5 12 7 Z" />
+        <circle cx="12" cy="12" r="0.6" fill="currentColor" stroke="none" />
+      </svg>
+      <span className="block h-px flex-1 max-w-[140px] bg-[color:var(--rule)]" />
+    </div>
+  );
+}
+
 export function EmptyState({
   title,
   body,

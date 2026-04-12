@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { Latin, SectionLabel } from "@/components/editorial";
+import { FleuronDivider, Latin, SectionLabel } from "@/components/editorial";
 
 export const metadata: Metadata = {
   title: "His Episcopacy",
@@ -168,6 +168,7 @@ export default function HisEpiscopacyPage() {
 
       {/* ── Call to action ─────────────────────────────── */}
       <PageSection className="border-t border-[color:var(--rule)] bg-bone">
+        <FleuronDivider className="mx-auto mb-16 max-w-[420px]" />
         <div className="mx-auto max-w-[820px] text-center">
           <SectionLabel className="justify-center">
             Spreading Faith & Building Bridges

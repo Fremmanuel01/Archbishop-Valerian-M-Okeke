@@ -3,32 +3,47 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Crest } from "@/components/crest";
+import {
+  ChiRho,
+  Crozier,
+  Dove,
+  Keys,
+  Candle,
+  Mitre,
+  Chalice,
+  Lamb,
+} from "@/components/icons";
 
-const SECTIONS = [
+type IconCmp = (p: { className?: string; size?: number }) => React.ReactElement;
+
+type NavItem = { label: string; href: string; Icon: IconCmp };
+type NavSection = { eyebrow: string; items: NavItem[] };
+
+const SECTIONS: NavSection[] = [
   {
     eyebrow: "About His Grace",
     items: [
-      { label: "Biography", href: "/biography" },
-      { label: "His Episcopacy", href: "/his-episcopacy" },
-      { label: "Coat of Arms", href: "/coat-of-arms" },
-      { label: "Pastoral Diary", href: "/diary" },
-      { label: "Pastoral Visits", href: "/pastoral-visits" },
+      { label: "Biography", href: "/biography", Icon: Crozier },
+      { label: "His Episcopacy", href: "/his-episcopacy", Icon: Mitre },
+      { label: "Coat of Arms", href: "/coat-of-arms", Icon: Lamb },
+      { label: "Pastoral Diary", href: "/diary", Icon: Candle },
+      { label: "Pastoral Visits", href: "/pastoral-visits", Icon: Crozier },
     ],
   },
   {
     eyebrow: "The Library",
     items: [
-      { label: "Pastoral Letters", href: "/pastoral-letters" },
-      { label: "Reflections & Homilies", href: "/reflections" },
-      { label: "Other Teachings", href: "/other-teachings" },
+      { label: "Pastoral Letters", href: "/pastoral-letters", Icon: ChiRho },
+      { label: "Reflections & Homilies", href: "/reflections", Icon: Dove },
+      { label: "Other Teachings", href: "/other-teachings", Icon: Keys },
     ],
   },
   {
     eyebrow: "Connect",
     items: [
-      { label: "Prayer Requests", href: "/connect/prayer-requests" },
-      { label: "Contact", href: "/connect/contact" },
-      { label: "Newsletter", href: "/connect/newsletter" },
+      { label: "Prayer Requests", href: "/connect/prayer-requests", Icon: Chalice },
+      { label: "Contact", href: "/connect/contact", Icon: Dove },
+      { label: "Newsletter", href: "/connect/newsletter", Icon: ChiRho },
     ],
   },
 ];
@@ -138,17 +153,24 @@ export function NavOverlay({
                     {section.eyebrow}
                   </p>
                   <ul className="mt-8 space-y-5">
-                    {section.items.map((item) => (
-                      <li key={item.href}>
-                        <Link
-                          href={item.href}
-                          onClick={() => setOpen(false)}
-                          className="block font-[family-name:var(--font-display)] text-[34px] font-medium leading-[1.1] text-white transition-colors hover:text-gold-soft focus-visible:text-gold-soft max-md:text-[28px]"
-                        >
-                          {item.label}
-                        </Link>
-                      </li>
-                    ))}
+                    {section.items.map((item) => {
+                      const Icon = item.Icon;
+                      return (
+                        <li key={item.href}>
+                          <Link
+                            href={item.href}
+                            onClick={() => setOpen(false)}
+                            className="group inline-flex items-center gap-4 font-[family-name:var(--font-display)] text-[34px] font-medium leading-[1.1] text-white transition-colors hover:text-gold-soft focus-visible:text-gold-soft max-md:text-[28px]"
+                          >
+                            <Icon
+                              className="h-7 w-7 flex-shrink-0 text-gold-soft opacity-60 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                              size={28}
+                            />
+                            {item.label}
+                          </Link>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               ))}

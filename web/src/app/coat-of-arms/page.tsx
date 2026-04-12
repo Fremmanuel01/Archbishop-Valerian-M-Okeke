@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { Latin } from "@/components/editorial";
+import { FleuronDivider, Latin } from "@/components/editorial";
 
 export const metadata: Metadata = {
   title: "Coat of Arms",
@@ -83,6 +83,7 @@ export default function CoatOfArmsPage() {
       </PageSection>
 
       <PageSection className="border-t border-[color:var(--rule)] bg-bone-deep">
+        <FleuronDivider className="mx-auto mb-16 max-w-[420px]" />
         <div className="mx-auto max-w-[820px] text-center">
           <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold">
             The Episcopal Motto

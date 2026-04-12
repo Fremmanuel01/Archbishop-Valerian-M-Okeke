@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Roman } from "@/components/editorial";
+import { AnimatedName } from "@/components/animated-name";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 import { SiteHeader } from "./site-header";
 
@@ -71,12 +72,7 @@ export async function Hero() {
             <span aria-hidden className="block h-px w-12 bg-gold" />
             His Grace · Most Reverend
           </p>
-          <h1 className="mb-8 font-[family-name:var(--font-display)] text-[clamp(56px,5.2vw,96px)] font-medium leading-[0.98] tracking-[-0.02em] text-ink max-md:mb-6 max-md:text-[52px] max-md:leading-[1.05]">
-            <span className="block italic font-normal text-gold">
-              Valerian Maduka
-            </span>
-            Okeke
-          </h1>
+          <AnimatedName />
           <div aria-hidden className="mb-8 h-px w-16 bg-gold max-md:mb-6" />
           <p className="mb-10 max-w-[480px] font-[family-name:var(--font-display)] text-[20px] italic leading-[1.55] text-ink-soft max-md:mb-8 max-md:max-w-none max-md:text-[17px]">
             Metropolitan Archbishop of Onitsha · Servant of the Lord&apos;s
@@ -85,14 +81,15 @@ export async function Hero() {
           <div className="flex flex-wrap items-center gap-4 max-md:gap-3">
             <Link
               href={latestHref}
-              style={{ color: "#ffffff" }}
-              className="inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:bg-ink-soft focus-visible:bg-ink-soft"
+              style={{ color: "#ffffff", ["--sweep-color" as string]: "#c9a664" }}
+              className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:text-ink focus-visible:text-ink"
             >
               Read the Pastoral Letter →
             </Link>
             <Link
               href="/biography"
-              className="inline-flex min-h-12 items-center gap-3 border border-ink/25 bg-transparent px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink transition-colors hover:border-gold hover:text-gold-text focus-visible:border-gold focus-visible:text-gold-text"
+              style={{ ["--sweep-color" as string]: "var(--ink)" }}
+              className="btn-sweep inline-flex min-h-12 items-center gap-3 border border-ink/25 bg-transparent px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink transition-colors hover:text-white hover:border-ink focus-visible:text-white focus-visible:border-ink"
             >
               Meet His Grace
             </Link>

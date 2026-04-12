@@ -91,8 +91,8 @@ export function SubmitButton({ children }: { children: React.ReactNode }) {
   return (
     <button
       type="submit"
-      style={{ color: "#ffffff" }}
-      className="inline-flex min-h-12 items-center gap-3 bg-ink px-9 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:bg-ink-soft focus-visible:bg-ink-soft"
+      style={{ color: "#ffffff", ["--sweep-color" as string]: "#c9a664" }}
+      className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-9 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:text-ink focus-visible:text-ink"
     >
       {children}
     </button>

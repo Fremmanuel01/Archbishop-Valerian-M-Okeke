@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { Roman } from "@/components/editorial";
+import { FleuronDivider, Roman } from "@/components/editorial";
 import { getPastoralLetters, yearOf } from "@/lib/cms";
 
 export const revalidate = 3600;
@@ -184,7 +184,8 @@ export default async function BiographyPage() {
       </PageSection>
 
       <PageSection className="border-t border-[color:var(--rule)] bg-bone-deep">
-        <h2 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold">
+        <FleuronDivider className="mx-auto mb-16 max-w-[420px]" />
+        <h2 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold-text">
           Pastoral Letters
         </h2>
         <p className="mt-6 font-[family-name:var(--font-display)] text-[clamp(36px,4vw,56px)] font-medium leading-[1.1] text-ink">

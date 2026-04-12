@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
+import {
+  Chalice,
+  Crozier,
+  Keys,
+  Mitre,
+  Candle,
+  Fleuron,
+} from "@/components/icons";
 import { getProgrammeEntries, getProgrammeYear } from "@/lib/programme";
 import type {
   ProgrammeCategory,
@@ -21,12 +29,24 @@ export const metadata: Metadata = {
 };
 
 const CATEGORY_CLASS: Record<ProgrammeCategory, string> = {
-  Mass: "border-gold bg-gold/10 text-gold",
+  Mass: "border-gold bg-gold/10 text-gold-text",
   "Pastoral Visit": "border-ink bg-ink/5 text-ink",
   Meeting: "border-ink-soft bg-ink-soft/5 text-ink-soft",
   Ordination: "border-purple bg-purple/10 text-purple",
   Retreat: "border-ink-soft bg-transparent text-ink-soft",
-  Special: "border-gold bg-transparent text-gold",
+  Special: "border-gold bg-transparent text-gold-text",
+};
+
+const CATEGORY_ICON: Record<
+  ProgrammeCategory,
+  (p: { className?: string; size?: number }) => React.ReactElement
+> = {
+  Mass: Chalice,
+  "Pastoral Visit": Crozier,
+  Meeting: Keys,
+  Ordination: Mitre,
+  Retreat: Candle,
+  Special: Fleuron,
 };
 
 export default async function DiaryPage() {
@@ -187,10 +207,12 @@ function EntryCard({ entry }: { entry: ProgrammeEntry }) {
 }
 
 function CategoryPill({ category }: { category: ProgrammeCategory }) {
+  const Icon = CATEGORY_ICON[category];
   return (
     <span
-      className={`inline-flex items-center border px-3 py-1.5 font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[1.8px] ${CATEGORY_CLASS[category]}`}
+      className={`inline-flex items-center gap-2 border px-3 py-1.5 font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[1.8px] ${CATEGORY_CLASS[category]}`}
     >
+      <Icon className="h-3.5 w-3.5 flex-shrink-0" size={14} />
       {category}
     </span>
   );

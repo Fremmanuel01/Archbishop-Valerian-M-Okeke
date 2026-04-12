@@ -1,9 +1,12 @@
+import { FleuronDivider } from "@/components/editorial";
+
 export function PullQuote() {
   return (
     <section
       aria-label="Pull quote"
       className="px-14 py-[180px] text-center max-lg:px-8 max-md:px-6 max-md:py-32"
     >
+      <FleuronDivider className="mx-auto mb-16 max-w-[420px]" />
       <div
         aria-hidden
         className="font-[family-name:var(--font-display)] text-[160px] leading-[0.5] text-gold opacity-30"

@@ -18,27 +18,44 @@ export async function Hero() {
     <section className="relative h-[100svh] min-h-[720px] w-full overflow-hidden text-white">
       <Image
         src="/hero.avif"
-        alt="His Grace Archbishop Valerian M. Okeke elevating the Book of Gospels"
+        alt="His Grace Archbishop Valerian M. Okeke celebrating Holy Mass"
         fill
         priority
         sizes="100vw"
-        quality={90}
-        className="scale-[1.02] object-cover object-[center_30%] [filter:brightness(1)_contrast(1.05)_saturate(1.08)]"
+        quality={92}
+        className="scale-[1.01] object-cover object-[center_30%] [filter:brightness(0.96)_contrast(1.06)_saturate(1.05)]"
+      />
+
+      {/* Scrim stack — deliberate darkness bottom-left for headline block */}
+      <div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          background: `
+            linear-gradient(180deg, rgba(10,27,51,0.55) 0%, rgba(10,27,51,0.25) 12%, transparent 26%),
+            radial-gradient(ellipse 85% 95% at 18% 100%, rgba(10,27,51,0.9) 0%, rgba(10,27,51,0.6) 32%, rgba(10,27,51,0.2) 58%, transparent 78%),
+            linear-gradient(0deg, rgba(10,27,51,0.45) 0%, rgba(10,27,51,0.12) 22%, transparent 45%)
+          `,
+        }}
       />
 
       <SiteHeader />
 
-      <div className="absolute inset-x-14 bottom-20 max-w-[920px] max-lg:inset-x-8 max-md:inset-x-6 max-md:bottom-36">
-        <p className="mb-7 flex items-center gap-[18px] font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[3px] text-gold-soft max-md:mb-5">
+      <div className="absolute inset-x-14 bottom-24 max-w-[680px] max-lg:inset-x-8 max-lg:bottom-20 max-md:inset-x-6 max-md:bottom-32">
+        <p className="mb-6 flex items-center gap-[18px] font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[3px] text-gold-soft max-md:mb-4">
           <span aria-hidden className="block h-px w-12 bg-gold-soft" />
           His Grace · Most Reverend
         </p>
-        <h1 className="mb-6 font-[family-name:var(--font-display)] text-[clamp(44px,6vw,112px)] font-medium leading-[1] tracking-[-0.02em] max-md:mb-5 max-md:leading-[1.05]">
+        <h1 className="mb-6 font-[family-name:var(--font-display)] text-[clamp(48px,5.5vw,96px)] font-medium leading-[0.98] tracking-[-0.02em] max-md:mb-5 max-md:text-[48px] max-md:leading-[1.05]">
           Valerian Maduka
           <br />
           <span className="italic font-normal text-gold-soft">Okeke</span>
         </h1>
-        <p className="mb-10 max-w-[580px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.5] opacity-90 max-md:mb-7 max-md:max-w-none max-md:text-lg">
+        <div
+          aria-hidden
+          className="mb-6 h-px w-16 bg-gold-soft/50 max-md:mb-5"
+        />
+        <p className="mb-9 max-w-[520px] font-[family-name:var(--font-display)] text-[20px] italic leading-[1.55] opacity-90 max-md:mb-7 max-md:max-w-none max-md:text-[17px]">
           Metropolitan Archbishop of Onitsha · Servant of the Lord&apos;s
           vineyard since the year of Our Lord <Roman year={2003} />.
         </p>
@@ -60,12 +77,16 @@ export async function Hero() {
 
       <div
         aria-label="Today in the liturgical calendar"
-        className="absolute bottom-20 right-14 border-l border-gold-soft pl-[18px] text-right font-[family-name:var(--font-ui)] text-[10px] uppercase tracking-[2px] opacity-80 max-lg:right-8 max-md:left-6 max-md:right-auto max-md:bottom-8 max-md:border-l-0 max-md:border-t max-md:pl-0 max-md:pt-3.5 max-md:text-left"
+        className="absolute bottom-10 right-14 inline-flex items-center gap-3 font-[family-name:var(--font-ui)] text-[10px] uppercase tracking-[2.4px] text-white/70 max-lg:right-8 max-md:hidden"
       >
-        <strong className="mb-1.5 block font-[family-name:var(--font-display)] text-base font-medium italic normal-case tracking-normal text-gold-soft">
+        <span className="font-[family-name:var(--font-display)] text-[13px] italic normal-case tracking-normal text-gold-soft">
           Easter Tuesday
-        </strong>
-        <Roman year={2} /> Week of Easter · <Roman year={2026} />
+        </span>
+        <span aria-hidden className="block h-px w-8 bg-gold-soft/60" />
+        <span>
+          <Roman year={2} arabic={false} /> Week of Easter ·{" "}
+          <Roman year={2026} arabic={false} />
+        </span>
       </div>
     </section>
   );

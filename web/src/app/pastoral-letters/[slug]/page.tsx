@@ -109,6 +109,7 @@ export default async function LetterPage({
                 href={letter.pdf_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                style={{ color: "#ffffff" }}
                 className="inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-white transition-colors hover:bg-ink-soft focus-visible:bg-ink-soft"
               >
                 Download the Full Letter (PDF) →

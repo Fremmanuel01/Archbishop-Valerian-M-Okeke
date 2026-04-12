@@ -23,7 +23,7 @@ export async function Hero() {
         priority
         sizes="100vw"
         quality={92}
-        className="scale-[1.01] object-cover object-[center_30%] [filter:brightness(1.02)_contrast(1.02)_saturate(1.03)]"
+        className="-scale-x-100 scale-[1.01] object-cover object-[center_30%] [filter:brightness(1.02)_contrast(1.02)_saturate(1.03)]"
       />
 
       {/* Scrim stack — warm bone wash with deliberate bottom-left anchor */}

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>His Grace Archbishop Valerian M. Okeke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0A1B33;
+  --ink-soft: #1F3354;
+  --bone: #F7F4EE;
+  --bone-deep: #EFEAE0;
+  --gold: #B08840;
+  --gold-soft: #C9A664;
+  --purple: #3A1F4D;
+  --stone: #D9D2C2;
+  --rule: rgba(176,136,64,0.35);
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --ui: 'Inter', system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--bone);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 18px;
+  line-height: 1.7;
+  font-feature-settings: "liga", "kern";
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--gold-soft);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+abbr[title] { text-decoration: none; cursor: help; }
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--ink); color: #fff;
+  padding: 12px 20px;
+  font-family: var(--ui); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+  z-index: 100;
+}
+.skip-link:focus { left: 16px; top: 16px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Header ─────────────────────────────────── */
+.header {
+  position: absolute; top: 0; left: 0; right: 0;
+  z-index: 50;
+  padding: 22px 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(10,27,51,0.45) 0%, rgba(10,27,51,0.25) 60%, rgba(10,27,51,0) 100%);
+}
+.header::after {
+  content: '';
+  position: absolute;
+  left: 40px; right: 40px;
+  bottom: -1px;
+  height: 1px;
+  background: rgba(255,255,255,0.18);
+}
+.header .crest {
+  display: flex; align-items: center; gap: 14px;
+  padding: 10px 0 22px;
+  color: #fff;
+}
+.header .crest .mark {
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-soft);
+}
+.header .crest .mark svg { width: 100%; height: 100%; display: block; }
+.header .crest .name {
+  font-family: var(--ui); font-size: 11px; font-weight: 600;
+  letter-spacing: 1.4px; text-transform: uppercase; line-height: 1.3;
+  color: #fff;
+}
+.header .crest .name strong {
+  display: block; font-weight: 600;
+}
+.header-actions {
+  display: flex; align-items: center; gap: 10px;
+  padding-bottom: 14px;
+}
+.header-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 20px;
+  min-height: 44px;
+  font-family: var(--ui); font-size: 13px; font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--ink); background: var(--gold-soft);
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.header-btn:hover, .header-btn:focus-visible { background: #fff; }
+.header-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+/* ── Hero ───────────────────────────────────── */
+.hero {
+  position: relative;
+  height: 100vh;           /* fallback */
+  height: 100svh;          /* stable on mobile browser chrome */
+  min-height: 720px;
+  width: 100%;
+  overflow: hidden;
+  color: #fff;
+}
+.hero .bg {
+  position: absolute; inset: 0;
+  background: url('assets/hero.png') center 30%/cover no-repeat;
+  filter: brightness(1.0) contrast(1.05) saturate(1.08);
+  transform: scale(1.02);
+}
+/* Scrim removed — relying on photo contrast. Re-add if text legibility drops. */
+.hero .content {
+  position: absolute; left: 56px; right: 56px; bottom: 80px; max-width: 920px;
+}
+.hero .eyebrow {
+  font-family: var(--ui); font-size: 11px; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold-soft);
+  display: flex; align-items: center; gap: 18px;
+  margin-bottom: 28px;
+}
+.hero .eyebrow::before {
+  content: ''; width: 48px; height: 1px; background: var(--gold-soft);
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(44px, 6vw, 112px);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.hero h1 .italic { font-style: italic; color: var(--gold-soft); font-weight: 400; }
+.hero .tagline {
+  font-family: var(--display); font-style: italic; font-size: 22px;
+  max-width: 580px; line-height: 1.5; opacity: 0.9; margin-bottom: 40px;
+}
+.hero .actions { display: flex; gap: 16px; align-items: center; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 12px;
+  min-height: 48px;
+  padding: 16px 32px;
+  font-family: var(--ui); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600;
+  color: var(--ink); background: var(--gold-soft);
+  border: none; cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.btn-primary:hover, .btn-primary:focus-visible { background: #fff; }
+.btn-link {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 44px;
+  font-family: var(--ui); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  padding: 0 2px 6px;
+}
+.btn-link:hover, .btn-link:focus-visible { border-bottom-color: var(--gold-soft); color: var(--gold-soft); }
+.hero .liturgical {
+  position: absolute; right: 56px; bottom: 80px;
+  font-family: var(--ui); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  text-align: right; opacity: 0.8;
+  border-left: 1px solid var(--gold-soft); padding-left: 18px;
+}
+.hero .liturgical strong { display: block; font-family: var(--display); font-size: 16px; font-style: italic; text-transform: none; letter-spacing: 0; color: var(--gold-soft); margin-bottom: 6px; font-weight: 500;}
+
+/* ── Section primitives ─────────────────────── */
+.section { padding: 140px 56px; position: relative; }
+.container { max-width: 1240px; margin: 0 auto; }
+.section-label {
+  display: flex; align-items: center; gap: 16px;
+  font-family: var(--ui); font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 24px; font-weight: 600;
+}
+.section-label::before { content: ''; width: 36px; height: 1px; background: var(--gold);}
+h2.display {
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(40px, 4.5vw, 72px);
+  line-height: 1.05; letter-spacing: -0.015em; margin-bottom: 18px;
+}
+h2.display em { font-style: italic; color: var(--gold);}
+.lead { font-family: var(--display); font-style: italic; font-size: 22px; color: var(--ink-soft); max-width: 680px; line-height: 1.55; }
+.hr-gold { width: 60px; height: 1px; background: var(--gold); border: 0; margin: 28px 0; }
+
+/* ── Daily reflection bar ───────────────────── */
+.reflection {
+  background: var(--bone-deep);
+  padding: 48px 56px;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.reflection .container { display: grid; grid-template-columns: 200px 1fr 200px; gap: 56px; align-items: center;}
+.reflection .date {
+  font-family: var(--ui); font-size: 10px; letter-spacing: 2.4px; text-transform: uppercase;
+  color: var(--gold); font-weight: 600;
+}
+.reflection .date strong { display: block; font-family: var(--display); font-style: italic; font-size: 26px; color: var(--ink); text-transform: none; letter-spacing: 0; margin-top: 6px; font-weight: 500;}
+.reflection blockquote {
+  font-family: var(--display); font-size: 30px; font-style: italic;
+  line-height: 1.4; color: var(--ink); text-align: center;
+}
+.reflection blockquote .source { display: block; font-family: var(--ui); font-style: normal; font-size: 11px; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-top: 16px; font-weight: 600;}
+.reflection .read {
+  font-family: var(--ui); font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink); text-align: right; font-weight: 600;
+  border-bottom: 1px solid var(--gold); padding-bottom: 6px;
+  display: inline-block; justify-self: end;
+}
+
+/* ── Featured pastoral letter ───────────────── */
+.featured-letter { background: var(--bone); position: relative; overflow: hidden;}
+.featured-letter::before {
+  content: 'MMXXVI'; position: absolute; right: -30px; top: 80px;
+  font-family: var(--display); font-size: 280px; line-height: 1; color: var(--gold); opacity: 0.06;
+  letter-spacing: -0.04em; pointer-events: none; font-weight: 600;
+}
+.featured-letter .grid {
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 100px; align-items: center;
+}
+.featured-letter .book {
+  position: relative;
+  display: flex; justify-content: center;
+}
+.featured-letter .book img {
+  width: 100%; max-width: 520px; height: auto;
+  filter: drop-shadow(0 30px 80px rgba(10,27,51,0.25)) drop-shadow(0 8px 24px rgba(10,27,51,0.12));
+}
+.featured-letter blockquote.pull {
+  font-family: var(--display); font-style: italic;
+  font-size: 32px; line-height: 1.4; color: var(--ink); margin: 32px 0;
+  border-left: 2px solid var(--gold); padding-left: 28px;
+}
+
+/* ── Pastoral diary ─────────────────────────── */
+.diary { background: #EFEAE0; color: var(--ink); padding: 140px 56px;}
+.diary .section-label { color: var(--gold);}
+.diary .section-label::before { background: var(--gold);}
+.diary h2.display { color: var(--ink);}
+.diary h2.display em { color: var(--gold);}
+.diary .grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-top: 80px;
+}
+.diary .img-wrap {
+  position: relative;
+  border: 1px solid var(--rule);
+  padding: 18px;
+  background: var(--bone);
+}
+.diary .img-wrap::before {
+  content: ''; position: absolute; top: -1px; left: -1px; width: 28px; height: 28px;
+  border-top: 2px solid var(--gold); border-left: 2px solid var(--gold);
+}
+.diary .img-wrap::after {
+  content: ''; position: absolute; bottom: -1px; right: -1px; width: 28px; height: 28px;
+  border-bottom: 2px solid var(--gold); border-right: 2px solid var(--gold);
+}
+.diary img { width: 100%; height: 520px; object-fit: cover;}
+.diary .entries .entry { padding: 28px 0; border-bottom: 1px solid var(--stone);}
+.diary .entries .entry:last-child { border-bottom: none; }
+.diary .entries .date { font-family: var(--ui); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); font-weight: 600; margin-bottom: 8px;}
+.diary .entries h4 { font-family: var(--display); font-size: 24px; font-weight: 500; line-height: 1.3; margin-bottom: 8px; color: var(--ink);}
+.diary .entries p { font-size: 15px; color: var(--ink-soft); opacity: 0.85; line-height: 1.6;}
+
+/* ── Pull quote ─────────────────────────────── */
+.pull-section { padding: 180px 56px; text-align: center;}
+.pull-section .quote-mark {
+  font-family: var(--display); font-size: 160px; line-height: 0.5; color: var(--gold); opacity: 0.3;
+}
+.pull-section blockquote {
+  font-family: var(--display); font-style: italic;
+  font-size: clamp(32px, 3.5vw, 54px); line-height: 1.3; color: var(--ink);
+  max-width: 940px; margin: 0 auto; font-weight: 500;
+}
+.pull-section .author {
+  font-family: var(--ui); font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--gold); margin-top: 40px; font-weight: 600;
+}
+.pull-section .author::before { content: '— '; }
+
+/* ── Footer ─────────────────────────────────── */
+footer {
+  background: #E6DFCD; color: var(--ink);
+  padding: 100px 56px 40px;
+  position: relative; overflow: hidden;
+  border-top: 1px solid var(--rule);
+}
+footer .watermark-cross {
+  position: absolute; right: -160px; bottom: -240px; width: 720px; height: 720px;
+  color: var(--gold); opacity: 0.1; pointer-events: none;
+}
+footer .container { position: relative; z-index: 1;}
+footer .grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;}
+footer h5 { font-family: var(--ui); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; font-weight: 600;}
+footer ul { list-style: none;}
+footer li { margin-bottom: 12px; font-family: var(--body); font-size: 15px; color: var(--ink-soft); opacity: 0.85;}
+footer .brand { font-family: var(--display); font-size: 36px; font-weight: 500; line-height: 1.15; margin-bottom: 14px; color: var(--ink);}
+footer .brand .italic { font-style: italic; color: var(--gold); display: block; font-size: 22px; margin-top: 4px;}
+footer .verse { font-family: var(--display); font-style: italic; font-size: 16px; color: var(--ink-soft); opacity: 0.85; max-width: 320px; margin-top: 24px; border-left: 1px solid var(--gold); padding-left: 16px; line-height: 1.5;}
+footer .copy { border-top: 1px solid var(--stone); padding-top: 30px; margin-top: 80px; display: flex; justify-content: space-between; font-family: var(--ui); font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: var(--ink-soft); opacity: 0.7;}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 1100px) {
+  .header { padding: 20px 28px 0; }
+  .header::after { left: 28px; right: 28px; }
+  .hero .content { left: 32px; right: 32px; }
+  .hero .liturgical { right: 32px; }
+  .section, .reflection, .diary, .pull-section { padding-left: 32px; padding-right: 32px; }
+  footer { padding-left: 32px; padding-right: 32px; }
+  .featured-letter .grid { gap: 60px; }
+  .diary .grid { gap: 48px; }
+}
+
+@media (max-width: 900px) {
+  .header { padding: 16px 20px 0; }
+  .header::after { left: 20px; right: 20px; }
+  .header .crest { gap: 10px; padding: 6px 0 16px; }
+  .header .crest .mark { width: 34px; height: 34px; }
+  .header .crest .name { font-size: 10px; letter-spacing: 1.1px; }
+  .header-actions { gap: 8px; padding-bottom: 10px; }
+  .header-btn { padding: 10px 14px; font-size: 12px; gap: 8px; }
+
+  .hero { min-height: 640px; }
+  .hero .content { left: 24px; right: 24px; bottom: 140px; max-width: 100%; }
+  .hero .eyebrow { margin-bottom: 20px; }
+  .hero h1 { line-height: 1.05; margin-bottom: 20px; }
+  .hero .tagline { font-size: 18px; max-width: none; margin-bottom: 28px; }
+  .hero .actions { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .btn-primary, .btn-link { width: auto; }
+
+  .hero .liturgical {
+    left: 24px; right: auto; bottom: 32px;
+    text-align: left;
+    border-left: none;
+    border-top: 1px solid var(--gold-soft);
+    padding: 14px 0 0;
+  }
+
+  .reflection { padding: 40px 24px; }
+  .reflection .container { grid-template-columns: 1fr; gap: 28px; text-align: center; }
+  .reflection .date, .reflection .read { text-align: center; justify-self: center; }
+  .reflection blockquote { font-size: 22px; }
+
+  .section { padding: 96px 24px; }
+  .featured-letter .grid { grid-template-columns: 1fr; gap: 56px; }
+  .featured-letter::before { font-size: 160px; top: 40px; right: -20px; }
+  .featured-letter blockquote.pull { font-size: 24px; }
+
+  .diary { padding: 96px 24px; }
+  .diary .grid { grid-template-columns: 1fr; gap: 48px; margin-top: 56px; }
+  .diary img { height: 380px; }
+
+  .pull-section { padding: 120px 24px; }
+
+  footer { padding: 80px 24px 32px; }
+  footer .grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+  footer .grid > :first-child { grid-column: 1 / -1; }
+  footer .copy { flex-direction: column; gap: 10px; text-align: center; margin-top: 56px; }
+  footer .watermark-cross { width: 420px; height: 420px; right: -120px; bottom: -160px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 44px; }
+  .featured-letter::before { display: none; }
+  footer .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<main id="main">
+<section class="hero">
+  <div class="bg"></div>
+  <header class="header">
+    <a class="crest" href="#" aria-label="Home — The Archbishop of Onitsha">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg">
+          <path fill="currentColor" d="M42 0h16v40h40v16H58v84H42V56H2V40h40z"/>
+        </svg>
+      </span>
+      <span class="name">
+        <strong>The Archbishop</strong>
+        of Onitsha
+      </span>
+    </a>
+    <div class="header-actions">
+      <button class="header-btn" type="button" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m20 20-3.5-3.5"/>
+        </svg>
+        Search
+      </button>
+      <button class="header-btn" type="button" aria-label="Open menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true">
+          <path d="M3 7h18M3 12h18M3 17h18"/>
+        </svg>
+        Menu
+      </button>
+    </div>
+  </header>
+
+  <div class="content">
+    <p class="eyebrow">His Grace · Most Reverend</p>
+    <h1>Valerian Maduka<br><span class="italic">Okeke</span></h1>
+    <p class="tagline">Metropolitan Archbishop of Onitsha · Servant of the Lord's vineyard since the year of Our Lord <abbr title="2003">MMIII</abbr>.</p>
+    <div class="actions">
+      <a class="btn-primary" href="#pastoral-letters">Read the Pastoral Letter →</a>
+      <a class="btn-link" href="#biography">Meet His Grace</a>
+    </div>
+  </div>
+
+  <div class="liturgical" aria-label="Today in the liturgical calendar">
+    <strong>Easter Tuesday</strong>
+    <abbr title="Second">II</abbr> Week of Easter · <abbr title="2026">MMXXVI</abbr>
+  </div>
+</section>
+
+<!-- ═══════════════════════ DAILY REFLECTION ═══════════════════════ -->
+<section class="reflection" id="reflections" aria-label="Daily reflection">
+  <div class="container">
+    <div class="date">
+      Reflection for the day
+      <strong><time datetime="2026-04-12">12 April</time></strong>
+    </div>
+    <blockquote>
+      "Our finest gifts can become our worst sins or defects, if we do not act with love and allow ourselves to be guided by the Holy Spirit."
+      <span class="source">Pentecost Homily · <abbr title="2020">MMXX</abbr></span>
+    </blockquote>
+    <a class="read" href="#reflections">Full Reflection →</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FEATURED LETTER ═══════════════════════ -->
+<section class="section featured-letter" id="pastoral-letters" aria-labelledby="featured-letter-title">
+  <div class="container">
+    <div class="grid">
+      <div class="book">
+        <img src="https://res.cloudinary.com/dz2jhmos1/image/upload/v1775995642/archbishop-library/covers-enhanced/mdsdummjf1vjh3bqyjfr.png" alt="Cover of the pastoral letter On Virtues and Capital Sins" width="1200" height="1500">
+      </div>
+      <div>
+        <p class="section-label">Pastoral Letter · <abbr title="2026">MMXXVI</abbr></p>
+        <h2 class="display" id="featured-letter-title">On Virtues<br>and <em>Capital Sins</em></h2>
+        <hr class="hr-gold">
+        <blockquote class="pull">
+          "Virtue is not the absence of struggle but the steady inclination of the will toward the good."
+        </blockquote>
+        <p style="color:var(--ink-soft); margin-bottom: 36px;">
+          The 2026 Lenten Pastoral Letter from His Grace, examining the cardinal virtues
+          and the seven capital sins through the lens of Scripture and the lived faith
+          of the Onitsha Archdiocese.
+        </p>
+        <a class="btn-primary" href="#" style="background:var(--ink); color:#fff;">Read in Full →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PASTORAL DIARY ═══════════════════════ -->
+<section class="diary" id="diary" aria-labelledby="diary-title">
+  <div class="container">
+    <p class="section-label">Pastoral Diary</p>
+    <h2 class="display" id="diary-title">Recent <em>Engagements</em></h2>
+    <p class="lead">
+      Among the people of God — homilies, pastoral visits, ordinations, and ministries
+      across the Archdiocese.
+    </p>
+
+    <div class="grid">
+      <div class="img-wrap">
+        <img src="file:///tmp/diary.jpg" alt="His Grace during a recent pastoral visit">
+      </div>
+      <div class="entries">
+        <article class="entry">
+          <p class="date"><time datetime="2026-04-06">06 April · <abbr title="2026">MMXXVI</abbr></time></p>
+          <h4>Easter Day Sermon at the Basilica of the Most Holy Trinity</h4>
+          <p>The Risen Christ is not a memory we visit but a Presence we receive.</p>
+        </article>
+        <article class="entry">
+          <p class="date"><time datetime="2026-03-28">28 March · <abbr title="2026">MMXXVI</abbr></time></p>
+          <h4>Pastoral Visit to St Joseph's Seminary, Awka-Etiti</h4>
+          <p>An afternoon of formation, prayer, and counsel with the seminarians.</p>
+        </article>
+        <article class="entry">
+          <p class="date"><time datetime="2026-03-14">14 March · <abbr title="2026">MMXXVI</abbr></time></p>
+          <h4>Confirmation Mass at Our Lady's Secondary School, Nnobi</h4>
+          <p>Sealed with the gift of the Spirit, eighty-four young women received Confirmation.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PULL QUOTE ═══════════════════════ -->
+<section class="pull-section" aria-label="Pull quote">
+  <div class="quote-mark" aria-hidden="true">"</div>
+  <blockquote>
+    The Eucharist is not a doctrine we defend but a fire we receive,<br>
+    and into which we are continually drawn.
+  </blockquote>
+  <p class="author">Most Rev. Valerian M. Okeke</p>
+</section>
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer id="connect">
+  <svg class="watermark-cross" viewBox="0 0 100 140" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M42 0h16v40h40v16H58v84H42V56H2V40h40z"/>
+  </svg>
+  <div class="container">
+    <div class="grid">
+      <div>
+        <p class="brand">
+          Valerian M. Okeke
+          <span class="italic">Archbishop of Onitsha</span>
+        </p>
+        <p class="verse">"<span lang="la">Ut Vitam Habeant</span> — that they may have life, and have it more abundantly." · John <abbr title="10">X</abbr>:10</p>
+      </div>
+      <nav aria-label="Library">
+        <h5>Library</h5>
+        <ul>
+          <li><a href="#pastoral-letters">Pastoral Letters</a></li>
+          <li><a href="#">Homilies</a></li>
+          <li><a href="#reflections">Reflections</a></li>
+          <li><a href="#">Other Teachings</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="About His Grace">
+        <h5>His Grace</h5>
+        <ul>
+          <li><a href="#biography">Biography</a></li>
+          <li><a href="#">Episcopal Ministry</a></li>
+          <li><a href="#">Coat of Arms</a></li>
+          <li><a href="#">Photo Gallery</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Connect">
+        <h5>Connect</h5>
+        <ul>
+          <li><a href="#">Prayer Requests</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Newsletter</a></li>
+          <li><a href="#">Social Media</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="copy">
+      <span>© <abbr title="2026">MMXXVI</abbr> · The Office of His Grace</span>
+      <span><span lang="la">Domus Episcopalis</span> · Onitsha · Anambra · Nigeria</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

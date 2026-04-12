@@ -1,0 +1,19 @@
+{
+  "name": "archbishop-valerian-m-okeke",
+  "version": "1.0.0",
+  "description": "Modern, ecclesiastical website for His Grace Most Rev. Valerian M. Okeke, Archbishop of the Catholic Archdiocese of Onitsha.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.1.0",
+    "turndown": "^7.2.4"
+  }
+}

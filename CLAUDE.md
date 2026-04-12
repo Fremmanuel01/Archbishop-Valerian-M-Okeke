@@ -31,6 +31,7 @@ ornament. Light mode only.
 | 5 — Page implementation | ⏳ Pending | |
 | 6 — CMS integration | ⏳ Pending | Pull from existing Archbishop Library API |
 | 7 — GitHub repo + deploy | ⏳ Pending | Repo not created. Vercel not linked. |
+| 8 — CMS admin dashboard  | ⏳ Future | Edit site content (programme, biography, reflections) from one panel. Writes to the same backend that Phases 5–6 read from via `src/lib/*.ts`. |
 
 **The latest approved artifact** is the homepage mockup at:
 - `docs/mockups/homepage-v1.html`

@@ -1,13 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Roman } from "@/components/editorial";
+import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 import { SiteHeader } from "./site-header";
 
-export function Hero() {
+export async function Hero() {
+  const letters = await getPastoralLetters();
+  const latest = [...letters].sort((a, b) => {
+    const ya = yearOf(a.date) ?? 0;
+    const yb = yearOf(b.date) ?? 0;
+    return yb - ya;
+  })[0];
+  const latestHref = latest
+    ? `/pastoral-letters/${latest.id}-${slugify(latest.title)}`
+    : "/pastoral-letters";
   return (
     <section className="relative h-[100svh] min-h-[720px] w-full overflow-hidden text-white">
       <Image
-        src="/hero.png"
+        src="/hero.avif"
         alt="His Grace Archbishop Valerian M. Okeke elevating the Book of Gospels"
         fill
         priority
@@ -34,7 +44,7 @@ export function Hero() {
         </p>
         <div className="flex items-center gap-4 max-md:flex-col max-md:items-start max-md:gap-3.5">
           <Link
-            href="/pastoral-letters/on-virtues-and-capital-sins"
+            href={latestHref}
             className="inline-flex min-h-12 items-center gap-3 bg-gold-soft px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink transition-colors hover:bg-white focus-visible:bg-white"
           >
             Read the Pastoral Letter →

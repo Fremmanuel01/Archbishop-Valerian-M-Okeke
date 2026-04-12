@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Crest } from "@/components/crest";
 import { NavOverlay } from "./nav-overlay";
 
@@ -11,6 +14,9 @@ const NAV = [
 ];
 
 export function AppHeader() {
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname?.startsWith(href);
   return (
     <header className="relative border-b border-[color:var(--rule)] bg-bone">
       <div className="mx-auto flex max-w-[1240px] items-center justify-between px-10 py-5 max-lg:px-7 max-md:px-5 max-md:py-4">
@@ -30,37 +36,26 @@ export function AppHeader() {
           aria-label="Primary"
           className="flex items-center gap-9 font-[family-name:var(--font-ui)] text-[12px] font-medium uppercase tracking-[1.4px] text-ink max-lg:hidden"
         >
-          {NAV.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="opacity-85 transition-opacity hover:opacity-100 hover:text-gold"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={
+                  active
+                    ? "text-gold-text opacity-100 [text-decoration:underline_from-font] [text-underline-offset:6px] [text-decoration-color:var(--gold)]"
+                    : "opacity-85 transition-opacity hover:opacity-100 hover:text-gold-text"
+                }
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-2.5 max-md:gap-2">
-          <button
-            type="button"
-            aria-label="Search"
-            className="inline-flex min-h-[44px] items-center gap-2.5 bg-gold-soft px-5 py-3 font-[family-name:var(--font-ui)] text-[13px] font-semibold text-ink transition-colors hover:bg-gold hover:text-white focus-visible:bg-gold focus-visible:text-white max-md:min-h-[40px] max-md:px-3.5 max-md:py-2.5 max-md:text-xs"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              strokeLinecap="round"
-              aria-hidden
-              className="h-[18px] w-[18px]"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-            <span className="max-md:sr-only">Search</span>
-          </button>
           <NavOverlay variant="light" />
         </div>
       </div>

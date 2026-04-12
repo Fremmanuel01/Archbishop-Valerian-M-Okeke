@@ -18,19 +18,6 @@ export function SiteHeader() {
       </Link>
 
       <div className="flex items-center gap-2.5 pb-3.5 max-md:gap-2 max-md:pb-2.5">
-        <HeaderButton label="Search" ariaLabel="Search">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={1.75}
-            strokeLinecap="round"
-            aria-hidden
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.5-3.5" />
-          </svg>
-        </HeaderButton>
         <NavOverlay variant="dark" />
       </div>
 
@@ -42,26 +29,3 @@ export function SiteHeader() {
   );
 }
 
-function HeaderButton({
-  label,
-  ariaLabel,
-  ariaExpanded,
-  children,
-}: {
-  label: string;
-  ariaLabel: string;
-  ariaExpanded?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={ariaLabel}
-      aria-expanded={ariaExpanded}
-      className="inline-flex min-h-[44px] items-center gap-2.5 bg-gold-soft px-5 py-3 font-[family-name:var(--font-ui)] text-[13px] font-semibold text-ink transition-colors hover:bg-white focus-visible:bg-white max-md:min-h-[40px] max-md:gap-2 max-md:px-3.5 max-md:py-2.5 max-md:text-xs [&>svg]:h-[18px] [&>svg]:w-[18px]"
-    >
-      {children}
-      {label}
-    </button>
-  );
-}

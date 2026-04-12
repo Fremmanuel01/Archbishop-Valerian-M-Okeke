@@ -1,3 +1,7 @@
+// Data access layer for the Pastoral Programme.
+// TODO(phase 8): replace the static imports below with a fetch against the
+// admin-editable CMS endpoint. All callers use these async functions, so the
+// page code will not need to change.
 import {
   PROGRAMME_ENTRIES,
   PROGRAMME_YEAR,

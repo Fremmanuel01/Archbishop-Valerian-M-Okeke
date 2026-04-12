@@ -7,6 +7,7 @@
   --bone-deep: #efeae0;
   --tan: #e6dfcd;
   --gold: #b08840;
+  --gold-text: #8a6a2e; /* darker gold for small text — WCAG AA on --bone */
   --gold-soft: #c9a664;
   --purple: #3a1f4d;
   --stone: #d9d2c2;
@@ -20,6 +21,7 @@
   --color-bone-deep: var(--bone-deep);
   --color-tan: var(--tan);
   --color-gold: var(--gold);
+  --color-gold-text: var(--gold-text);
   --color-gold-soft: var(--gold-soft);
   --color-purple: var(--purple);
   --color-stone: var(--stone);
@@ -83,5 +85,41 @@ button:focus-visible {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .skip-link,
+  [aria-label="Primary"],
+  [aria-label="Open menu"],
+  [role="dialog"] {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+  }
+  main {
+    padding: 0 !important;
+  }
+  a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+  h1,
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+  blockquote {
+    page-break-inside: avoid;
   }
 }

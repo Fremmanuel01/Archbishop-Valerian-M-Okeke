@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
+import { getPastoralLetters, yearOf } from "@/lib/cms";
+
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Biography",
@@ -57,7 +60,8 @@ const MILESTONES: Milestone[] = [
   },
 ];
 
-const PASTORAL_LETTERS = [
+// Historical pastoral letters not yet in the CMS. Remove as they are added.
+const LEGACY_LETTERS: Array<{ year: number; title: string }> = [
   { year: 2004, title: "That They May Have Life" },
   { year: 2005, title: "The Measure of Love" },
   { year: 2005, title: "Our Glorious Heritage" },
@@ -79,13 +83,23 @@ const PASTORAL_LETTERS = [
   { year: 2020, title: "The Sacraments: Our Treasure" },
   { year: 2021, title: "The Priesthood: Gift and Sacrifice" },
   { year: 2022, title: "The Holy Spirit: Man's Helper and Friend" },
-  { year: 2023, title: "The Hour of Glory: Suffering in the Life of a Christian" },
-  { year: 2024, title: "Blessed Are the Pure in Heart" },
-  { year: 2025, title: "And the Two Become One: Towards a Christian Marriage" },
-  { year: 2026, title: "On Virtues and Capital Sins" },
 ];
 
-export default function BiographyPage() {
+export default async function BiographyPage() {
+  const cmsLetters = await getPastoralLetters();
+  const cmsEntries = cmsLetters
+    .map((l) => ({ year: yearOf(l.date) ?? 0, title: l.title }))
+    .filter((l) => l.year > 0);
+  const seenYearTitles = new Set(
+    cmsEntries.map((l) => `${l.year}-${l.title.toLowerCase()}`),
+  );
+  const legacyEntries = LEGACY_LETTERS.filter(
+    (l) => !seenYearTitles.has(`${l.year}-${l.title.toLowerCase()}`),
+  );
+  const allLetters = [...cmsEntries, ...legacyEntries].sort(
+    (a, b) => a.year - b.year,
+  );
+
   return (
     <PageShell
       eyebrow="About His Grace"
@@ -151,7 +165,10 @@ export default function BiographyPage() {
               {MILESTONES.map((m) => (
                 <li key={`${m.year}-${m.heading}`}>
                   <p className="font-[family-name:var(--font-display)] text-[26px] font-medium italic text-ink">
-                    <Roman year={m.year} />
+                    <Roman year={m.year} arabic={false} />
+                    <span className="ml-2 font-[family-name:var(--font-ui)] text-[11px] font-semibold not-italic tracking-[1.5px] text-ink-soft opacity-70">
+                      {m.year}
+                    </span>
                   </p>
                   <p className="mt-1 font-[family-name:var(--font-display)] text-lg font-medium text-ink">
                     {m.heading}
@@ -179,7 +196,7 @@ export default function BiographyPage() {
           marriage, and the pressing questions of Christian life.
         </p>
         <ul className="mt-14 grid grid-cols-3 gap-x-12 gap-y-6 max-lg:grid-cols-2 max-md:grid-cols-1">
-          {PASTORAL_LETTERS.map((l) => (
+          {allLetters.map((l) => (
             <li
               key={`${l.year}-${l.title}`}
               className="flex items-baseline gap-6 border-b border-[color:var(--rule)] pb-4 font-[family-name:var(--font-body)]"

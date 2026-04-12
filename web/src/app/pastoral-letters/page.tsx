@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { Roman } from "@/components/editorial";
+import { EmptyState, Roman } from "@/components/editorial";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -29,6 +29,12 @@ export default async function PastoralLettersPage() {
       lead="Over twenty years of teaching and shepherding the faithful of the Archdiocese — a living archive of pastoral wisdom."
     >
       <PageSection>
+        {sorted.length === 0 ? (
+          <EmptyState
+            title="The library is briefly unavailable"
+            body="Pastoral letters will return shortly. Please check back in a few minutes."
+          />
+        ) : (
         <div className="grid grid-cols-3 gap-14 max-lg:grid-cols-2 max-lg:gap-10 max-md:grid-cols-1">
           {sorted.map((letter) => {
             const slug = `${letter.id}-${slugify(letter.title)}`;
@@ -75,6 +81,7 @@ export default async function PastoralLettersPage() {
             );
           })}
         </div>
+        )}
       </PageSection>
     </PageShell>
   );

@@ -22,7 +22,12 @@ export default function NewsletterPage() {
             A quiet subscription — a few letters, a few reflections, and the
             rhythm of the liturgical year.
           </h2>
-          <form className="mt-12 flex flex-col items-stretch gap-5 text-left">
+          <form
+            action="mailto:newsletter@archbishopvalokeke.org"
+            method="post"
+            encType="text/plain"
+            className="mt-12 flex flex-col items-stretch gap-5 text-left"
+          >
             <FormField
               id="name"
               label="Your Name"

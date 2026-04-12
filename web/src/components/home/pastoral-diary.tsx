@@ -68,7 +68,7 @@ export function PastoralDiary() {
             />
             <div className="relative aspect-[4/5] w-full bg-stone max-lg:aspect-[3/2]">
               <Image
-                src="/hero.png"
+                src="/hero.avif"
                 alt="His Grace during a recent pastoral visit"
                 fill
                 sizes="(max-width: 1024px) 100vw, 560px"

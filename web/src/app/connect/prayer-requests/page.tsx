@@ -33,7 +33,12 @@ export default function PrayerRequestsPage() {
             </p>
           </div>
 
-          <form className="space-y-7">
+          <form
+            action="mailto:prayers@archbishopvalokeke.org"
+            method="post"
+            encType="text/plain"
+            className="space-y-7"
+          >
             <FormField
               id="name"
               label="Your Name"
@@ -56,6 +61,11 @@ export default function PrayerRequestsPage() {
               placeholder="Please remember in prayer…"
             />
             <SubmitButton>Submit Intention →</SubmitButton>
+            <p className="text-[13px] italic leading-[1.5] text-ink-soft">
+              This form will open your email client with your intention
+              pre-filled. A dedicated submission backend is being prepared by
+              the Chancery.
+            </p>
           </form>
         </div>
       </PageSection>

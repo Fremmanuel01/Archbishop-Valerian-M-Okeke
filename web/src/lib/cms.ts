@@ -29,27 +29,43 @@ export type Writing = {
 type Envelope<T> = { success: boolean; data: T };
 
 async function get<T>(path: string): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    headers: { Accept: "application/json" },
-    next: { revalidate: 3600 },
-  });
-  if (!res.ok) {
-    throw new Error(`CMS ${path} → ${res.status}`);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  try {
+    const res = await fetch(`${API}${path}`, {
+      headers: { Accept: "application/json" },
+      next: { revalidate: 3600 },
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      throw new Error(`CMS ${path} → ${res.status}`);
+    }
+    const json = (await res.json()) as Envelope<T>;
+    return json.data;
+  } finally {
+    clearTimeout(timeoutId);
   }
-  const json = (await res.json()) as Envelope<T>;
-  return json.data;
+}
+
+async function safeList<T>(path: string): Promise<T[]> {
+  try {
+    return await get<T[]>(path);
+  } catch (error) {
+    console.error(`[cms] ${path} failed:`, error);
+    return [];
+  }
 }
 
 export const getPastoralLetters = () =>
-  get<PastoralLetter[]>("/pastoral-letters");
+  safeList<PastoralLetter>("/pastoral-letters");
 export const getPastoralLetter = (id: number | string) =>
   get<PastoralLetter>(`/pastoral-letters/${id}`);
 
-export const getHomilies = () => get<Homily[]>("/homilies");
+export const getHomilies = () => safeList<Homily>("/homilies");
 export const getHomily = (id: number | string) =>
   get<Homily>(`/homilies/${id}`);
 
-export const getWritings = () => get<Writing[]>("/writings");
+export const getWritings = () => safeList<Writing>("/writings");
 export const getWriting = (id: number | string) =>
   get<Writing>(`/writings/${id}`);
 

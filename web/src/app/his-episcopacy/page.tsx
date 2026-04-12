@@ -112,7 +112,7 @@ export default function HisEpiscopacyPage() {
           </div>
 
           <aside className="space-y-10 border-l border-[color:var(--rule)] pl-10 max-lg:border-l-0 max-lg:border-t max-lg:pl-0 max-lg:pt-8">
-            <h2 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold">
+            <h2 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold-text">
               The Archdiocese in Numbers
             </h2>
             <dl className="space-y-8">
@@ -127,6 +127,10 @@ export default function HisEpiscopacyPage() {
                 </div>
               ))}
             </dl>
+            <p className="pt-4 text-[12px] italic leading-[1.5] text-ink-soft opacity-70">
+              Figures as published by the Archdiocese of Onitsha Mission
+              Office. Current approximate totals — updated periodically.
+            </p>
           </aside>
         </div>
       </PageSection>

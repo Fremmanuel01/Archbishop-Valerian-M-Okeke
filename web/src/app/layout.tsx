@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, EB_Garamond, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -26,12 +28,33 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://archbishop-valerian-m-okeke.vercel.app"),
   title: {
     default: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
     template: "%s — Archbishop of Onitsha",
   },
   description:
     "The personal website of His Grace Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha. Pastoral letters, homilies, reflections, and the ministry of His Grace.",
+  openGraph: {
+    type: "website",
+    locale: "en_GB",
+    siteName: "His Grace Most Rev. Valerian M. Okeke",
+    title: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
+    description:
+      "Pastoral letters, homilies, reflections, and the ministry of His Grace the Metropolitan Archbishop of Onitsha.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
+    description:
+      "Pastoral letters, homilies, reflections, and the ministry of His Grace.",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0a1b33",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -49,6 +72,8 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { Roman } from "@/components/editorial";
+import { EmptyState, Roman } from "@/components/editorial";
 import { getHomilies, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -28,6 +28,12 @@ export default async function ReflectionsPage() {
       lead="Homilies preached at solemnities, feasts, pastoral visits, and ordinary time — gathered for meditation and study."
     >
       <PageSection>
+        {sorted.length === 0 ? (
+          <EmptyState
+            title="Homilies will return shortly"
+            body="The reflections archive is briefly unavailable. Please check back in a few minutes."
+          />
+        ) : (
         <ul className="divide-y divide-[color:var(--rule)] border-y border-[color:var(--rule)]">
           {sorted.map((h) => {
             const year = yearOf(h.date);
@@ -71,6 +77,7 @@ export default async function ReflectionsPage() {
             );
           })}
         </ul>
+        )}
       </PageSection>
     </PageShell>
   );

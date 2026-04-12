@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { Roman } from "@/components/editorial";
+import { EmptyState, Roman } from "@/components/editorial";
 import { getWritings, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -27,6 +27,12 @@ export default async function OtherTeachingsPage() {
       lead="Lectures, conference addresses, essays, and occasional writings beyond the formal pastoral letters."
     >
       <PageSection>
+        {sorted.length === 0 ? (
+          <EmptyState
+            title="Writings will return shortly"
+            body="The archive is briefly unavailable. Please check back in a few minutes."
+          />
+        ) : (
         <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1">
           {sorted.map((w) => {
             const year = yearOf(w.date);
@@ -75,6 +81,7 @@ export default async function OtherTeachingsPage() {
             );
           })}
         </div>
+        )}
       </PageSection>
     </PageShell>
   );

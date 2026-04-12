@@ -76,11 +76,31 @@ export function SectionLabel({
 }) {
   return (
     <p
-      className={`flex items-center gap-4 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold ${className}`}
+      className={`flex items-center gap-4 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold-text ${className}`}
     >
       <span aria-hidden className="block h-px w-9 bg-gold" />
       {children}
     </p>
+  );
+}
+
+export function EmptyState({
+  title,
+  body,
+}: {
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="mx-auto max-w-[560px] border border-[color:var(--rule)] bg-bone-deep px-10 py-16 text-center">
+      <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[3px] text-gold-text">
+        Nothing to show yet
+      </p>
+      <h2 className="mt-5 font-[family-name:var(--font-display)] text-[32px] font-medium italic leading-[1.2] text-ink">
+        {title}
+      </h2>
+      <p className="mt-4 text-[16px] leading-[1.65] text-ink-soft">{body}</p>
+    </div>
   );
 }
 

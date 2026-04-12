@@ -30,7 +30,7 @@ ornament. Light mode only.
 | 4 — Next.js scaffold | ✅ Bootstrapped | `web/` exists, no shadcn/components yet |
 | 5 — Page implementation | ⏳ Pending | |
 | 6 — CMS integration | ⏳ Pending | Pull from existing Archbishop Library API |
-| 7 — GitHub repo + deploy | ⏳ Pending | Repo not created. Vercel not linked. |
+| 7 — GitHub repo + deploy | ✅ Done | GitHub: `Fremmanuel01/Archbishop-Valerian-M-Okeke` (public). Vercel project: `emmanuel-nwabufos-projects/archbishop-valerian-m-okeke` (Deployment Protection disabled — public). Live: <https://archbishop-valerian-m-okeke.vercel.app>. |
 | 8 — CMS admin dashboard  | ⏳ Future | Edit site content (programme, biography, reflections) from one panel. Writes to the same backend that Phases 5–6 read from via `src/lib/*.ts`. |
 
 **The latest approved artifact** is the homepage mockup at:

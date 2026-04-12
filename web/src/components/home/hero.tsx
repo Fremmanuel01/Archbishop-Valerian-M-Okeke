@@ -25,7 +25,7 @@ export async function Hero() {
         priority
         sizes="100vw"
         quality={92}
-        className="object-cover object-[70%_30%] [filter:brightness(1)_contrast(1.04)_saturate(1.05)]"
+        className="object-cover object-[center_20%] [filter:brightness(1.02)_contrast(1.04)_saturate(1.05)]"
       />
 
       {/* ── Layer 2: horizontal bone fade into photo ───────── */}

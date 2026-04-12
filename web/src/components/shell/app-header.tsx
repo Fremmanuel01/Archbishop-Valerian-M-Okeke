@@ -43,10 +43,11 @@ export function AppHeader() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
+                data-active={active ? "true" : undefined}
                 className={
                   active
-                    ? "text-gold-text opacity-100 [text-decoration:underline_from-font] [text-underline-offset:6px] [text-decoration-color:var(--gold)]"
-                    : "opacity-85 transition-opacity hover:opacity-100 hover:text-gold-text"
+                    ? "link-underline text-gold-text"
+                    : "link-underline text-ink/85 hover:text-gold-text"
                 }
               >
                 {item.label}

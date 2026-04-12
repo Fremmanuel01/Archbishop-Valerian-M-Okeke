@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, EB_Garamond, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { SmoothScroll } from "@/components/smooth-scroll";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -71,6 +72,7 @@ export default function RootLayout({
         <a className="skip-link" href="#main">
           Skip to main content
         </a>
+        <SmoothScroll />
         {children}
         <Analytics />
         <SpeedInsights />

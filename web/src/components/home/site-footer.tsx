@@ -87,7 +87,7 @@ function FooterColumn({
             key={link.label}
             className="mb-3 font-[family-name:var(--font-body)] text-[15px] text-ink-soft opacity-85"
           >
-            <Link href={link.href} className="hover:text-gold">
+            <Link href={link.href} className="link-underline hover:text-gold">
               {link.label}
             </Link>
           </li>

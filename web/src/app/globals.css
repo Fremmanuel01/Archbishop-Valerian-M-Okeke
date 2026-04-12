@@ -44,6 +44,35 @@ body {
   font-size: 18px;
   line-height: 1.7;
   font-feature-settings: "liga", "kern";
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+.small-caps {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.06em;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Link underline draw-in — left-to-right 400ms reveal */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 3px;
+  transition:
+    background-size 450ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 300ms ease;
+}
+.link-underline:hover,
+.link-underline:focus-visible {
+  background-size: 100% 1px;
+}
+.link-underline[data-active="true"] {
+  background-size: 100% 1px;
 }
 
 a {

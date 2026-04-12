@@ -55,13 +55,18 @@ export function Roman({
 
 export function Latin({
   children,
-  className,
+  className = "",
+  smallCaps = false,
 }: {
   children: React.ReactNode;
   className?: string;
+  smallCaps?: boolean;
 }) {
   return (
-    <span lang="la" className={className}>
+    <span
+      lang="la"
+      className={smallCaps ? `small-caps ${className}` : className}
+    >
       {children}
     </span>
   );

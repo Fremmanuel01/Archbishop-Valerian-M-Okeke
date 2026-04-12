@@ -1,6 +1,7 @@
 import { AppHeader } from "./app-header";
 import { SiteFooter } from "@/components/home/site-footer";
 import { SectionLabel } from "@/components/editorial";
+import { Reveal } from "@/components/reveal";
 
 export function PageShell({
   eyebrow,
@@ -21,20 +22,28 @@ export function PageShell({
       <main id="main">
         <header className="relative overflow-hidden border-b border-[color:var(--rule)] bg-bone px-14 pb-24 pt-28 max-lg:px-8 max-md:px-6 max-md:pb-16 max-md:pt-20">
           <div className="relative mx-auto max-w-[1240px]">
-            {eyebrow ? <SectionLabel>{eyebrow}</SectionLabel> : null}
-            <h1 className="mt-6 font-[family-name:var(--font-display)] text-[clamp(48px,5.5vw,88px)] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
-              {title}
-              {titleAccent ? (
-                <>
-                  <br />
-                  <em className="italic text-gold">{titleAccent}</em>
-                </>
-              ) : null}
-            </h1>
+            {eyebrow ? (
+              <Reveal>
+                <SectionLabel>{eyebrow}</SectionLabel>
+              </Reveal>
+            ) : null}
+            <Reveal delay={120}>
+              <h1 className="mt-6 font-[family-name:var(--font-display)] text-[clamp(48px,5.5vw,88px)] font-medium leading-[1.05] tracking-[-0.015em] text-ink">
+                {title}
+                {titleAccent ? (
+                  <>
+                    <br />
+                    <em className="italic text-gold">{titleAccent}</em>
+                  </>
+                ) : null}
+              </h1>
+            </Reveal>
             {lead ? (
-              <p className="mt-6 max-w-[720px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.55] text-ink-soft">
-                {lead}
-              </p>
+              <Reveal delay={240}>
+                <p className="mt-6 max-w-[720px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.55] text-ink-soft">
+                  {lead}
+                </p>
+              </Reveal>
             ) : null}
           </div>
         </header>

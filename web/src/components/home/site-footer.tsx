@@ -5,6 +5,7 @@ import { Latin, Roman } from "@/components/editorial";
 const LIBRARY = [
   { label: "Pastoral Letters", href: "/pastoral-letters" },
   { label: "Reflections & Homilies", href: "/reflections" },
+  { label: "Easter & Christmas Messages", href: "/messages" },
   { label: "Other Teachings", href: "/other-teachings" },
   { label: "Pastoral Visits", href: "/pastoral-visits" },
 ];

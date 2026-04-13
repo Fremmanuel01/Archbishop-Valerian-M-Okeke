@@ -114,6 +114,7 @@ const OTHER_LIBRARY: Array<{
   Icon: IconCmp;
 }> = [
   { label: "Reflections & Homilies", href: "/reflections", Icon: Dove },
+  { label: "Easter & Christmas Messages", href: "/messages", Icon: Candle },
   { label: "Other Teachings", href: "/other-teachings", Icon: Keys },
 ];
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
-import { getWritings, yearOf } from "@/lib/cms";
+import { getAddressesAndInterviews, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Other Teachings",
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function OtherTeachingsPage() {
-  const writings = await getWritings();
+  const writings = await getAddressesAndInterviews();
   const sorted = [...writings].sort((a, b) => {
     if (!a.date) return 1;
     if (!b.date) return -1;

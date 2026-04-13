@@ -10,6 +10,7 @@ const STATIC_ROUTES = [
   "/coat-of-arms",
   "/pastoral-letters",
   "/reflections",
+  "/messages",
   "/other-teachings",
   "/diary",
   "/pastoral-visits",

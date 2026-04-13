@@ -69,6 +69,16 @@ export const getWritings = () => safeList<Writing>("/writings");
 export const getWriting = (id: number | string) =>
   get<Writing>(`/writings/${id}`);
 
+export async function getMessages(): Promise<Writing[]> {
+  const all = await getWritings();
+  return all.filter((w) => w.category === "Message");
+}
+
+export async function getAddressesAndInterviews(): Promise<Writing[]> {
+  const all = await getWritings();
+  return all.filter((w) => w.category !== "Message");
+}
+
 export function slugify(title: string): string {
   return title
     .toLowerCase()

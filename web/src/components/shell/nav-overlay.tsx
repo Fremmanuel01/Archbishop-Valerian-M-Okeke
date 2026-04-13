@@ -35,6 +35,7 @@ const SECTIONS: NavSection[] = [
     items: [
       { label: "Pastoral Letters", href: "/pastoral-letters", Icon: ChiRho },
       { label: "Reflections & Homilies", href: "/reflections", Icon: Dove },
+      { label: "Easter & Christmas Messages", href: "/messages", Icon: Candle },
       { label: "Other Teachings", href: "/other-teachings", Icon: Keys },
     ],
   },

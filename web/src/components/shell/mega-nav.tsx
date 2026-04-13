@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import {
   Candle,
   Chalice,
@@ -28,15 +27,16 @@ export type HomilyPreview = {
   title: string;
   year: number | null;
   occasion: string | null;
-  slug?: string;
 };
 
-type PanelKey = "about" | "library" | "reflections" | "connect" | null;
+type IconCmp = (p: { className?: string; size?: number }) => React.ReactElement;
+
+type PanelKind = "about" | "library" | "reflections" | "connect" | null;
 
 type NavItem = {
   label: string;
   href: string;
-  panel: PanelKey;
+  panel: PanelKind;
 };
 
 const NAV: NavItem[] = [
@@ -47,8 +47,6 @@ const NAV: NavItem[] = [
   { label: "Connect", href: "/connect", panel: "connect" },
 ];
 
-type IconCmp = (p: { className?: string; size?: number }) => React.ReactElement;
-
 const ABOUT_ITEMS: Array<{
   label: string;
   href: string;
@@ -58,13 +56,15 @@ const ABOUT_ITEMS: Array<{
   {
     label: "Biography",
     href: "/biography",
-    description: "The life and ministry of His Grace — from Amesi to the Metropolitan See.",
+    description:
+      "The life and ministry of His Grace — from Amesi to the Metropolitan See.",
     Icon: Crozier,
   },
   {
     label: "His Episcopacy",
     href: "/his-episcopacy",
-    description: "The missionary apostolate: education, prison ministry, riverine evangelisation.",
+    description:
+      "The missionary apostolate: education, prison ministry, riverine evangelisation.",
     Icon: Mitre,
   },
   {
@@ -76,7 +76,8 @@ const ABOUT_ITEMS: Array<{
   {
     label: "Pastoral Diary",
     href: "/diary",
-    description: "Masses, visits, ordinations, and the liturgical year of the Archdiocese.",
+    description:
+      "Masses, visits, ordinations, and the liturgical year of the Archdiocese.",
     Icon: Candle,
   },
 ];
@@ -110,21 +111,10 @@ const CONNECT_ITEMS: Array<{
 const OTHER_LIBRARY: Array<{
   label: string;
   href: string;
-  description: string;
   Icon: IconCmp;
 }> = [
-  {
-    label: "Reflections & Homilies",
-    href: "/reflections",
-    description: "Homilies preached at solemnities, feasts, and ordinary time.",
-    Icon: Dove,
-  },
-  {
-    label: "Other Teachings",
-    href: "/other-teachings",
-    description: "Lectures, conference addresses, and occasional writings.",
-    Icon: Keys,
-  },
+  { label: "Reflections & Homilies", href: "/reflections", Icon: Dove },
+  { label: "Other Teachings", href: "/other-teachings", Icon: Keys },
 ];
 
 export function MegaNav({
@@ -137,34 +127,8 @@ export function MegaNav({
   variant?: "light" | "dark";
 }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState<PanelKey>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname?.startsWith(href) ?? false;
-
-  const handleEnter = (panel: PanelKey) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setOpen(panel);
-  };
-
-  const handleLeave = () => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    closeTimer.current = setTimeout(() => setOpen(null), 220);
-  };
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(null);
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, []);
-
-  useEffect(() => {
-    // Close panel on route change
-    setOpen(null);
-  }, [pathname]);
+    href === "/" ? pathname === "/" : (pathname?.startsWith(href) ?? false);
 
   const linkBase =
     variant === "dark"
@@ -176,59 +140,51 @@ export function MegaNav({
       : "link-underline text-gold-text";
 
   return (
-    <div
-      className="relative flex flex-1 justify-center max-xl:justify-end"
-      onMouseLeave={handleLeave}
+    <nav
+      aria-label="Primary"
+      className="flex flex-1 items-stretch justify-center gap-9 font-[family-name:var(--font-ui)] text-[12px] font-medium uppercase tracking-[1.4px] max-xl:hidden"
     >
-      <nav
-        aria-label="Primary"
-        className="flex items-center gap-9 font-[family-name:var(--font-ui)] text-[12px] font-medium uppercase tracking-[1.4px] max-xl:hidden"
-      >
-        {NAV.map((item) => {
-          const active = isActive(item.href);
-          return (
-            <div
-              key={item.href}
-              className="relative py-4"
-              onMouseEnter={() => handleEnter(item.panel)}
-              onFocus={() => handleEnter(item.panel)}
+      {NAV.map((item) => {
+        const active = isActive(item.href);
+        const hasPanel = item.panel !== null;
+        return (
+          <div
+            key={item.href}
+            className={
+              hasPanel
+                ? "group/item relative flex items-center"
+                : "relative flex items-center"
+            }
+          >
+            <Link
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              data-active={active ? "true" : undefined}
+              className={`py-5 ${active ? linkActive : linkBase}`}
             >
-              <Link
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                aria-expanded={item.panel ? open === item.panel : undefined}
-                data-active={active ? "true" : undefined}
-                className={active ? linkActive : linkBase}
-              >
-                {item.label}
-              </Link>
-            </div>
-          );
-        })}
-      </nav>
+              {item.label}
+            </Link>
 
-      {/* ── Mega panel ───────────────────────────────────────── */}
-      <div
-        className={`pointer-events-none absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 transition-all duration-300 ease-out ${
-          open
-            ? "pointer-events-auto translate-y-0 opacity-100"
-            : "-translate-y-2 opacity-0"
-        }`}
-        onMouseEnter={() => {
-          if (closeTimer.current) clearTimeout(closeTimer.current);
-        }}
-        onMouseLeave={handleLeave}
-      >
-        <div className="border-y border-[color:var(--rule)] bg-bone-deep shadow-[0_30px_60px_-20px_rgba(10,27,51,0.18)]">
-          <div className="mx-auto grid max-w-[1240px] gap-14 px-14 py-14 max-lg:px-8">
-            {open === "about" ? <AboutPanel /> : null}
-            {open === "library" ? <LibraryPanel letters={letters} /> : null}
-            {open === "reflections" ? <ReflectionsPanel homilies={homilies} /> : null}
-            {open === "connect" ? <ConnectPanel /> : null}
+            {hasPanel ? (
+              <div className="pointer-events-none absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 pt-2 opacity-0 [transition:opacity_260ms_ease-out,transform_260ms_ease-out] group-hover/item:pointer-events-auto group-hover/item:translate-y-0 group-hover/item:opacity-100 group-focus-within/item:pointer-events-auto group-focus-within/item:translate-y-0 group-focus-within/item:opacity-100 [transform:translateY(-4px)]">
+                <div className="border-y border-[color:var(--rule)] bg-bone-deep shadow-[0_30px_60px_-20px_rgba(10,27,51,0.18)]">
+                  <div className="mx-auto grid max-w-[1240px] gap-14 px-14 py-14 max-lg:px-8">
+                    {item.panel === "about" ? <AboutPanel /> : null}
+                    {item.panel === "library" ? (
+                      <LibraryPanel letters={letters} />
+                    ) : null}
+                    {item.panel === "reflections" ? (
+                      <ReflectionsPanel homilies={homilies} />
+                    ) : null}
+                    {item.panel === "connect" ? <ConnectPanel /> : null}
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
-        </div>
-      </div>
-    </div>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -284,7 +240,7 @@ function AboutPanel() {
                   <p className="font-[family-name:var(--font-display)] text-[22px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-[14px] leading-[1.5] text-ink-soft">
+                  <p className="mt-1 text-[14px] leading-[1.5] text-ink-soft normal-case tracking-normal">
                     {item.description}
                   </p>
                 </div>
@@ -310,7 +266,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
         <div className="mt-8 space-y-4">
           <Link
             href="/pastoral-letters"
-            className="inline-flex font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink link-underline"
+            className="link-underline inline-flex font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink"
           >
             Browse all letters →
           </Link>
@@ -356,10 +312,10 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
               </div>
               {letter.year ? (
                 <p className="mt-4 font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[2px] text-gold-text">
-                  MMXXVI · {letter.year}
+                  Pastoral Letter · {letter.year}
                 </p>
               ) : null}
-              <p className="mt-2 font-[family-name:var(--font-display)] text-[18px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
+              <p className="mt-2 font-[family-name:var(--font-display)] text-[18px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
                 {letter.title}
               </p>
             </Link>
@@ -382,7 +338,7 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
         />
         <Link
           href="/reflections"
-          className="mt-8 inline-flex font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink link-underline"
+          className="link-underline mt-8 inline-flex font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink"
         >
           Browse all reflections →
         </Link>
@@ -399,7 +355,7 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
                   {h.occasion}
                 </p>
               ) : null}
-              <p className="mt-2 font-[family-name:var(--font-display)] text-[18px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
+              <p className="mt-2 font-[family-name:var(--font-display)] text-[18px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
                 {h.title}
               </p>
             </Link>
@@ -427,14 +383,11 @@ function ConnectPanel() {
                 href={item.href}
                 className="group block border-t border-[color:var(--rule)] pt-5 transition-colors hover:border-gold"
               >
-                <Icon
-                  className="h-6 w-6 text-gold-text"
-                  size={24}
-                />
+                <Icon className="h-6 w-6 text-gold-text" size={24} />
                 <p className="mt-4 font-[family-name:var(--font-display)] text-[22px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
                   {item.label}
                 </p>
-                <p className="mt-2 text-[14px] leading-[1.5] text-ink-soft">
+                <p className="mt-2 text-[14px] leading-[1.5] text-ink-soft normal-case tracking-normal">
                   {item.description}
                 </p>
               </Link>

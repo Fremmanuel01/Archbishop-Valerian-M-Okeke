@@ -79,7 +79,7 @@ export default async function HomilyPage({
         </>
       }
       title={homily.title}
-      lead={homily.description ? plainExcerpt(homily.description, 220) : undefined}
+      lead={homily.occasion ?? undefined}
     >
       <PageSection>
         <div className="grid grid-cols-[1fr_1.4fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">

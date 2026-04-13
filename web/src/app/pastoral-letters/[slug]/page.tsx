@@ -79,7 +79,6 @@ export default async function LetterPage({
         </>
       }
       title={letter.title}
-      lead={letter.description ?? undefined}
     >
       <PageSection>
         <div className="grid grid-cols-[1fr_1.4fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">

@@ -96,6 +96,52 @@ body {
   transform: scaleX(1);
 }
 
+/* Primary / secondary button utilities — hardcoded colors, zero dependence on Tailwind color tokens */
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 16px 32px;
+  background-color: #0a1b33;
+  color: #ffffff;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: color 300ms ease;
+  cursor: pointer;
+  border: none;
+}
+.btn-ink:hover,
+.btn-ink:focus-visible {
+  color: #0a1b33;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 16px 32px;
+  background-color: transparent;
+  color: #0a1b33;
+  border: 1px solid rgba(10, 27, 51, 0.25);
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: color 300ms ease, border-color 300ms ease;
+  cursor: pointer;
+}
+.btn-outline:hover,
+.btn-outline:focus-visible {
+  color: #ffffff;
+  border-color: #0a1b33;
+}
+
 /* Book cover 3D tilt on hover */
 .book-tilt {
   transform-style: preserve-3d;

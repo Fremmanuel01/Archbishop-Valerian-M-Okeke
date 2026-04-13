@@ -82,14 +82,14 @@ export async function Hero() {
             <Link
               href={latestHref}
               style={{ ["--sweep-color" as string]: "#c9a664" }}
-              className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-[#fff] transition-colors hover:text-[#0a1b33] focus-visible:text-[#0a1b33]"
+              className="btn-ink btn-sweep"
             >
               Read the Pastoral Letter →
             </Link>
             <Link
               href="/biography"
               style={{ ["--sweep-color" as string]: "#0a1b33" }}
-              className="btn-sweep inline-flex min-h-12 items-center gap-3 border border-ink/25 bg-transparent px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-[#0a1b33] transition-colors hover:text-[#fff] hover:border-ink focus-visible:text-[#fff] focus-visible:border-ink"
+              className="btn-outline btn-sweep"
             >
               Meet His Grace
             </Link>

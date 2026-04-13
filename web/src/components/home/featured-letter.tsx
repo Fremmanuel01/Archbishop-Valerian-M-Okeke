@@ -77,7 +77,7 @@ export async function FeaturedLetter() {
           <Link
             href={`/pastoral-letters/${slug}`}
             style={{ ["--sweep-color" as string]: "#c9a664" }}
-            className="btn-sweep inline-flex min-h-12 items-center gap-3 bg-ink px-8 py-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-[#fff] transition-colors hover:text-[#0a1b33] focus-visible:text-[#0a1b33]"
+            className="btn-ink btn-sweep"
           >
             Read in Full →
           </Link>

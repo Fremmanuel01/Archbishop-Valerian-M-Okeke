@@ -45,6 +45,7 @@ const SECTIONS: NavSection[] = [
       { label: "Prayer Requests", href: "/connect/prayer-requests", Icon: Chalice },
       { label: "Contact", href: "/connect/contact", Icon: Dove },
       { label: "Newsletter", href: "/connect/newsletter", Icon: ChiRho },
+      { label: "Chancery Admin", href: "/admin", Icon: Keys },
     ],
   },
 ];

@@ -153,7 +153,7 @@ export function MegaNav({
             key={item.href}
             className={
               hasPanel
-                ? "group/item relative flex items-center"
+                ? "mega-item relative flex items-center"
                 : "relative flex items-center"
             }
           >
@@ -167,7 +167,7 @@ export function MegaNav({
             </Link>
 
             {hasPanel ? (
-              <div className="pointer-events-none absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 pt-2 opacity-0 [transition:opacity_260ms_ease-out,transform_260ms_ease-out] group-hover/item:pointer-events-auto group-hover/item:translate-y-0 group-hover/item:opacity-100 group-focus-within/item:pointer-events-auto group-focus-within/item:translate-y-0 group-focus-within/item:opacity-100 [transform:translateY(-4px)]">
+              <div className="mega-panel absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 pt-2">
                 <div className="border-y border-[color:var(--rule)] bg-bone-deep shadow-[0_30px_60px_-20px_rgba(10,27,51,0.18)]">
                   <div className="mx-auto grid max-w-[1240px] gap-14 px-14 py-14 max-lg:px-8">
                     {item.panel === "about" ? <AboutPanel /> : null}

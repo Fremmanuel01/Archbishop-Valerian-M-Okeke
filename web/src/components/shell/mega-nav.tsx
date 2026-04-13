@@ -27,6 +27,7 @@ export type HomilyPreview = {
   title: string;
   year: number | null;
   occasion: string | null;
+  slug: string;
 };
 
 type IconCmp = (p: { className?: string; size?: number }) => React.ReactElement;
@@ -348,7 +349,7 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
         {recent.map((h) => (
           <li key={h.id}>
             <Link
-              href="/reflections"
+              href={`/reflections/${h.slug}`}
               className="group block border-t border-[color:var(--rule)] pt-5"
             >
               {h.occasion ? (

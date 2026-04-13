@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
-import { getHomilies, yearOf } from "@/lib/cms";
+import { getHomilies, slugify, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Reflections & Homilies",
@@ -37,17 +37,16 @@ export default async function ReflectionsPage() {
         <ul className="divide-y divide-[color:var(--rule)] border-y border-[color:var(--rule)]">
           {sorted.map((h) => {
             const year = yearOf(h.date);
+            const slug = `${h.id}-${slugify(h.title)}`;
             return (
               <li key={h.id}>
-                <a
-                  href={h.pdf_url ?? "#"}
-                  target={h.pdf_url ? "_blank" : undefined}
-                  rel={h.pdf_url ? "noopener noreferrer" : undefined}
+                <Link
+                  href={`/reflections/${slug}`}
                   className="group grid grid-cols-[220px_1fr_auto] items-start gap-12 py-12 max-lg:grid-cols-1 max-lg:gap-3 max-lg:py-9"
                 >
                   <div>
                     {h.occasion ? (
-                      <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">
+                      <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold-text">
                         {h.occasion}
                       </p>
                     ) : null}
@@ -60,7 +59,7 @@ export default async function ReflectionsPage() {
                     ) : null}
                   </div>
                   <div>
-                    <h2 className="font-[family-name:var(--font-display)] text-[32px] font-medium leading-[1.15] text-ink transition-colors group-hover:text-gold max-md:text-[24px]">
+                    <h2 className="font-[family-name:var(--font-display)] text-[32px] font-medium leading-[1.15] text-ink transition-colors group-hover:text-gold-text max-md:text-[24px]">
                       {h.title}
                     </h2>
                     {h.description ? (
@@ -70,9 +69,9 @@ export default async function ReflectionsPage() {
                     ) : null}
                   </div>
                   <span className="mt-2 whitespace-nowrap border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink max-lg:justify-self-start">
-                    {h.pdf_url ? "Read →" : "Coming Soon"}
+                    Read →
                   </span>
-                </a>
+                </Link>
               </li>
             );
           })}

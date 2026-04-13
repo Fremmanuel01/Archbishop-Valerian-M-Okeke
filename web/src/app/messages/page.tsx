@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
-import { getMessages, yearOf, formatLongDate } from "@/lib/cms";
+import { getMessages, slugify, yearOf, formatLongDate } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Easter & Christmas Messages",
@@ -38,9 +39,17 @@ export default async function MessagesPage() {
             {sorted.map((m) => {
               const year = yearOf(m.date);
               const isChristmas = m.title.toLowerCase().includes("christmas");
+              const slug = `${m.id}-${slugify(m.title)}`;
+              const cleanTitle = m.title.replace(
+                /^\d{4}\s+(Easter|Christmas)\s+Message:\s*/i,
+                "",
+              );
               return (
                 <li key={m.id}>
-                  <article className="group relative flex h-full flex-col border border-[color:var(--rule)] bg-bone p-10 transition-colors hover:border-gold max-md:p-7">
+                  <Link
+                    href={`/messages/${slug}`}
+                    className="group relative flex h-full flex-col border border-[color:var(--rule)] bg-bone p-10 transition-colors hover:border-gold max-md:p-7"
+                  >
                     {m.cover_photo_url ? (
                       <div className="relative mb-8 aspect-[3/2] w-full overflow-hidden bg-stone">
                         <Image
@@ -61,9 +70,8 @@ export default async function MessagesPage() {
                         </>
                       ) : null}
                     </p>
-                    <h2 className="mt-4 font-[family-name:var(--font-display)] text-[26px] font-medium leading-[1.2] text-ink max-md:text-[22px]">
-                      {m.title
-                        .replace(/^\d{4}\s+(Easter|Christmas)\s+Message:\s*/i, "")}
+                    <h2 className="mt-4 font-[family-name:var(--font-display)] text-[26px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text max-md:text-[22px]">
+                      {cleanTitle}
                     </h2>
                     {m.occasion ? (
                       <p className="mt-2 font-[family-name:var(--font-display)] text-[16px] italic leading-[1.4] text-ink-soft">
@@ -75,17 +83,10 @@ export default async function MessagesPage() {
                         <time dateTime={m.date}>{formatLongDate(m.date)}</time>
                       </p>
                     ) : null}
-                    {m.pdf_url ? (
-                      <a
-                        href={m.pdf_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="link-underline mt-4 inline-flex w-fit font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink"
-                      >
-                        Read the Message →
-                      </a>
-                    ) : null}
-                  </article>
+                    <span className="mt-4 inline-flex w-fit border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink">
+                      Read →
+                    </span>
+                  </Link>
                 </li>
               );
             })}

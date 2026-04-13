@@ -36,6 +36,7 @@ export async function AppHeader() {
       title: h.title,
       year: yearOf(h.date),
       occasion: h.occasion ?? null,
+      slug: `${h.id}-${slugify(h.title)}`,
     }));
 
   return (

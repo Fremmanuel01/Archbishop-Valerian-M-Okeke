@@ -87,10 +87,10 @@ export default async function LetterPage({
               <Image
                 src={cover}
                 alt={`Cover of ${letter.title}`}
-                width={1200}
-                height={1500}
-                sizes="(max-width: 1024px) 100vw, 480px"
-                className="h-auto w-full max-w-[480px] [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.25))]"
+                width={800}
+                height={1100}
+                sizes="(max-width: 1024px) 100vw, 460px"
+                className="h-auto w-full max-w-[460px] object-contain [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.25))]"
               />
             ) : null}
           </div>

@@ -88,10 +88,10 @@ export default async function HomilyPage({
               <Image
                 src={cover}
                 alt={homily.title}
-                width={1000}
-                height={1200}
-                sizes="(max-width: 1024px) 100vw, 480px"
-                className="h-auto w-full max-w-[460px] [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.18))]"
+                width={800}
+                height={1100}
+                sizes="(max-width: 1024px) 100vw, 460px"
+                className="h-auto w-full max-w-[460px] object-contain [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.18))]"
               />
             </div>
           ) : (

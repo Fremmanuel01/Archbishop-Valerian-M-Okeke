@@ -4,19 +4,19 @@ import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Keys } from "@/components/icons";
 
 export const metadata: Metadata = {
-  title: "Chancery Admin",
+  title: "CADO ICT Admin",
   description:
-    "Content management for the website of His Grace Most Rev. Valerian Maduka Okeke, Archbishop of Onitsha.",
+    "Content management for the website of His Grace Most Rev. Valerian Maduka Okeke, managed by the CADO ICT Department.",
   robots: { index: false, follow: false },
 };
 
 export default function AdminPlaceholderPage() {
   return (
     <PageShell
-      eyebrow="Administration"
-      title="Chancery"
+      eyebrow="Catholic Archdiocese of Onitsha · ICT Department"
+      title="CADO ICT"
       titleAccent="Admin"
-      lead="The content management dashboard for the Office of His Grace."
+      lead="The content management dashboard for the website of His Grace — maintained by the CADO ICT Department."
     >
       <PageSection>
         <div className="mx-auto max-w-[640px] border border-[color:var(--rule)] bg-bone p-14 text-center max-md:p-8">

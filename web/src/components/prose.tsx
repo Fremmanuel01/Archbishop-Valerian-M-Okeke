@@ -2,13 +2,39 @@ import { marked } from "marked";
 
 marked.setOptions({ gfm: true, breaks: false });
 
-export function Prose({ markdown }: { markdown: string }) {
+export type ProseVariant = "default" | "letter";
+
+export function Prose({
+  markdown,
+  variant = "default",
+}: {
+  markdown: string;
+  variant?: ProseVariant;
+}) {
   const html = marked.parse(markdown, { async: false }) as string;
+  const processed =
+    variant === "letter" ? applyHangingNumbers(html) : html;
+  const variantClass =
+    variant === "letter" ? "prose-editorial-letter" : "prose-editorial";
   return (
     <div
-      className="prose-editorial space-y-5 font-[family-name:var(--font-body)] text-[19px] leading-[1.8] text-ink"
-      dangerouslySetInnerHTML={{ __html: html }}
+      className={`${variantClass} space-y-5 font-[family-name:var(--font-body)] text-[19px] leading-[1.8] text-ink`}
+      dangerouslySetInnerHTML={{ __html: processed }}
     />
+  );
+}
+
+/**
+ * Transform "<p>1. Text...</p>" paragraphs into
+ * "<p class="numbered" data-num="1">Text...</p>" so CSS can render the
+ * number in a gutter with a hanging indent. Marked emits numbered lists as
+ * <ol> by default, but pastoral letters number every paragraph as prose,
+ * not as a list, so we post-process the emitted <p> tags.
+ */
+function applyHangingNumbers(html: string): string {
+  return html.replace(
+    /<p>(\d{1,3})\.\s+/g,
+    (_m, n) => `<p class="numbered" data-num="${n}">`,
   );
 }
 
@@ -34,4 +60,47 @@ export function stripMarkdown(text: string): string {
 export function plainExcerpt(text: string, len = 200): string {
   const plain = stripMarkdown(text);
   return plain.length > len ? plain.slice(0, len).trimEnd() + "…" : plain;
+}
+
+/**
+ * Parse rendered HTML and return an array of {id, text, level} for the
+ * table-of-contents. Also inject id attributes on the headings in the HTML.
+ * Runs on the server so the TOC can be built without any client JS.
+ */
+export function parseHeadings(
+  html: string,
+): { html: string; headings: { id: string; text: string; level: number }[] } {
+  const headings: { id: string; text: string; level: number }[] = [];
+  const used = new Set<string>();
+  const withIds = html.replace(
+    /<(h[23])>([^<]+)<\/\1>/g,
+    (_m, tag: string, rawText: string) => {
+      const text = rawText.trim();
+      let id = text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+        .slice(0, 60);
+      let suffix = 2;
+      const base = id;
+      while (used.has(id)) id = `${base}-${suffix++}`;
+      used.add(id);
+      headings.push({ id, text, level: tag === "h2" ? 2 : 3 });
+      return `<${tag} id="${id}">${text}</${tag}>`;
+    },
+  );
+  return { html: withIds, headings };
+}
+
+/**
+ * Server-rendered Prose that also returns the extracted headings for a TOC.
+ * Use this when you want to render the body and a TOC side-by-side.
+ */
+export function renderProse(
+  markdown: string,
+  variant: ProseVariant = "default",
+): { html: string; headings: { id: string; text: string; level: number }[] } {
+  const raw = marked.parse(markdown, { async: false }) as string;
+  const processed = variant === "letter" ? applyHangingNumbers(raw) : raw;
+  return parseHeadings(processed);
 }

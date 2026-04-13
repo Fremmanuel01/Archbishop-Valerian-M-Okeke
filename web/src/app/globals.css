@@ -319,3 +319,112 @@ button:focus-visible {
   background: var(--gold);
   margin: 2.5em 0;
 }
+
+/* ── Letter variant: long-form pastoral letters ────────────── */
+.prose-editorial-letter {
+  max-width: 64ch;
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 19px;
+  line-height: 1.85;
+  color: var(--ink);
+}
+.prose-editorial-letter > * + * { margin-top: 1.2em; }
+.prose-editorial-letter h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(30px, 3.5vw, 42px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin-top: 0;
+  margin-bottom: 1em;
+}
+.prose-editorial-letter h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
+  scroll-margin-top: 120px;
+}
+/* Flourish between h2 sections (decorative only) */
+.prose-editorial-letter h2::before {
+  content: "✦";
+  display: block;
+  color: var(--gold);
+  font-size: 14px;
+  margin-bottom: 1em;
+  letter-spacing: 4px;
+}
+.prose-editorial-letter h2:first-of-type::before { display: none; }
+.prose-editorial-letter h3 {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2.4px;
+  color: var(--gold-text);
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.4em;
+  scroll-margin-top: 120px;
+}
+.prose-editorial-letter p { margin: 0; }
+.prose-editorial-letter strong { color: var(--ink); font-weight: 600; }
+.prose-editorial-letter em { font-style: italic; }
+.prose-editorial-letter a {
+  color: var(--gold-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+/* Hanging numbered paragraphs — gutter number + indented body */
+.prose-editorial-letter p.numbered {
+  position: relative;
+  padding-left: 3.2em;
+}
+.prose-editorial-letter p.numbered::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  width: 2.2em;
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--gold-text);
+  text-align: right;
+  padding-right: 0.5em;
+  border-right: 1px solid var(--rule);
+}
+/* Block-quoted scripture */
+.prose-editorial-letter blockquote {
+  border-left: 2px solid var(--gold);
+  padding: 0.2em 0 0.2em 1.6em;
+  margin: 1.6em 0 1.6em 0.8em;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 19px;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+.prose-editorial-letter ul,
+.prose-editorial-letter ol {
+  padding-left: 1.5em;
+  margin-left: 1em;
+}
+.prose-editorial-letter li { margin-bottom: 0.4em; }
+.prose-editorial-letter hr {
+  border: 0;
+  height: 1px;
+  width: 5rem;
+  background: var(--gold);
+  margin: 3em auto;
+}
+@media (max-width: 900px) {
+  .prose-editorial-letter { font-size: 17px; }
+  .prose-editorial-letter p.numbered { padding-left: 2.6em; }
+  .prose-editorial-letter p.numbered::before { width: 1.8em; font-size: 10px; }
+  .prose-editorial-letter h2 { font-size: 22px; }
+}

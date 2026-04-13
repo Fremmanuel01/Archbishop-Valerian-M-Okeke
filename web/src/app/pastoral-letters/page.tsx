@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
+import { plainExcerpt } from "@/components/prose";
 
 export const metadata: Metadata = {
   title: "Pastoral Letters",
@@ -71,7 +72,7 @@ export default async function PastoralLettersPage() {
                 </h2>
                 {letter.description ? (
                   <p className="mt-3 text-[16px] leading-[1.55] text-ink-soft">
-                    {letter.description}
+                    {plainExcerpt(letter.description, 160)}
                   </p>
                 ) : null}
                 <span className="mt-5 inline-flex w-fit border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink">

@@ -259,3 +259,63 @@ button:focus-visible {
     page-break-inside: avoid;
   }
 }
+
+/* ── Editorial prose (rendered markdown from the CMS) ─────────── */
+.prose-editorial > * + * {
+  margin-top: 1.15em;
+}
+.prose-editorial h1,
+.prose-editorial h2,
+.prose-editorial h3,
+.prose-editorial h4 {
+  font-family: var(--font-display), Georgia, serif;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+.prose-editorial h1 { font-size: 2em; margin-top: 1.4em; }
+.prose-editorial h2 { font-size: 1.55em; margin-top: 1.6em; }
+.prose-editorial h3 { font-size: 1.25em; margin-top: 1.5em; }
+.prose-editorial h4 {
+  font-family: var(--font-ui), system-ui, sans-serif;
+  font-size: 0.72em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gold-text);
+  margin-top: 1.5em;
+}
+.prose-editorial p { margin: 0; }
+.prose-editorial strong { color: var(--ink); font-weight: 600; }
+.prose-editorial em { font-style: italic; }
+.prose-editorial a {
+  color: var(--gold-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.prose-editorial ul,
+.prose-editorial ol {
+  padding-left: 1.4em;
+}
+.prose-editorial ul { list-style: disc; }
+.prose-editorial ol { list-style: decimal; }
+.prose-editorial li { margin-bottom: 0.4em; }
+.prose-editorial li > p { display: inline; }
+.prose-editorial blockquote {
+  border-left: 2px solid var(--gold);
+  padding: 0.1em 0 0.1em 1.4em;
+  margin: 1.4em 0;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.18em;
+  font-style: italic;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.prose-editorial hr {
+  border: 0;
+  height: 1px;
+  width: 4rem;
+  background: var(--gold);
+  margin: 2.5em 0;
+}

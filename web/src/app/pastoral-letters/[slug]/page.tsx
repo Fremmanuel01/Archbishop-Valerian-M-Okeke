@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
+import { Prose } from "@/components/prose";
 import {
   getPastoralLetter,
   getPastoralLetters,
@@ -103,7 +104,7 @@ export default async function LetterPage({
                 &ldquo;{letter.key_quote}&rdquo;
               </blockquote>
             ) : null}
-            {letter.description ? <p>{letter.description}</p> : null}
+            {letter.description ? <Prose markdown={letter.description} /> : null}
             {letter.pdf_url ? (
               <a
                 href={letter.pdf_url}

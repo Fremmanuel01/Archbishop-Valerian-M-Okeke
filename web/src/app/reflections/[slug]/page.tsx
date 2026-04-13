@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
+import { Prose, plainExcerpt } from "@/components/prose";
 import {
   getHomilies,
   getHomily,
@@ -36,7 +37,9 @@ export async function generateMetadata({
     const homily = await getHomily(id);
     return {
       title: homily.title,
-      description: homily.description ?? homily.occasion ?? undefined,
+      description: homily.description
+        ? plainExcerpt(homily.description, 160)
+        : homily.occasion ?? undefined,
     };
   } catch {
     return { title: "Not found" };
@@ -76,7 +79,7 @@ export default async function HomilyPage({
         </>
       }
       title={homily.title}
-      lead={homily.description ?? undefined}
+      lead={homily.description ? plainExcerpt(homily.description, 220) : undefined}
     >
       <PageSection>
         <div className="grid grid-cols-[1fr_1.4fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">
@@ -112,7 +115,7 @@ export default async function HomilyPage({
               </blockquote>
             ) : null}
             {homily.description ? (
-              <p>{homily.description}</p>
+              <Prose markdown={homily.description} />
             ) : (
               <p className="italic text-ink-soft">
                 The full text of this homily will be available here

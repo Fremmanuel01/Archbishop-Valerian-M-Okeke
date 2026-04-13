@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
+import { Prose } from "@/components/prose";
 import {
   getMessages,
   getWriting,
@@ -108,7 +109,7 @@ export default async function MessagePage({
               </time>
             </p>
             {message.body ? (
-              <p>{message.body}</p>
+              <Prose markdown={message.body} />
             ) : (
               <p className="italic text-ink-soft">
                 The full text of this message will be available here

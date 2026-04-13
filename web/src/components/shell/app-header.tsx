@@ -1,25 +1,46 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Crest } from "@/components/crest";
 import { NavOverlay } from "./nav-overlay";
+import { MegaNav } from "./mega-nav";
+import {
+  getPastoralLetters,
+  getHomilies,
+  slugify,
+  yearOf,
+} from "@/lib/cms";
 
-const NAV = [
-  { label: "Biography", href: "/biography" },
-  { label: "Pastoral Letters", href: "/pastoral-letters" },
-  { label: "Reflections", href: "/reflections" },
-  { label: "Diary", href: "/diary" },
-  { label: "Connect", href: "/connect" },
-];
+export async function AppHeader() {
+  const [rawLetters, rawHomilies] = await Promise.all([
+    getPastoralLetters(),
+    getHomilies(),
+  ]);
 
-export function AppHeader() {
-  const pathname = usePathname();
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname?.startsWith(href);
+  const letters = [...rawLetters]
+    .sort((a, b) => (yearOf(b.date) ?? 0) - (yearOf(a.date) ?? 0))
+    .map((l) => ({
+      id: l.id,
+      title: l.title,
+      year: yearOf(l.date),
+      slug: `${l.id}-${slugify(l.title)}`,
+      cover: l.cover_photo_url ?? l.thumbnail_url,
+    }));
+
+  const homilies = [...rawHomilies]
+    .sort((a, b) => {
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return a.date < b.date ? 1 : -1;
+    })
+    .map((h) => ({
+      id: h.id,
+      title: h.title,
+      year: yearOf(h.date),
+      occasion: h.occasion ?? null,
+    }));
+
   return (
     <header className="relative border-b border-[color:var(--rule)] bg-bone">
-      <div className="mx-auto flex max-w-[1240px] items-center justify-between px-10 py-5 max-lg:px-7 max-md:px-5 max-md:py-4">
+      <div className="mx-auto flex max-w-[1440px] items-center gap-10 px-10 py-5 max-lg:px-7 max-md:px-5 max-md:py-4">
         <Link
           href="/"
           aria-label="Home — The Archbishop of Onitsha"
@@ -32,29 +53,7 @@ export function AppHeader() {
           </span>
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="flex items-center gap-9 font-[family-name:var(--font-ui)] text-[12px] font-medium uppercase tracking-[1.4px] text-ink max-lg:hidden"
-        >
-          {NAV.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                data-active={active ? "true" : undefined}
-                className={
-                  active
-                    ? "link-underline text-gold-text"
-                    : "link-underline text-ink/85 hover:text-gold-text"
-                }
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <MegaNav letters={letters} homilies={homilies} variant="light" />
 
         <div className="flex items-center gap-2.5 max-md:gap-2">
           <NavOverlay variant="light" />

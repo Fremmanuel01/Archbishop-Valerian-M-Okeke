@@ -1,10 +1,45 @@
 import Link from "next/link";
 import { Crest } from "@/components/crest";
 import { NavOverlay } from "@/components/shell/nav-overlay";
+import { MegaNav } from "@/components/shell/mega-nav";
+import {
+  getPastoralLetters,
+  getHomilies,
+  slugify,
+  yearOf,
+} from "@/lib/cms";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  const [rawLetters, rawHomilies] = await Promise.all([
+    getPastoralLetters(),
+    getHomilies(),
+  ]);
+
+  const letters = [...rawLetters]
+    .sort((a, b) => (yearOf(b.date) ?? 0) - (yearOf(a.date) ?? 0))
+    .map((l) => ({
+      id: l.id,
+      title: l.title,
+      year: yearOf(l.date),
+      slug: `${l.id}-${slugify(l.title)}`,
+      cover: l.cover_photo_url ?? l.thumbnail_url,
+    }));
+
+  const homilies = [...rawHomilies]
+    .sort((a, b) => {
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return a.date < b.date ? 1 : -1;
+    })
+    .map((h) => ({
+      id: h.id,
+      title: h.title,
+      year: yearOf(h.date),
+      occasion: h.occasion ?? null,
+    }));
+
   return (
-    <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between bg-[linear-gradient(180deg,rgba(247,244,238,0.85)_0%,rgba(247,244,238,0.5)_60%,transparent_100%)] px-10 pt-[22px] text-ink max-lg:px-7 max-md:px-5 max-md:pt-4">
+    <header className="absolute inset-x-0 top-0 z-50 flex items-center gap-10 bg-[linear-gradient(180deg,rgba(247,244,238,0.92)_0%,rgba(247,244,238,0.6)_60%,transparent_100%)] px-10 pt-[22px] text-ink max-lg:px-7 max-md:px-5 max-md:pt-4">
       <Link
         href="/"
         aria-label="Home — The Archbishop of Onitsha"
@@ -17,6 +52,8 @@ export function SiteHeader() {
         </span>
       </Link>
 
+      <MegaNav letters={letters} homilies={homilies} variant="light" />
+
       <div className="flex items-center gap-2.5 pb-3.5 max-md:gap-2 max-md:pb-2.5">
         <NavOverlay variant="dark" />
       </div>
@@ -28,4 +65,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
+import { plainExcerpt } from "@/components/prose";
 import { getAddressesAndInterviews, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -60,7 +61,7 @@ export default async function OtherTeachingsPage() {
                 ) : null}
                 {w.body ? (
                   <p className="mt-4 text-[16px] leading-[1.6] text-ink-soft">
-                    {w.body}
+                    {plainExcerpt(w.body, 180)}
                   </p>
                 ) : null}
                 {w.pdf_url ? (

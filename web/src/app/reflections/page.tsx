@@ -23,9 +23,9 @@ export default async function ReflectionsPage() {
 
   return (
     <PageShell
-      eyebrow="Homilies & Reflections"
-      title="Spoken from the"
-      titleAccent="Cathedra"
+      eyebrow={<><span lang="la">Vox Pastoris</span> · Homilies & Reflections</>}
+      title="Voice of the"
+      titleAccent="Shepherd"
       lead="Homilies preached at solemnities, feasts, pastoral visits, and ordinary time — gathered for meditation and study."
     >
       <PageSection>

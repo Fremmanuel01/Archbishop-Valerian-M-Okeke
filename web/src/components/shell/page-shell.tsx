@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { AppHeader } from "./app-header";
 import { SiteFooter } from "@/components/home/site-footer";
 import { SectionLabel } from "@/components/editorial";
@@ -8,12 +9,14 @@ export function PageShell({
   title,
   titleAccent,
   lead,
+  heroImage,
   children,
 }: {
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
   titleAccent?: React.ReactNode;
   lead?: React.ReactNode;
+  heroImage?: { src: string; alt: string };
   children: React.ReactNode;
 }) {
   return (
@@ -21,6 +24,25 @@ export function PageShell({
       <AppHeader />
       <main id="main">
         <header className="relative overflow-hidden border-b border-[color:var(--rule)] bg-bone px-14 pb-24 pt-28 max-lg:px-8 max-md:px-6 max-md:pb-16 max-md:pt-20">
+          {heroImage ? (
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 right-0 w-[62%] max-lg:w-[78%] max-md:w-full max-md:opacity-25"
+            >
+              <Image
+                src={heroImage.src}
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 62vw"
+                className="object-cover object-[70%_center] [filter:grayscale(100%)_contrast(1.15)_brightness(0.92)] [mix-blend-mode:multiply] [mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)] [-webkit-mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)]"
+              />
+              <div
+                className="absolute inset-0 [mix-blend-mode:color] [mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)] [-webkit-mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)]"
+                style={{ backgroundColor: "#0A1B33" }}
+              />
+            </div>
+          ) : null}
           <div className="relative mx-auto max-w-[1240px]">
             {eyebrow ? (
               <Reveal>

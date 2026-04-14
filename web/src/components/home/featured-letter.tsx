@@ -44,6 +44,7 @@ export async function FeaturedLetter() {
               alt={`Cover of ${latest.title}`}
               width={1200}
               height={1500}
+              priority
               sizes="(max-width: 1024px) 100vw, 520px"
               className="book-tilt h-auto w-full max-w-[520px] [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.25))_drop-shadow(0_8px_24px_rgba(10,27,51,0.12))]"
             />

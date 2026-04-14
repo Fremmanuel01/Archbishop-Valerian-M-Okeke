@@ -27,6 +27,10 @@ export default async function ReflectionsPage() {
       title="Voice of the"
       titleAccent="Shepherd"
       lead="Homilies preached at solemnities, feasts, pastoral visits, and ordinary time — gathered for meditation and study."
+      heroImage={{
+        src: "/homily-hero.jpg",
+        alt: "His Grace preaching at the Basilica of the Most Holy Trinity",
+      }}
     >
       <PageSection>
         {sorted.length === 0 ? (

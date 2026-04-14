@@ -1,6 +1,35 @@
 import { marked } from "marked";
+import sanitizeHtml from "sanitize-html";
 
 marked.setOptions({ gfm: true, breaks: false });
+
+const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
+  allowedTags: [
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "p", "blockquote", "ul", "ol", "li",
+    "strong", "em", "b", "i", "u", "s", "sub", "sup",
+    "a", "br", "hr", "span", "abbr", "cite",
+    "figure", "figcaption", "img",
+    "table", "thead", "tbody", "tr", "td", "th",
+    "code", "pre",
+  ],
+  allowedAttributes: {
+    a: ["href", "title", "rel", "target"],
+    img: ["src", "alt", "title", "width", "height"],
+    abbr: ["title"],
+    span: ["lang", "class"],
+    "*": ["id"],
+  },
+  allowedSchemes: ["http", "https", "mailto"],
+  transformTags: {
+    a: sanitizeHtml.simpleTransform("a", { rel: "noopener noreferrer" }),
+  },
+};
+
+function renderMarkdown(markdown: string): string {
+  const raw = marked.parse(markdown, { async: false }) as string;
+  return sanitizeHtml(raw, SANITIZE_OPTIONS);
+}
 
 export type ProseVariant = "default" | "letter";
 
@@ -11,7 +40,7 @@ export function Prose({
   markdown: string;
   variant?: ProseVariant;
 }) {
-  const html = marked.parse(markdown, { async: false }) as string;
+  const html = renderMarkdown(markdown);
   const processed =
     variant === "letter" ? applyHangingNumbers(html) : html;
   const variantClass =
@@ -100,7 +129,7 @@ export function renderProse(
   markdown: string,
   variant: ProseVariant = "default",
 ): { html: string; headings: { id: string; text: string; level: number }[] } {
-  const raw = marked.parse(markdown, { async: false }) as string;
+  const raw = renderMarkdown(markdown);
   const processed = variant === "letter" ? applyHangingNumbers(raw) : raw;
   return parseHeadings(processed);
 }

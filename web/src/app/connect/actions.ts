@@ -31,12 +31,12 @@ function notConfiguredError(): FormState {
   };
 }
 
-function contactRecipient(): string {
-  return process.env.CONTACT_TO ?? "chancery@archbishopvalokeke.org";
+function contactRecipient(): string | null {
+  return process.env.CONTACT_TO ?? null;
 }
 
-function prayerRecipient(): string {
-  return process.env.PRAYER_TO ?? "prayers@archbishopvalokeke.org";
+function prayerRecipient(): string | null {
+  return process.env.PRAYER_TO ?? null;
 }
 
 export async function submitContact(
@@ -53,11 +53,12 @@ export async function submitContact(
   if (!name || !isEmail(email) || !subject || !message) {
     return { status: "error", message: "Please complete every field with a valid email." };
   }
-  if (!resendConfigured()) return notConfiguredError();
+  const recipient = contactRecipient();
+  if (!resendConfigured() || !recipient) return notConfiguredError();
 
   try {
     await sendEmail({
-      to: contactRecipient(),
+      to: recipient,
       subject: `[Website contact] ${subject}`,
       text: `From: ${name} <${email}>\n\n${message}`,
       replyTo: email,
@@ -88,11 +89,12 @@ export async function submitPrayerRequest(
   if (!name || !isEmail(email) || !intention) {
     return { status: "error", message: "Please share your name, email, and intention." };
   }
-  if (!resendConfigured()) return notConfiguredError();
+  const recipient = prayerRecipient();
+  if (!resendConfigured() || !recipient) return notConfiguredError();
 
   try {
     await sendEmail({
-      to: prayerRecipient(),
+      to: recipient,
       subject: `Prayer intention from ${name}`,
       text: `From: ${name} <${email}>\n\nIntention:\n${intention}`,
       replyTo: email,

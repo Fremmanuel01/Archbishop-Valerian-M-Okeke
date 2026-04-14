@@ -9,11 +9,11 @@ export type PastoralVideo = {
 
 export const FEATURED_VIDEO: PastoralVideo = {
   id: "ZbrwZq-54hI",
-  title: "Chrism Mass at the Basilica of the Most Holy Trinity",
-  occasion: "Holy Thursday · Onitsha",
-  date: "02 April 2026",
-  iso: "2026-04-02",
-  duration: "48:12",
+  title: "Priestly Ordination — Archdiocese of Onitsha",
+  occasion: "Sacred Orders · Onitsha",
+  date: "2023",
+  iso: "2023-01-01",
+  duration: "",
 };
 
 export const QUEUED_VIDEOS: PastoralVideo[] = [

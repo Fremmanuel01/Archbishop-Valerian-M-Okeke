@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
+import { plainExcerpt } from "@/components/prose";
 import { getHomilies, slugify, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
@@ -64,7 +65,7 @@ export default async function ReflectionsPage() {
                     </h2>
                     {h.description ? (
                       <p className="mt-4 max-w-[680px] text-[17px] leading-[1.6] text-ink-soft">
-                        {h.description}
+                        {plainExcerpt(h.description, 220)}
                       </p>
                     ) : null}
                   </div>

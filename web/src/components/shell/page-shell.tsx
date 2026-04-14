@@ -27,18 +27,18 @@ export function PageShell({
           {heroImage ? (
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-y-0 right-0 w-[62%] max-lg:w-[78%] max-md:w-full max-md:opacity-25"
+              className="pointer-events-none absolute inset-y-0 right-0 w-[58%] max-lg:w-[72%] max-md:w-full max-md:opacity-25"
             >
               <Image
                 src={heroImage.src}
                 alt=""
                 fill
                 priority
-                sizes="(max-width: 1024px) 100vw, 62vw"
-                className="object-cover object-[70%_center] [filter:grayscale(100%)_contrast(1.15)_brightness(0.92)] [mix-blend-mode:multiply] [mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)] [-webkit-mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)]"
+                sizes="(max-width: 1024px) 100vw, 58vw"
+                className="object-cover object-center [filter:grayscale(100%)_contrast(1.15)_brightness(0.92)] [mix-blend-mode:multiply] [mask-image:radial-gradient(ellipse_110%_95%_at_65%_50%,black_38%,transparent_85%)] [-webkit-mask-image:radial-gradient(ellipse_110%_95%_at_65%_50%,black_38%,transparent_85%)]"
               />
               <div
-                className="absolute inset-0 [mix-blend-mode:color] [mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)] [-webkit-mask-image:radial-gradient(ellipse_85%_80%_at_100%_35%,black_15%,transparent_72%)]"
+                className="absolute inset-0 [mix-blend-mode:color] [mask-image:radial-gradient(ellipse_110%_95%_at_65%_50%,black_38%,transparent_85%)] [-webkit-mask-image:radial-gradient(ellipse_110%_95%_at_65%_50%,black_38%,transparent_85%)]"
                 style={{ backgroundColor: "#0A1B33" }}
               />
             </div>

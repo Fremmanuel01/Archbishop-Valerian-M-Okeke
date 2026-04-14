@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
-import { FormField, SubmitButton, TextArea } from "@/components/form";
+import { PrayerRequestForm } from "@/components/connect-forms";
 import { Latin } from "@/components/editorial";
 
 export const metadata: Metadata = {
@@ -33,40 +33,7 @@ export default function PrayerRequestsPage() {
             </p>
           </div>
 
-          <form
-            action="mailto:prayers@archbishopvalokeke.org"
-            method="post"
-            encType="text/plain"
-            className="space-y-7"
-          >
-            <FormField
-              id="name"
-              label="Your Name"
-              required
-              autoComplete="name"
-            />
-            <FormField
-              id="email"
-              label="Email Address"
-              type="email"
-              required
-              autoComplete="email"
-              helper="We will send a brief acknowledgement when your intention is received."
-            />
-            <TextArea
-              id="intention"
-              label="Your Intention"
-              rows={7}
-              required
-              placeholder="Please remember in prayer…"
-            />
-            <SubmitButton>Submit Intention →</SubmitButton>
-            <p className="text-[13px] italic leading-[1.5] text-ink-soft">
-              This form will open your email client with your intention
-              pre-filled. A dedicated submission backend is being prepared by
-              the Chancery.
-            </p>
-          </form>
+          <PrayerRequestForm />
         </div>
       </PageSection>
     </PageShell>

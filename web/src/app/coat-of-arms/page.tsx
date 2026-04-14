@@ -18,14 +18,14 @@ export default function CoatOfArmsPage() {
       lead="The Good Shepherd, the gospel of John, and the episcopal motto that has guided the ministry of His Grace."
     >
       <PageSection>
-        <div className="grid grid-cols-[1fr_1.3fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">
+        <div className="grid grid-cols-[1fr_1.2fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">
           <div className="flex items-start justify-center">
             <Image
               src="/coat-of-arms.png"
               alt="Coat of Arms of His Grace Most Rev. Valerian Maduka Okeke"
-              width={500}
-              height={500}
-              className="h-auto w-auto max-w-[360px] object-contain [filter:drop-shadow(0_30px_60px_rgba(10,27,51,0.15))]"
+              width={900}
+              height={900}
+              className="h-auto w-full max-w-[560px] object-contain [filter:drop-shadow(0_30px_60px_rgba(10,27,51,0.15))]"
             />
           </div>
 

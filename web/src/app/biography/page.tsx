@@ -106,6 +106,10 @@ export default async function BiographyPage() {
       title="A Life in the"
       titleAccent="Lord's Vineyard"
       lead="Shepherd, teacher, and servant of the Church of Onitsha — a ministry formed by scripture, prayer, and the lived faith of his people."
+      heroPortrait={{
+        src: "/archbishop-portrait.jpg",
+        alt: "His Grace Most Rev. Valerian Maduka Okeke",
+      }}
     >
       <PageSection>
         <div className="grid grid-cols-[2fr_1fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">

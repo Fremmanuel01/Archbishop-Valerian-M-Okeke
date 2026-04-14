@@ -26,6 +26,7 @@ const SECTIONS: NavSection[] = [
       { label: "Biography", href: "/biography", Icon: Crozier },
       { label: "His Episcopacy", href: "/his-episcopacy", Icon: Mitre },
       { label: "Coat of Arms", href: "/coat-of-arms", Icon: Lamb },
+      { label: "Photo Gallery", href: "/photo-gallery", Icon: Dove },
       { label: "Pastoral Diary", href: "/diary", Icon: Candle },
       { label: "Pastoral Visits", href: "/pastoral-visits", Icon: Crozier },
     ],

@@ -8,6 +8,7 @@ const STATIC_ROUTES = [
   "/biography",
   "/his-episcopacy",
   "/coat-of-arms",
+  "/photo-gallery",
   "/pastoral-letters",
   "/reflections",
   "/messages",

@@ -75,6 +75,13 @@ const ABOUT_ITEMS: Array<{
     Icon: Lamb,
   },
   {
+    label: "Photo Gallery",
+    href: "/photo-gallery",
+    description:
+      "A pastoral archive — feasts, visitations, and the daily life of the See.",
+    Icon: Dove,
+  },
+  {
     label: "Pastoral Diary",
     href: "/diary",
     description:

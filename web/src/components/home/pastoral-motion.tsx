@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { SectionLabel, Latin } from "@/components/editorial";
 import {
-  FEATURED_VIDEO,
-  QUEUED_VIDEOS,
+  PASTORAL_VIDEOS,
   type PastoralVideo,
 } from "@/lib/featured-videos";
 
@@ -13,20 +12,31 @@ function thumb(id: string) {
   return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 }
 
-export function PastoralMotion() {
-  const all = [FEATURED_VIDEO, ...QUEUED_VIDEOS];
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const active = all[activeIndex];
-  const queue = all.filter((_, i) => i !== activeIndex);
+// 3-column grid for 4+ videos, otherwise as many columns as videos.
+function gridShape(count: number) {
+  if (count <= 1) return { cols: 1, rows: 1 };
+  if (count <= 3) return { cols: count, rows: 1 };
+  if (count <= 6) return { cols: 3, rows: 2 };
+  return { cols: 3, rows: 3 };
+}
 
-  const selectVideo = (video: PastoralVideo) => {
-    const idx = all.findIndex((v) => v === video);
-    if (idx !== -1) {
-      setActiveIndex(idx);
-      setPlaying(false);
-    }
-  };
+// Hover-expanding grid track values. The hovered row/col gets the
+// generous fraction; the rest split the remainder. Only kicks in once
+// there are enough tiles for the effect to read as intentional.
+function trackValues(
+  total: number,
+  hoveredIndex: number,
+  large: number,
+  small: number,
+) {
+  return Array.from({ length: total }, (_, i) =>
+    i === hoveredIndex ? `${large}fr` : `${small}fr`,
+  ).join(" ");
+}
+
+export function PastoralMotion() {
+  const videos = PASTORAL_VIDEOS;
+  if (videos.length === 0) return null;
 
   return (
     <section
@@ -45,134 +55,166 @@ export function PastoralMotion() {
           Pastoral Activities in <em className="italic text-gold">Motion</em>
         </h2>
         <p className="max-w-[680px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.55] text-ink-soft">
-          Selected homilies, pastoral visits, and sacred liturgies — recorded as
-          they unfolded across the Archdiocese.
+          Selected homilies, pastoral visits, and sacred liturgies — recorded
+          as they unfolded across the Archdiocese.
         </p>
 
-        <div
-          className={`mt-20 grid gap-12 max-lg:grid-cols-1 max-lg:gap-10 max-lg:mt-14 ${
-            queue.length > 0 ? "grid-cols-[1.7fr_1fr]" : "grid-cols-1"
-          }`}
-        >
-          <div>
-            <div className="relative border border-[color:var(--rule)] bg-bone-deep p-[14px]">
-              <span
-                aria-hidden
-                className="absolute -left-px -top-px h-7 w-7 border-l-2 border-t-2 border-gold"
-              />
-              <span
-                aria-hidden
-                className="absolute -bottom-px -right-px h-7 w-7 border-b-2 border-r-2 border-gold"
-              />
-              <div className="relative aspect-video w-full bg-ink">
-                {playing ? (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${active.id}?autoplay=1&rel=0`}
-                    title={active.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 h-full w-full"
-                  />
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => setPlaying(true)}
-                    aria-label={`Play video: ${active.title}`}
-                    className="group absolute inset-0 block cursor-pointer"
-                  >
-                    <Image
-                      key={active.id + activeIndex}
-                      src={thumb(active.id)}
-                      alt=""
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 760px"
-                      className="object-cover transition-opacity duration-500 group-hover:opacity-90"
-                    />
-                    <span
-                      aria-hidden
-                      className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"
-                    />
-                    <span
-                      aria-hidden
-                      className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-gold/70 bg-ink/40 text-gold backdrop-blur-sm transition-transform duration-300 group-hover:scale-[1.06]"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="ml-1 h-7 w-7"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </span>
-                    <span className="absolute bottom-5 right-5 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-bone">
-                      {active.duration}
-                    </span>
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-7">
-              <p className="mb-3 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
-                <time dateTime={active.iso}>{active.date}</time>
-                <span className="mx-2 opacity-40">·</span>
-                {active.occasion}
-              </p>
-              <h3 className="font-[family-name:var(--font-display)] text-[32px] font-medium leading-[1.2] text-ink">
-                {active.title}
-              </h3>
-            </div>
-          </div>
-
-          {queue.length > 0 && (
-          <aside aria-label="Queued videos">
-            <p className="mb-5 flex items-center gap-3 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
-              <span aria-hidden className="block h-px w-6 bg-gold" />
-              Up Next
-            </p>
-            <ul className="space-y-5">
-              {queue.map((video) => (
-                <li key={`${video.id}-${video.iso}`}>
-                  <button
-                    type="button"
-                    onClick={() => selectVideo(video)}
-                    className="group flex w-full gap-4 border-b border-stone pb-5 text-left transition-opacity hover:opacity-95"
-                  >
-                    <span className="relative block aspect-video w-[132px] flex-shrink-0 bg-ink max-md:w-[112px]">
-                      <Image
-                        src={thumb(video.id)}
-                        alt=""
-                        fill
-                        sizes="(max-width: 768px) 112px, 132px"
-                        className="object-cover"
-                      />
-                      <span
-                        aria-hidden
-                        className="absolute inset-0 bg-ink/20 transition-colors duration-300 group-hover:bg-ink/10"
-                      />
-                      <span className="absolute bottom-1 right-1 bg-ink/80 px-1.5 py-px font-[family-name:var(--font-ui)] text-[9px] font-semibold tracking-[1px] text-bone">
-                        {video.duration}
-                      </span>
-                    </span>
-                    <span className="flex flex-1 flex-col">
-                      <span className="mb-1 font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[1.5px] text-gold-text">
-                        {video.occasion}
-                      </span>
-                      <span className="font-[family-name:var(--font-display)] text-[17px] font-medium leading-[1.3] text-ink transition-colors group-hover:text-gold-text">
-                        {video.title}
-                      </span>
-                      <span className="mt-1 font-[family-name:var(--font-ui)] text-[10px] tracking-[1px] text-ink-soft opacity-70">
-                        <time dateTime={video.iso}>{video.date}</time>
-                      </span>
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </aside>
-          )}
-        </div>
+        <VideoGrid videos={videos} />
       </div>
     </section>
+  );
+}
+
+function VideoGrid({ videos }: { videos: PastoralVideo[] }) {
+  const { cols, rows } = gridShape(videos.length);
+  const [hovered, setHovered] = useState<number | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  // Expand the hovered tile only once the grid is large enough for the
+  // motion to read as intentional rather than jittery.
+  const expandable = videos.length >= 4;
+  const hoveredCol = hovered === null ? null : hovered % cols;
+  const hoveredRow = hovered === null ? null : Math.floor(hovered / cols);
+
+  const gridStyle: CSSProperties = expandable
+    ? {
+        gridTemplateColumns: trackValues(
+          cols,
+          hoveredCol ?? -1,
+          5,
+          3,
+        ),
+        gridTemplateRows: trackValues(
+          rows,
+          hoveredRow ?? -1,
+          5,
+          3,
+        ),
+        transition:
+          "grid-template-columns 420ms ease, grid-template-rows 420ms ease",
+      }
+    : {
+        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+      };
+
+  return (
+    <div
+      className="mt-20 grid w-full gap-3 max-lg:mt-14 max-lg:gap-2"
+      style={{
+        ...gridStyle,
+        // Tile aspect drives total height; keep the section feeling cinematic
+        // on desktop and tap-friendly on phones without hover.
+        height: rows === 1 ? "min(58vw, 620px)" : `min(80vw, 720px)`,
+      }}
+    >
+      {videos.map((video, idx) => (
+        <Tile
+          key={`${video.id}-${idx}`}
+          video={video}
+          isActive={activeId === video.id}
+          onActivate={() => setActiveId(video.id)}
+          onHover={() => setHovered(idx)}
+          onLeave={() => setHovered(null)}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Tile({
+  video,
+  isActive,
+  onActivate,
+  onHover,
+  onLeave,
+}: {
+  video: PastoralVideo;
+  isActive: boolean;
+  onActivate: () => void;
+  onHover: () => void;
+  onLeave: () => void;
+}) {
+  return (
+    <figure
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      className="group relative h-full min-h-[260px] overflow-hidden border border-[color:var(--rule)] bg-ink"
+    >
+      <span
+        aria-hidden
+        className="absolute -left-px -top-px z-20 h-6 w-6 border-l-2 border-t-2 border-gold"
+      />
+      <span
+        aria-hidden
+        className="absolute -bottom-px -right-px z-20 h-6 w-6 border-b-2 border-r-2 border-gold"
+      />
+
+      {isActive ? (
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1`}
+          title={video.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute inset-0 z-10 h-full w-full"
+        />
+      ) : (
+        <button
+          type="button"
+          onClick={onActivate}
+          aria-label={`Play video: ${video.title}`}
+          className="absolute inset-0 z-10 block h-full w-full cursor-pointer"
+        >
+          <Image
+            src={thumb(video.id)}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1240px) 50vw, 420px"
+            className="object-cover transition-[transform,filter] duration-500 ease-out group-hover:scale-[1.04] group-hover:brightness-110"
+          />
+          <span
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent transition-opacity duration-500 group-hover:from-ink/70"
+          />
+          <span
+            aria-hidden
+            className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-gold/70 bg-ink/45 text-gold backdrop-blur-sm transition-transform duration-500 group-hover:scale-110 max-md:h-12 max-md:w-12"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden
+              className="ml-1 h-6 w-6 max-md:h-5 max-md:w-5"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </span>
+          {video.duration ? (
+            <span className="absolute bottom-3 right-3 z-10 bg-ink/80 px-2 py-0.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold tracking-[1.5px] text-bone">
+              {video.duration}
+            </span>
+          ) : null}
+        </button>
+      )}
+
+      <figcaption className="pointer-events-none absolute inset-x-4 bottom-4 z-10 flex flex-col gap-1 text-bone opacity-100 transition-opacity duration-500 group-hover:opacity-100">
+        {video.occasion ? (
+          <span className="font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[2px] text-gold-soft max-md:text-[8px]">
+            {video.occasion}
+          </span>
+        ) : null}
+        <h3 className="font-[family-name:var(--font-display)] text-[20px] font-medium leading-[1.2] text-bone drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] max-md:text-[16px]">
+          {video.title}
+        </h3>
+        {video.date ? (
+          <time
+            dateTime={video.iso ?? ""}
+            className="font-[family-name:var(--font-ui)] text-[10px] tracking-[1.5px] text-bone/80 max-md:text-[9px]"
+          >
+            {video.date}
+          </time>
+        ) : null}
+      </figcaption>
+    </figure>
   );
 }

@@ -9,7 +9,7 @@ import {
   submitPrayerRequest,
   subscribeNewsletter,
   type FormState,
-} from "@/app/connect/actions";
+} from "@/app/(frontend)/connect/actions";
 
 function Honeypot() {
   return (

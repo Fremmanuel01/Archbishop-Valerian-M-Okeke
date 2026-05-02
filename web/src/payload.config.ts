@@ -57,6 +57,10 @@ export default buildConfig({
         process.env.DATABASE_URL ??
         process.env.POSTGRES_URL,
     },
+    // TODO(phase 8): switch to managed migrations (`payload migrate:create`,
+    // `payload migrate`) once the schema settles. Until then, push the schema
+    // directly so the first production boot can create its own tables.
+    push: true,
   }),
   plugins: [
     vercelBlobStorage({

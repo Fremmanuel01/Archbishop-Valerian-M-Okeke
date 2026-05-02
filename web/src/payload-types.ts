@@ -73,6 +73,7 @@ export interface Config {
     'pastoral-visits': PastoralVisit;
     'gallery-images': GalleryImage;
     'biography-sections': BiographySection;
+    'featured-videos': FeaturedVideo;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     'pastoral-visits': PastoralVisitsSelect<false> | PastoralVisitsSelect<true>;
     'gallery-images': GalleryImagesSelect<false> | GalleryImagesSelect<true>;
     'biography-sections': BiographySectionsSelect<false> | BiographySectionsSelect<true>;
+    'featured-videos': FeaturedVideosSelect<false> | FeaturedVideosSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -292,6 +294,39 @@ export interface BiographySection {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Pastoral videos shown in the homepage 'Pastoral Activities in Motion' grid. Up to nine entries are rendered, ordered by the 'order' field (lower first).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "featured-videos".
+ */
+export interface FeaturedVideo {
+  id: number;
+  title: string;
+  /**
+   * The 11-character video ID from the YouTube URL — e.g. 'ZbrwZq-54hI' from https://youtu.be/ZbrwZq-54hI. Do NOT paste the full URL.
+   */
+  youtubeId: string;
+  /**
+   * Small uppercase eyebrow above the title, e.g. 'Sacred Orders · Onitsha'.
+   */
+  occasion?: string | null;
+  /**
+   * Optional — formatted as 'Month Year' on the tile. Leave blank if no specific date applies.
+   */
+  date?: string | null;
+  /**
+   * Optional, e.g. '1:12:40'. Shows in the bottom-right corner of the tile.
+   */
+  duration?: string | null;
+  /**
+   * Lower numbers appear first in the grid. Use the same number for ties; ties resolve by creation order.
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -338,6 +373,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'biography-sections';
         value: number | BiographySection;
+      } | null)
+    | ({
+        relationTo: 'featured-videos';
+        value: number | FeaturedVideo;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -481,6 +520,21 @@ export interface BiographySectionsSelect<T extends boolean = true> {
   eyebrow?: T;
   order?: T;
   body?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "featured-videos_select".
+ */
+export interface FeaturedVideosSelect<T extends boolean = true> {
+  title?: T;
+  youtubeId?: T;
+  occasion?: T;
+  date?: T;
+  duration?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

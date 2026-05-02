@@ -12,6 +12,7 @@ import { DiaryEntries } from "./payload/collections/DiaryEntries";
 import { PastoralVisits } from "./payload/collections/PastoralVisits";
 import { GalleryImages } from "./payload/collections/GalleryImages";
 import { BiographySections } from "./payload/collections/BiographySections";
+import { FeaturedVideos } from "./payload/collections/FeaturedVideos";
 import { Homepage } from "./payload/globals/Homepage";
 import { Programme } from "./payload/globals/Programme";
 
@@ -43,6 +44,7 @@ export default buildConfig({
     PastoralVisits,
     GalleryImages,
     BiographySections,
+    FeaturedVideos,
   ],
   globals: [Homepage, Programme],
   secret: payloadSecret,

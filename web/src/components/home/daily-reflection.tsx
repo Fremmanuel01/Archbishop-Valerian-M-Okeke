@@ -1,6 +1,25 @@
 import { Roman } from "@/components/editorial";
 
+const TIMEZONE = "Africa/Lagos";
+
+function todayInLagos() {
+  const now = new Date();
+  const dayMonth = new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    timeZone: TIMEZONE,
+  }).format(now);
+  const iso = new Intl.DateTimeFormat("en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone: TIMEZONE,
+  }).format(now);
+  return { dayMonth, iso };
+}
+
 export function DailyReflection() {
+  const { dayMonth, iso } = todayInLagos();
   return (
     <section
       id="reflections"
@@ -11,7 +30,7 @@ export function DailyReflection() {
         <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">
           Reflection for the day
           <strong className="mt-1.5 block font-[family-name:var(--font-display)] text-[26px] font-medium italic normal-case tracking-normal text-ink">
-            <time dateTime="2026-04-12">12 April</time>
+            <time dateTime={iso}>{dayMonth}</time>
           </strong>
         </p>
         <blockquote className="text-center font-[family-name:var(--font-display)] text-[30px] italic leading-[1.4] text-ink max-lg:text-[22px]">

@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getPastoralLetters, slugify } from "@/lib/cms";
+import { SITE_URL } from "@/lib/site";
 
-const BASE = "https://archbishop-valerian-m-okeke.vercel.app";
+const BASE = SITE_URL;
 
 const STATIC_ROUTES = [
   "",

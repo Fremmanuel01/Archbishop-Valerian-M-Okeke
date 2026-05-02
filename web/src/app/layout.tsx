@@ -3,6 +3,7 @@ import { Cormorant_Garamond, EB_Garamond, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SmoothScroll } from "@/components/smooth-scroll";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -29,7 +30,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://archbishop-valerian-m-okeke.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
     template: "%s — Archbishop of Onitsha",

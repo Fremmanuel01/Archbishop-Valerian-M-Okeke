@@ -49,7 +49,11 @@ export function PastoralMotion() {
           they unfolded across the Archdiocese.
         </p>
 
-        <div className="mt-20 grid grid-cols-[1.7fr_1fr] gap-12 max-lg:grid-cols-1 max-lg:gap-10 max-lg:mt-14">
+        <div
+          className={`mt-20 grid gap-12 max-lg:grid-cols-1 max-lg:gap-10 max-lg:mt-14 ${
+            queue.length > 0 ? "grid-cols-[1.7fr_1fr]" : "grid-cols-1"
+          }`}
+        >
           <div>
             <div className="relative border border-[color:var(--rule)] bg-bone-deep p-[14px]">
               <span
@@ -120,6 +124,7 @@ export function PastoralMotion() {
             </div>
           </div>
 
+          {queue.length > 0 && (
           <aside aria-label="Queued videos">
             <p className="mb-5 flex items-center gap-3 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
               <span aria-hidden className="block h-px w-6 bg-gold" />
@@ -165,6 +170,7 @@ export function PastoralMotion() {
               ))}
             </ul>
           </aside>
+          )}
         </div>
       </div>
     </section>

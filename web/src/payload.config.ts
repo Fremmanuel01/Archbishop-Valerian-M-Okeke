@@ -70,7 +70,13 @@ export default buildConfig({
       // on the next deploy.
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
       collections: {
-        [Media.slug]: true,
+        [Media.slug]: {
+          // Browser uploads directly to Vercel Blob instead of routing
+          // through /api/media. Required because Vercel serverless
+          // functions cap request bodies at 4.5 MB and Sharp resizing
+          // amplifies that further.
+          clientUploads: true,
+        },
       },
       token: process.env.BLOB_READ_WRITE_TOKEN ?? "",
     }),

@@ -9,12 +9,11 @@ export const Media: CollectionConfig = {
     group: "Content",
   },
   upload: {
-    staticDir: "media",
-    imageSizes: [
-      { name: "thumbnail", width: 400, height: undefined, position: "centre" },
-      { name: "card", width: 1024, height: undefined, position: "centre" },
-      { name: "hero", width: 1920, height: undefined, position: "centre" },
-    ],
+    // Files are uploaded directly to Vercel Blob (clientUploads on the
+    // adapter), so Payload never holds the bytes server-side. That means
+    // Sharp can't generate imageSizes variants — and we don't need them
+    // anyway: every consumer of these images on the storefront goes
+    // through next/image, which resizes on demand at the CDN edge.
     mimeTypes: ["image/*"],
   },
   fields: [

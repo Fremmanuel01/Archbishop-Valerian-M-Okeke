@@ -1,5 +1,10 @@
 import type { MetadataRoute } from "next";
-import { getPastoralLetters, slugify } from "@/lib/cms";
+import {
+  getPastoralLetters,
+  getHomilies,
+  getMessages,
+  slugify,
+} from "@/lib/cms";
 import { SITE_URL } from "@/lib/site";
 
 const BASE = SITE_URL;
@@ -32,18 +37,37 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: path === "" ? 1 : 0.7,
   }));
 
-  let letterEntries: MetadataRoute.Sitemap = [];
-  try {
-    const letters = await getPastoralLetters();
-    letterEntries = letters.map((letter) => ({
-      url: `${BASE}/pastoral-letters/${letter.id}-${slugify(letter.title)}`,
-      lastModified: letter.date ? new Date(letter.date) : now,
-      changeFrequency: "yearly",
-      priority: 0.8,
-    }));
-  } catch {
-    // CMS unavailable at build; ship static entries only
-  }
+  const [letters, homilies, messages] = await Promise.all([
+    getPastoralLetters(),
+    getHomilies(),
+    getMessages(),
+  ]);
 
-  return [...staticEntries, ...letterEntries];
+  const letterEntries: MetadataRoute.Sitemap = letters.map((letter) => ({
+    url: `${BASE}/pastoral-letters/${letter.id}-${slugify(letter.title)}`,
+    lastModified: letter.date ? new Date(letter.date) : now,
+    changeFrequency: "yearly",
+    priority: 0.8,
+  }));
+
+  const homilyEntries: MetadataRoute.Sitemap = homilies.map((homily) => ({
+    url: `${BASE}/reflections/${homily.id}-${slugify(homily.title)}`,
+    lastModified: homily.date ? new Date(homily.date) : now,
+    changeFrequency: "yearly",
+    priority: 0.7,
+  }));
+
+  const messageEntries: MetadataRoute.Sitemap = messages.map((message) => ({
+    url: `${BASE}/messages/${message.id}-${slugify(message.title)}`,
+    lastModified: message.date ? new Date(message.date) : now,
+    changeFrequency: "yearly",
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticEntries,
+    ...letterEntries,
+    ...homilyEntries,
+    ...messageEntries,
+  ];
 }

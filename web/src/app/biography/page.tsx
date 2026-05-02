@@ -60,35 +60,110 @@ const MILESTONES: Milestone[] = [
   },
 ];
 
-// Historical pastoral letters not yet in the CMS. Remove as they are added.
-const LEGACY_LETTERS: Array<{ year: number; title: string }> = [
-  { year: 2004, title: "That They May Have Life" },
-  { year: 2005, title: "The Measure of Love" },
-  { year: 2005, title: "Our Glorious Heritage" },
+type LegacyLetter = { year: number; title: string; pdf?: string };
+
+// Historical pastoral letters not yet in the CMS. PDFs are mirrored from the
+// legacy archive at /pastoral-letters/legacy/. Remove as they are added.
+const LEGACY_LETTERS: LegacyLetter[] = [
+  {
+    year: 2004,
+    title: "That They May Have Life",
+    pdf: "/pastoral-letters/legacy/2004-that-they-may-have-life.pdf",
+  },
+  {
+    year: 2005,
+    title: "The Measure of Love",
+    pdf: "/pastoral-letters/legacy/2005-the-measure-of-love.pdf",
+  },
+  {
+    year: 2005,
+    title: "Our Glorious Heritage",
+    pdf: "/pastoral-letters/legacy/2005-our-glorious-heritage.pdf",
+  },
   { year: 2006, title: "If Only You Have Faith" },
   { year: 2006, title: "Go Make Disciples of All Nations" },
-  { year: 2007, title: "You and the Common Good" },
-  { year: 2008, title: "The Family and Human Life" },
-  { year: 2009, title: "Our Greatest Legacy" },
+  {
+    year: 2007,
+    title: "You and the Common Good",
+    pdf: "/pastoral-letters/legacy/2007-you-and-the-common-good.pdf",
+  },
+  {
+    year: 2008,
+    title: "The Family and Human Life",
+    pdf: "/pastoral-letters/legacy/2008-the-family-and-human-life.pdf",
+  },
+  {
+    year: 2009,
+    title: "Our Greatest Legacy",
+    pdf: "/pastoral-letters/legacy/2009-our-greatest-legacy.pdf",
+  },
   { year: 2010, title: "The Splendour of Prayer" },
-  { year: 2011, title: "Gratitude" },
-  { year: 2012, title: "The Dignity of Labour" },
-  { year: 2013, title: "Living Hope" },
-  { year: 2014, title: "Catholic Education and National Development" },
+  {
+    year: 2011,
+    title: "Gratitude",
+    pdf: "/pastoral-letters/legacy/2011-gratitude.pdf",
+  },
+  {
+    year: 2012,
+    title: "The Dignity of Labour",
+    pdf: "/pastoral-letters/legacy/2012-the-dignity-of-labour.pdf",
+  },
+  {
+    year: 2013,
+    title: "Living Hope",
+    pdf: "/pastoral-letters/legacy/2013-living-hope.pdf",
+  },
+  {
+    year: 2014,
+    title: "Catholic Education and National Development",
+    pdf: "/pastoral-letters/legacy/2014-catholic-education-and-national-development.pdf",
+  },
   { year: 2015, title: "Democracy and Christian Values" },
-  { year: 2016, title: "Blessed Are the Merciful" },
-  { year: 2017, title: "Blessed Are the Peacemakers" },
-  { year: 2018, title: "Mary Our Mother" },
-  { year: 2019, title: "The Holy Eucharist: Our Strength" },
-  { year: 2020, title: "The Sacraments: Our Treasure" },
-  { year: 2021, title: "The Priesthood: Gift and Sacrifice" },
-  { year: 2022, title: "The Holy Spirit: Man's Helper and Friend" },
+  {
+    year: 2016,
+    title: "Blessed Are the Merciful",
+    pdf: "/pastoral-letters/legacy/2016-blessed-are-the-merciful.pdf",
+  },
+  {
+    year: 2017,
+    title: "Blessed Are the Peacemakers",
+    pdf: "/pastoral-letters/legacy/2017-blessed-are-the-peacemakers.pdf",
+  },
+  {
+    year: 2018,
+    title: "Mary Our Mother",
+    pdf: "/pastoral-letters/legacy/2018-mary-our-mother.pdf",
+  },
+  {
+    year: 2019,
+    title: "The Holy Eucharist: Our Strength",
+    pdf: "/pastoral-letters/legacy/2019-the-holy-eucharist-our-strength.pdf",
+  },
+  {
+    year: 2020,
+    title: "The Sacraments: Our Treasure",
+    pdf: "/pastoral-letters/legacy/2020-the-sacraments-our-treasure.pdf",
+  },
+  {
+    year: 2021,
+    title: "The Priesthood: Gift and Sacrifice",
+    pdf: "/pastoral-letters/legacy/2021-the-priesthood-gift-and-sacrifice.pdf",
+  },
+  {
+    year: 2022,
+    title: "The Holy Spirit: Man's Helper and Friend",
+    pdf: "/pastoral-letters/legacy/2022-the-holy-spirit.pdf",
+  },
 ];
 
 export default async function BiographyPage() {
   const cmsLetters = await getPastoralLetters();
-  const cmsEntries = cmsLetters
-    .map((l) => ({ year: yearOf(l.date) ?? 0, title: l.title }))
+  const cmsEntries: LegacyLetter[] = cmsLetters
+    .map((l) => ({
+      year: yearOf(l.date) ?? 0,
+      title: l.title,
+      pdf: l.pdf_url ?? undefined,
+    }))
     .filter((l) => l.year > 0);
   const seenYearTitles = new Set(
     cmsEntries.map((l) => `${l.year}-${l.title.toLowerCase()}`),
@@ -209,9 +284,28 @@ export default async function BiographyPage() {
               <span className="font-[family-name:var(--font-display)] text-[22px] italic text-gold">
                 <Roman year={l.year} />
               </span>
-              <span className="text-[17px] leading-[1.4] text-ink">
-                {l.title}
-              </span>
+              {l.pdf ? (
+                <a
+                  href={l.pdf}
+                  target="_blank"
+                  rel="noopener"
+                  className="group flex flex-1 items-baseline gap-2 text-[17px] leading-[1.4] text-ink transition-colors hover:text-gold"
+                >
+                  <span className="border-b border-transparent group-hover:border-gold/60">
+                    {l.title}
+                  </span>
+                  <span
+                    aria-hidden
+                    className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.5px] text-gold opacity-70 group-hover:opacity-100"
+                  >
+                    PDF
+                  </span>
+                </a>
+              ) : (
+                <span className="text-[17px] leading-[1.4] text-ink-soft">
+                  {l.title}
+                </span>
+              )}
             </li>
           ))}
         </ul>

@@ -138,12 +138,12 @@ export function PastoralMotion() {
                     onClick={() => selectVideo(video)}
                     className="group flex w-full gap-4 border-b border-stone pb-5 text-left transition-opacity hover:opacity-95"
                   >
-                    <span className="relative block aspect-video w-[132px] flex-shrink-0 bg-ink">
+                    <span className="relative block aspect-video w-[132px] flex-shrink-0 bg-ink max-md:w-[112px]">
                       <Image
                         src={thumb(video.id)}
                         alt=""
                         fill
-                        sizes="132px"
+                        sizes="(max-width: 768px) 112px, 132px"
                         className="object-cover"
                       />
                       <span

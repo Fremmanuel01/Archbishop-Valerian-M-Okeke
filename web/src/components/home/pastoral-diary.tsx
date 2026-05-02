@@ -53,7 +53,7 @@ export async function PastoralDiary() {
               aria-hidden
               className="absolute -bottom-px -right-px h-7 w-7 border-b-2 border-r-2 border-gold"
             />
-            <div className="relative aspect-[4/5] w-full bg-stone max-lg:aspect-[3/2]">
+            <div className="relative aspect-[4/5] w-full bg-stone max-lg:aspect-[4/3]">
               <Image
                 src={entries[0]?.coverImageUrl ?? "/hero.avif"}
                 alt={

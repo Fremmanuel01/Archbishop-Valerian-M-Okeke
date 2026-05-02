@@ -68,7 +68,7 @@ export function SiteFooter() {
               <abbr title="10">X</abbr>:10
             </p>
 
-            <ul className="mt-8 flex items-center gap-3" aria-label="Social media">
+            <ul className="mt-8 flex items-center gap-3 max-md:gap-4" aria-label="Social media">
               {SOCIAL.map((s) => (
                 <li key={s.label}>
                   <a

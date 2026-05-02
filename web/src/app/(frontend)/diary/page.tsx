@@ -186,7 +186,7 @@ function EntryCard({ entry }: { entry: ProgrammeEntry }) {
           href={googleCalendarUrl(entry)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 border border-[color:var(--rule)] bg-bone px-4 py-2 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.6px] text-ink transition-colors hover:border-gold hover:text-gold"
+          className="inline-flex min-h-[44px] items-center gap-2 border border-[color:var(--rule)] bg-bone px-4 py-2.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.6px] text-ink transition-colors hover:border-gold hover:text-gold"
         >
           <svg
             viewBox="0 0 24 24"

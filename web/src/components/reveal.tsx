@@ -18,27 +18,30 @@ export function Reveal({
   once = true,
 }: RevealProps) {
   const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  // Start visible so SSR markup is paintable immediately and slow-JS
+  // devices don't see an empty page header. Only hide-then-animate when we
+  // know the element is below the fold and the browser supports IO.
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    if (typeof IntersectionObserver === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setVisible(true);
-      return;
-    }
+    const rect = node.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (inView) return; // already visible — leave it; no animation needed.
 
+    setHidden(true);
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            setVisible(true);
+            setHidden(false);
             if (once) observer.disconnect();
           } else if (!once) {
-            setVisible(false);
+            setHidden(true);
           }
         }
       },
@@ -50,8 +53,8 @@ export function Reveal({
   }, [once]);
 
   const style: React.CSSProperties = {
-    opacity: visible ? 1 : 0,
-    transform: visible ? "translateY(0)" : "translateY(14px)",
+    opacity: hidden ? 0 : 1,
+    transform: hidden ? "translateY(14px)" : "translateY(0)",
     transition:
       "opacity 800ms cubic-bezier(0.22, 1, 0.36, 1), transform 800ms cubic-bezier(0.22, 1, 0.36, 1)",
     transitionDelay: `${delay}ms`,

@@ -93,8 +93,12 @@ export default async function LetterPage({
       <PageSection>
         <div className="grid grid-cols-[180px_minmax(0,1fr)_220px] gap-12 max-xl:grid-cols-[160px_minmax(0,1fr)] max-lg:grid-cols-1 max-lg:gap-10">
           {/* ─── Left rail: metadata ─────────── */}
-          <aside className="max-lg:order-2">
-            <div className="sticky top-32 space-y-5 font-[family-name:var(--font-ui)] text-[11px] text-ink-soft">
+          {/* On mobile we keep this as order-1 so the PDF download and
+              "All Pastoral Letters" links sit above the long-form body
+              instead of at the very end of a 30-min read. Sticky only
+              on desktop where it has parallel scroll context. */}
+          <aside>
+            <div className="space-y-5 font-[family-name:var(--font-ui)] text-[11px] text-ink-soft lg:sticky lg:top-32 max-lg:flex max-lg:flex-wrap max-lg:items-baseline max-lg:gap-x-8 max-lg:gap-y-4 max-lg:space-y-0 max-lg:border-y max-lg:border-[color:var(--rule)] max-lg:py-5">
               <div>
                 <p className="text-[10px] font-semibold uppercase tracking-[2.4px] text-gold-text">
                   Pastoral Letter

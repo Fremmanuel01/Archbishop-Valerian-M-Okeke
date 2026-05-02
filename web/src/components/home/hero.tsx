@@ -69,7 +69,7 @@ export async function Hero() {
       <SiteHeader />
 
       {/* ── Content ─────────────────────────────────────────── */}
-      <div className="relative z-10 flex min-h-[100svh] items-center px-14 pb-20 pt-40 max-lg:min-h-0 max-lg:items-start max-lg:bg-bone max-lg:pb-20 max-lg:pt-[58svh] max-md:px-6 max-md:pt-[55svh]">
+      <div className="relative z-10 flex min-h-[100svh] items-center px-14 pb-20 pt-40 max-lg:min-h-0 max-lg:items-start max-lg:pb-20 max-lg:pt-[58svh] max-md:px-6 max-md:pt-[55svh]">
         <div className="max-w-[560px]">
           <p className="mb-8 flex items-center gap-[18px] font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[3px] text-gold-text max-md:mb-6">
             <span aria-hidden className="block h-px w-12 bg-gold" />

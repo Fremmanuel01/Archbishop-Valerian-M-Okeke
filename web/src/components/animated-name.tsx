@@ -33,7 +33,7 @@ function AnimatedText({
 
 export function AnimatedName() {
   return (
-    <h1 className="mb-8 font-[family-name:var(--font-display)] text-[clamp(56px,5.2vw,96px)] font-medium leading-[0.98] tracking-[-0.02em] text-ink max-md:mb-6 max-md:text-[52px] max-md:leading-[1.05]">
+    <h1 className="mb-8 font-[family-name:var(--font-display)] text-[clamp(56px,5.2vw,96px)] font-medium leading-[0.98] tracking-[-0.02em] text-ink max-md:mb-6 max-md:text-[clamp(40px,12vw,52px)] max-md:leading-[1.05]">
       <AnimatedText
         text="Valerian Maduka"
         startDelay={200}

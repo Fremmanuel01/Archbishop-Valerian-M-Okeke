@@ -1,3 +1,11 @@
+type InputMode =
+  | "text"
+  | "email"
+  | "tel"
+  | "search"
+  | "url"
+  | "numeric";
+
 export function FormField({
   id,
   label,
@@ -6,6 +14,7 @@ export function FormField({
   placeholder,
   helper,
   autoComplete,
+  inputMode,
 }: {
   id: string;
   label: string;
@@ -14,7 +23,12 @@ export function FormField({
   placeholder?: string;
   helper?: string;
   autoComplete?: string;
+  inputMode?: InputMode;
 }) {
+  // Map input type → sensible inputMode default so iOS shows the right
+  // keyboard on first focus without having to remember to set it.
+  const resolvedInputMode: InputMode | undefined =
+    inputMode ?? (type === "email" ? "email" : type === "tel" ? "tel" : undefined);
   return (
     <div className="flex flex-col">
       <label
@@ -35,6 +49,7 @@ export function FormField({
         required={required}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        inputMode={resolvedInputMode}
         className="min-h-12 border border-stone bg-bone px-4 py-3 font-[family-name:var(--font-body)] text-[18px] text-ink placeholder:text-ink-soft/50 focus:border-gold focus:outline-none"
       />
       {helper ? (
@@ -51,6 +66,7 @@ export function TextArea({
   required,
   placeholder,
   helper,
+  autoComplete,
 }: {
   id: string;
   label: string;
@@ -58,6 +74,7 @@ export function TextArea({
   required?: boolean;
   placeholder?: string;
   helper?: string;
+  autoComplete?: string;
 }) {
   return (
     <div className="flex flex-col">
@@ -78,7 +95,8 @@ export function TextArea({
         rows={rows}
         required={required}
         placeholder={placeholder}
-        className="border border-stone bg-bone px-4 py-3 font-[family-name:var(--font-body)] text-[18px] leading-[1.6] text-ink placeholder:text-ink-soft/50 focus:border-gold focus:outline-none"
+        autoComplete={autoComplete}
+        className="min-h-[160px] border border-stone bg-bone px-4 py-3 font-[family-name:var(--font-body)] text-[18px] leading-[1.6] text-ink placeholder:text-ink-soft/50 focus:border-gold focus:outline-none max-md:min-h-[140px]"
       />
       {helper ? (
         <p className="mt-2 text-[13px] text-ink-soft">{helper}</p>

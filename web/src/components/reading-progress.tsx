@@ -36,7 +36,7 @@ export function ReadingProgress({ targetId }: { targetId?: string }) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-[2px] bg-transparent"
+      className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[2px] bg-transparent"
     >
       <div
         className="h-full bg-gold transition-[width] duration-100 ease-out"

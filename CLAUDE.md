@@ -3,6 +3,12 @@
 Operating context for Claude / AI agents working in this repository.
 **Read this before doing anything.**
 
+> **Heads-up:** `web/AGENTS.md` (re-exported as `web/CLAUDE.md`) warns:
+> *"This is NOT the Next.js you know — APIs, conventions, and file structure may
+> differ from your training data. Read the relevant guide in
+> `web/node_modules/next/dist/docs/` before writing any code."* Heed it before
+> reaching for App Router patterns from memory.
+
 ---
 
 ## What this project is
@@ -26,12 +32,12 @@ ornament. Light mode only.
 | 0 — Content scraping | ✅ Done | 111 pages, 63 images, 20 PDFs from `archbishopvalokeke.org` |
 | 1 — Design exploration | ✅ Done | Design system locked, homepage mockup approved |
 | 2 — Sitemap / IA | ✅ Drafted | See "IA" below — not yet finalised |
-| 3 — Design system in code | ⏳ Next | Port mockup tokens into Tailwind v4 theme + shadcn |
-| 4 — Next.js scaffold | ✅ Bootstrapped | `web/` exists, no shadcn/components yet |
-| 5 — Page implementation | ⏳ Pending | |
-| 6 — CMS integration | ⏳ Pending | Pull from existing Archbishop Library API |
+| 3 — Design system in code | ✅ Done | Tokens live in `web/src/app/globals.css`; shadcn was **not** installed — components are hand-built in `web/src/components/` |
+| 4 — Next.js scaffold | ✅ Done | Next.js 16 App Router with Turbopack, Tailwind v4, `next/font` |
+| 5 — Page implementation | ✅ Done | Routes: `biography`, `coat-of-arms`, `connect`, `diary`, `his-episcopacy`, `messages`, `other-teachings`, `pastoral-letters`, `pastoral-visits`, `photo-gallery`, `reflections` |
+| 6 — CMS integration | ✅ Done | `web/src/lib/cms.ts` reads pastoral letters / homilies / writings from the Archbishop Library API |
 | 7 — GitHub repo + deploy | ✅ Done | GitHub: `Fremmanuel01/Archbishop-Valerian-M-Okeke` (public). Vercel project: `emmanuel-nwabufos-projects/archbishop-valerian-m-okeke` (Deployment Protection disabled — public). Live: <https://archbishop-valerian-m-okeke.vercel.app>. |
-| 8 — CMS admin dashboard  | ⏳ Future | Edit site content (programme, biography, reflections) from one panel. Writes to the same backend that Phases 5–6 read from via `src/lib/*.ts`. |
+| 8 — CMS admin dashboard  | 🚧 In progress | Payload CMS 3.82 mounted at `(payload)/admin` with Postgres. Collections: `Users`, `Media`, `DiaryEntries`, `PastoralVisits`, `GalleryImages`, `BiographySections`. Globals: `Homepage`, `Programme`. Storefront pages still mostly read static data — wiring them through Payload is the open work. |
 
 **The latest approved artifact** is the homepage mockup at:
 - `docs/mockups/homepage-v1.html`
@@ -66,11 +72,41 @@ Archbishop-Valerian-M-Okeke/
 │   └── videos/                      (empty — only 1 embed catalogued in inventory)
 ├── scripts/
 │   └── scrape.js                    (the scraper — re-runnable)
-└── web/                       ← Next.js 16 app (NOT yet styled)
+└── web/                       ← Next.js 16 app (the deployable site)
+    ├── AGENTS.md / CLAUDE.md        (read first — Next.js may not match training data)
     ├── package.json
-    ├── src/app/                     (default Next.js scaffold, untouched)
-    ├── tsconfig.json
-    └── …
+    ├── next.config.ts               (wraps config with `withPayload`, sets image hosts + security headers)
+    ├── src/
+    │   ├── app/
+    │   │   ├── layout.tsx, page.tsx, globals.css, sitemap.ts, robots.ts
+    │   │   ├── (payload)/           Payload admin route group
+    │   │   │   ├── admin/[[...segments]]/   admin UI
+    │   │   │   ├── api/[...slug]/           Payload REST API
+    │   │   │   ├── api/graphql, api/graphql-playground
+    │   │   │   ├── custom.scss
+    │   │   │   └── layout.tsx
+    │   │   └── biography, coat-of-arms, connect, diary, his-episcopacy,
+    │   │       messages, other-teachings, pastoral-letters, pastoral-visits,
+    │   │       photo-gallery, reflections    (storefront routes)
+    │   ├── components/              hand-built (no shadcn)
+    │   │   ├── home/                hero, daily-reflection, pastoral-diary, …
+    │   │   ├── shell/               app-header, mega-nav, nav-overlay, page-shell
+    │   │   ├── prose.tsx            sanitised HTML/Markdown renderer
+    │   │   ├── connect-forms.tsx, form.tsx, letter-toc.tsx, reading-progress.tsx,
+    │   │   │   reveal.tsx, smooth-scroll.tsx, editorial.tsx, crest.tsx, icons.tsx,
+    │   │   │   animated-name.tsx
+    │   ├── data/                    static content (e.g. pastoral-programme.ts)
+    │   ├── lib/
+    │   │   ├── cms.ts               read-only client for Archbishop Library API
+    │   │   ├── resend.ts            transactional email
+    │   │   ├── programme.ts         data-access layer (currently static, designed to swap to CMS)
+    │   │   ├── gallery.ts, gallery.json, featured-videos.ts
+    │   ├── payload/
+    │   │   ├── collections/         Users, Media, DiaryEntries, PastoralVisits,
+    │   │   │                        GalleryImages, BiographySections
+    │   │   └── globals/             Homepage, Programme
+    │   └── payload.config.ts        Postgres adapter, Lexical editor, Sharp
+    └── tsconfig.json
 ```
 
 **Hard rule**: nothing in `scraped/` is hand-authored. Re-run
@@ -80,15 +116,19 @@ Archbishop-Valerian-M-Okeke/
 
 ## Tech stack (locked unless user says otherwise)
 
-- **Framework**: Next.js 16 (App Router, Turbopack) in `web/`
+- **Framework**: Next.js 16 (App Router, Turbopack), React 19 — in `web/`
 - **Language**: TypeScript, strict
-- **Styling**: Tailwind CSS v4 (`@theme inline` tokens, no `tailwind.config.ts`)
-- **Components**: shadcn/ui (Radix base, `new-york` style) — **not yet installed**
-- **Fonts**: Loaded via `next/font` (Google Fonts)
-- **Deployment target**: Vercel (Fluid Compute, default)
-- **CMS data source**: existing Archbishop Library API at
-  `https://peachpuff-tiger-996145.hostingersite.com/api/{pastoral-letters,homilies,writings}` —
-  read-only consumption from this site.
+- **Styling**: Tailwind CSS v4 (`@theme inline` tokens in `src/app/globals.css`, no `tailwind.config.ts`)
+- **Components**: hand-built in `src/components/` — **shadcn was never installed**. Don't reach for `lucide-react` or shadcn primitives without checking; use inline SVG (see `src/components/icons.tsx`, `crest.tsx`).
+- **Fonts**: Loaded via `next/font/google` in `src/app/layout.tsx`
+- **Admin CMS** (this repo): Payload CMS 3.82 (`@payloadcms/next`) mounted under `(payload)/admin`, with `@payloadcms/db-postgres` and Lexical editor. Image processing via `sharp`.
+- **External CMS data source** (read-only): Archbishop Library API at
+  `https://peachpuff-tiger-996145.hostingersite.com/api/{pastoral-letters,homilies,writings}` — fetched in `src/lib/cms.ts` with `next: { revalidate: 3600 }`.
+- **Email**: Resend (`src/lib/resend.ts`) for the Connect / prayer-request / contact forms.
+- **Prose rendering**: `marked` + `sanitize-html` (see `src/components/prose.tsx`).
+- **Smooth scroll / motion**: `lenis` (see `src/components/smooth-scroll.tsx`, `reveal.tsx`).
+- **Telemetry**: `@vercel/analytics` and `@vercel/speed-insights`.
+- **Deployment target**: Vercel (Fluid Compute, default). Root directory: `web`.
 - **Node version**: 20.x (project defaults to whatever's installed; CI not set up yet)
 
 ---
@@ -210,9 +250,9 @@ won't change.
 
 ## Conventions
 
-- **No emoji as icons.** Use SVG (`lucide-react` once shadcn is installed) or
-  inline `<svg>`. The Latin cross `✠` character is forbidden — use the inline
-  SVG path from `docs/mockups/homepage-v1.html` (the footer watermark).
+- **No emoji as icons.** Use inline `<svg>` (see `src/components/icons.tsx` and
+  `crest.tsx`). The Latin cross `✠` character is forbidden — use the inline SVG
+  path from `docs/mockups/homepage-v1.html` (the footer watermark).
 - **Roman numerals must be wrapped** in `<abbr title="...">` for screen readers
 - **Latin tag/heading text** must be wrapped in `<span lang="la">` so screen
   readers don't pronounce it as English
@@ -228,43 +268,62 @@ won't change.
 
 ## Open questions / decisions still owed to the user
 
-1. GitHub repo: name `Archbishop-Valerian-M-Okeke`, public or **private**?
-2. Newsletter provider (Resend? ConvertKit? none?)
-3. Prayer-request submissions — store in CMS DB, email only, or third-party form?
-4. Should the site be **bilingual** English + Igbo eventually?
-5. The 5 pastoral letters with no original cover (IDs 2, 4, 5, 6, 22 in the
+1. Should the site be **bilingual** English + Igbo eventually?
+2. The 5 pastoral letters with no original cover (IDs 2, 4, 5, 6, 22 in the
    live CMS) — extract first page of PDF or wait for re-upload?
-6. Hero photo for the homepage — current mockup uses a gold-vestments
+3. Hero photo for the homepage — current mockup uses a gold-vestments
    cathedraticum shot. Should we commission proper portraits?
+4. Phase 8 hand-off: which storefront pages migrate from static `src/data/` /
+   the legacy Archbishop Library API to Payload first? (Programme is the
+   obvious first candidate — the data-access layer in `src/lib/programme.ts`
+   already anticipates the swap.)
+
+*(Resolved earlier: repo is public; Resend chosen for forms / email; Phase 7 deploy live.)*
 
 ---
 
 ## What NOT to do without asking
 
-- Run `git push` to anywhere (no remote exists yet)
-- Run `vercel link` / deploy commands
-- Install large UI libraries other than shadcn/ui
+- Push to `main` or any remote branch without explicit instruction
+- Add `Co-Authored-By: Claude` (or any Claude attribution) to commits or PRs
+- Run `vercel link` / deploy / promote commands
+- Install large UI libraries (shadcn was deliberately skipped — confirm before adding one now)
 - Touch the existing `Achbishop's library` project (sibling folder, separate)
 - Re-run `scripts/scrape.js` against the live legacy site (rate-limit caution)
 - Edit anything in `scraped/` by hand
-- Delete the homepage mockup HTML — it's the canonical design reference until
-  we ship Phase 3
+- Delete the homepage mockup HTML — it remains the canonical design reference
 
 ---
 
 ## Useful commands
 
 ```bash
-# Re-run the legacy scraper
+# --- Storefront / Next.js (run from web/) ---
+cd web
+npm install
+npm run dev          # start dev server on http://localhost:3000
+npm run build        # production build (also validates Payload + types)
+npm run start        # run the built app
+npm run lint         # eslint (eslint-config-next)
+
+# --- Payload CMS admin (run from web/) ---
+npm run payload                  # Payload CLI (e.g. `npm run payload migrate`)
+npm run generate:types           # writes web/src/payload/payload-types.ts
+npm run generate:importmap       # regenerate the admin importMap
+
+# --- Legacy scraper (run from repo root) ---
 node scripts/scrape.js
-node scripts/scrape.js --limit 5      # quick test
-
-# Start the Next.js dev server
-cd web && npm run dev
-
-# Re-render the homepage mockup screenshot (requires playwright from sibling repo)
-node /tmp/snap-onitsha.js             # legacy temp script — should be moved to docs/mockups/
+node scripts/scrape.js --limit 5     # quick test
 ```
+
+### Required environment variables (`web/.env.local`)
+
+- `PAYLOAD_SECRET` — required for Payload session signing
+- One of `DATABASE_URL_UNPOOLED`, `POSTGRES_URL_NON_POOLING`, `DATABASE_URL`,
+  or `POSTGRES_URL` — Postgres connection string (Payload prefers the unpooled
+  variant). See `web/src/payload.config.ts`.
+- `RESEND_API_KEY` — required for the Connect / contact / prayer-request forms
+- `RESEND_FROM` (optional) — defaults to `Archbishop's Office <onboarding@resend.dev>`
 
 ---
 

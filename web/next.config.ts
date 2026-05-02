@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { withPayload } from "@payloadcms/next/withPayload";
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -22,6 +23,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       new URL("https://res.cloudinary.com/dz2jhmos1/image/upload/**"),
       new URL("https://i.ytimg.com/vi/**"),
+      {
+        protocol: "https",
+        hostname: "*.public.blob.vercel-storage.com",
+        pathname: "/**",
+      },
     ],
     qualities: [70, 75, 92],
   },
@@ -35,4 +41,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPayload(nextConfig, { devBundleServerPackages: false });

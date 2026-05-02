@@ -1,42 +1,29 @@
 import Image from "next/image";
 import { Roman, SectionLabel } from "@/components/editorial";
+import { getRecentDiary, type DiaryEntry } from "@/lib/diary";
 
-type Entry = {
-  date: string;
-  iso: string;
-  year: number;
-  title: string;
-  summary: string;
-};
+const TIMEZONE = "Africa/Lagos";
 
-const ENTRIES: Entry[] = [
-  {
-    date: "06 April",
-    iso: "2026-04-06",
-    year: 2026,
-    title: "Easter Day Sermon at the Basilica of the Most Holy Trinity",
-    summary:
-      "The Risen Christ is not a memory we visit but a Presence we receive.",
-  },
-  {
-    date: "28 March",
-    iso: "2026-03-28",
-    year: 2026,
-    title: "Pastoral Visit to St Joseph's Seminary, Awka-Etiti",
-    summary:
-      "An afternoon of formation, prayer, and counsel with the seminarians.",
-  },
-  {
-    date: "14 March",
-    iso: "2026-03-14",
-    year: 2026,
-    title: "Confirmation Mass at Our Lady's Secondary School, Nnobi",
-    summary:
-      "Sealed with the gift of the Spirit, eighty-four young women received Confirmation.",
-  },
-];
+function formatDayMonth(iso: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "long",
+    timeZone: TIMEZONE,
+  }).format(d);
+}
 
-export function PastoralDiary() {
+function yearOf(iso: string): number {
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? new Date().getFullYear() : d.getFullYear();
+}
+
+export async function PastoralDiary() {
+  const entries = await getRecentDiary(3);
+  if (entries.length === 0) return null;
+
   return (
     <section
       id="diary"
@@ -68,8 +55,12 @@ export function PastoralDiary() {
             />
             <div className="relative aspect-[4/5] w-full bg-stone max-lg:aspect-[3/2]">
               <Image
-                src="/hero.avif"
-                alt="His Grace during a recent pastoral visit"
+                src={entries[0]?.coverImageUrl ?? "/hero.avif"}
+                alt={
+                  entries[0]?.coverImageUrl
+                    ? entries[0].title
+                    : "His Grace during a recent pastoral visit"
+                }
                 fill
                 sizes="(max-width: 1024px) 100vw, 560px"
                 className="object-cover"
@@ -78,22 +69,31 @@ export function PastoralDiary() {
           </div>
 
           <div>
-            {ENTRIES.map((entry) => (
+            {entries.map((entry: DiaryEntry) => (
               <article
-                key={entry.iso}
+                key={entry.id}
                 className="border-b border-stone py-7 last:border-b-0"
               >
                 <p className="mb-2 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold">
-                  <time dateTime={entry.iso}>
-                    {entry.date} · <Roman year={entry.year} />
+                  <time dateTime={entry.date}>
+                    {formatDayMonth(entry.date)} ·{" "}
+                    <Roman year={yearOf(entry.date)} />
                   </time>
+                  {entry.location ? (
+                    <>
+                      <span className="mx-2 opacity-50">·</span>
+                      {entry.location}
+                    </>
+                  ) : null}
                 </p>
                 <h3 className="mb-2 font-[family-name:var(--font-display)] text-2xl font-medium leading-[1.3] text-ink">
                   {entry.title}
                 </h3>
-                <p className="text-[15px] leading-[1.6] text-ink-soft opacity-85">
-                  {entry.summary}
-                </p>
+                {entry.excerpt ? (
+                  <p className="text-[15px] leading-[1.6] text-ink-soft opacity-85">
+                    {entry.excerpt}
+                  </p>
+                ) : null}
               </article>
             ))}
           </div>

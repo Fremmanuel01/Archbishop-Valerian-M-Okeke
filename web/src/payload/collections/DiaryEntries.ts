@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidatePath } from "next/cache";
 
 export const DiaryEntries: CollectionConfig = {
   slug: "diary-entries",
@@ -9,6 +10,20 @@ export const DiaryEntries: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "date", "location", "_status"],
     group: "Content",
+    description:
+      "Recent engagements shown on the homepage. The latest three published entries (sorted by date, newest first) appear in the 'Recent Engagements' section.",
+  },
+  hooks: {
+    afterChange: [
+      () => {
+        revalidatePath("/");
+      },
+    ],
+    afterDelete: [
+      () => {
+        revalidatePath("/");
+      },
+    ],
   },
   versions: { drafts: true },
   fields: [

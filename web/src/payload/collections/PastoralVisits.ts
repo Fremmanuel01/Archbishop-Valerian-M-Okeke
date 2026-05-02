@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidatePath } from "next/cache";
 
 export const PastoralVisits: CollectionConfig = {
   slug: "pastoral-visits",
@@ -7,6 +8,20 @@ export const PastoralVisits: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "date", "parish", "_status"],
     group: "Content",
+    description:
+      "Timeline of pastoral visits shown on /pastoral-visits, sorted by date (newest first). Use 'parish' for the place line and 'summary' for the purpose.",
+  },
+  hooks: {
+    afterChange: [
+      () => {
+        revalidatePath("/pastoral-visits");
+      },
+    ],
+    afterDelete: [
+      () => {
+        revalidatePath("/pastoral-visits");
+      },
+    ],
   },
   versions: { drafts: true },
   fields: [

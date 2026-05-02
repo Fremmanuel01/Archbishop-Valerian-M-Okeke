@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Roman } from "@/components/editorial";
 import { AnimatedName } from "@/components/animated-name";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
+import { getHomepage } from "@/lib/homepage";
 import { SiteHeader } from "./site-header";
 
 export async function Hero() {
-  const letters = await getPastoralLetters();
+  const [letters, homepage] = await Promise.all([
+    getPastoralLetters(),
+    getHomepage(),
+  ]);
   const latest = [...letters].sort((a, b) => {
     const ya = yearOf(a.date) ?? 0;
     const yb = yearOf(b.date) ?? 0;
@@ -37,8 +40,8 @@ export async function Hero() {
       {/* ── Photo anchored right, with its own inner bone fade ── */}
       <div className="absolute inset-y-0 right-0 w-[62%] overflow-hidden max-lg:inset-x-0 max-lg:inset-y-auto max-lg:top-0 max-lg:h-[58svh] max-lg:w-full">
         <Image
-          src="/hero.avif"
-          alt="His Grace Archbishop Valerian M. Okeke with episcopal crozier"
+          src={homepage.heroImageUrl ?? "/hero.avif"}
+          alt={homepage.heroImageAlt}
           fill
           priority
           sizes="(max-width: 1024px) 100vw, 62vw"
@@ -70,13 +73,12 @@ export async function Hero() {
         <div className="max-w-[560px]">
           <p className="mb-8 flex items-center gap-[18px] font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[3px] text-gold-text max-md:mb-6">
             <span aria-hidden className="block h-px w-12 bg-gold" />
-            His Grace · Most Reverend
+            {homepage.heroEyebrow}
           </p>
           <AnimatedName />
           <div aria-hidden className="mb-8 h-px w-16 bg-gold max-md:mb-6" />
           <p className="mb-10 max-w-[480px] font-[family-name:var(--font-display)] text-[20px] italic leading-[1.55] text-ink-soft max-md:mb-8 max-md:max-w-none max-md:text-[17px]">
-            Metropolitan Archbishop of Onitsha · Servant of the Lord&apos;s
-            vineyard since the year of Our Lord <Roman year={2003} />.
+            {homepage.heroSubheading}
           </p>
           <div className="flex flex-wrap items-center gap-4 max-md:gap-3">
             <Link

@@ -1,6 +1,8 @@
 import { FleuronDivider } from "@/components/editorial";
+import { getHomepage } from "@/lib/homepage";
 
-export function PullQuote() {
+export async function PullQuote() {
+  const { featuredQuote, featuredQuoteAttribution } = await getHomepage();
   return (
     <section
       aria-label="Pull quote"
@@ -14,12 +16,10 @@ export function PullQuote() {
         &ldquo;
       </div>
       <blockquote className="mx-auto max-w-[940px] font-[family-name:var(--font-display)] text-[clamp(32px,3.5vw,54px)] font-medium italic leading-[1.3] text-ink">
-        The Eucharist is not a doctrine we defend but a fire we receive,
-        <br />
-        and into which we are continually drawn.
+        {featuredQuote}
       </blockquote>
       <p className="mt-10 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[3px] text-gold">
-        — Most Rev. Valerian M. Okeke
+        {featuredQuoteAttribution}
       </p>
     </section>
   );

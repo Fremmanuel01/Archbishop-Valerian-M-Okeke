@@ -1,4 +1,5 @@
 import { Roman } from "@/components/editorial";
+import { getHomepage } from "@/lib/homepage";
 
 const TIMEZONE = "Africa/Lagos";
 
@@ -18,8 +19,9 @@ function todayInLagos() {
   return { dayMonth, iso };
 }
 
-export function DailyReflection() {
+export async function DailyReflection() {
   const { dayMonth, iso } = todayInLagos();
+  const { dailyReflectionQuote } = await getHomepage();
   return (
     <section
       id="reflections"
@@ -34,9 +36,7 @@ export function DailyReflection() {
           </strong>
         </p>
         <blockquote className="text-center font-[family-name:var(--font-display)] text-[30px] italic leading-[1.4] text-ink max-lg:text-[22px]">
-          &ldquo;Our finest gifts can become our worst sins or defects, if we do
-          not act with love and allow ourselves to be guided by the Holy
-          Spirit.&rdquo;
+          &ldquo;{dailyReflectionQuote}&rdquo;
           <span className="mt-4 block font-[family-name:var(--font-ui)] text-[11px] font-semibold not-italic uppercase tracking-[2px] text-gold">
             Pentecost Homily · <Roman year={2020} />
           </span>

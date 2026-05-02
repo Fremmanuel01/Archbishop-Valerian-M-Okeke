@@ -10,8 +10,10 @@ export const metadata: Metadata = {
     "A pastoral archive in photographs — feasts, visitations, ordinations, and the daily life of the Metropolitan See of Onitsha.",
 };
 
-export default function PhotoGalleryPage() {
-  const photos = getGalleryPhotos();
+export const revalidate = 3600;
+
+export default async function PhotoGalleryPage() {
+  const photos = await getGalleryPhotos();
 
   return (
     <PageShell

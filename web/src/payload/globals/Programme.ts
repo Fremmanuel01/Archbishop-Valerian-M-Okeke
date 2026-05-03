@@ -12,7 +12,11 @@ export const Programme: GlobalConfig = {
   hooks: {
     afterChange: [
       () => {
+        // Programme drives both the /diary calendar AND the homepage
+        // "Recent Engagements" section. Revalidate both so admin edits
+        // propagate within seconds.
         revalidatePath("/diary");
+        revalidatePath("/");
       },
     ],
   },

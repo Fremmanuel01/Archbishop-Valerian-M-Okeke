@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Roman, SectionLabel } from "@/components/editorial";
-import { getRecentDiary, type DiaryEntry } from "@/lib/diary";
+import { getUpcomingEngagements, type DiaryEntry } from "@/lib/diary";
 
 const TIMEZONE = "Africa/Lagos";
 
@@ -21,7 +21,7 @@ function yearOf(iso: string): number {
 }
 
 export async function PastoralDiary() {
-  const entries = await getRecentDiary(3);
+  const entries = await getUpcomingEngagements(3);
   if (entries.length === 0) return null;
 
   return (
@@ -36,11 +36,11 @@ export async function PastoralDiary() {
           id="diary-title"
           className="mb-4 mt-6 font-[family-name:var(--font-display)] text-[clamp(40px,4.5vw,72px)] font-medium leading-[1.05] tracking-[-0.015em]"
         >
-          Recent <em className="italic text-gold">Engagements</em>
+          Upcoming <em className="italic text-gold">Engagements</em>
         </h2>
         <p className="max-w-[680px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.55] text-ink-soft">
-          Among the people of God — homilies, pastoral visits, ordinations, and
-          ministries across the Archdiocese.
+          Coming soon among the people of God — Masses, pastoral visits,
+          ordinations, and ministries scheduled across the Archdiocese.
         </p>
 
         <div className="mt-20 grid grid-cols-2 items-center gap-20 max-lg:grid-cols-1 max-lg:gap-12 max-lg:mt-14">

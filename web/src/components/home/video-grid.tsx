@@ -125,16 +125,18 @@ function Tile({
     <figure
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className="group relative aspect-video overflow-hidden border border-[color:var(--rule)] bg-ink transition-[border-color] duration-300 hover:border-gold/60"
+      className="group relative aspect-video overflow-hidden border border-[color:var(--rule)] bg-ink"
     >
-      {/* Gold L-brackets in opposite corners — echoes the hero/diary cards. */}
+      {/* Gold L-brackets in opposite corners — echoes the hero/diary cards.
+          Static size; we want the visual rhythm without contending with the
+          grid-template-columns transition for paint cycles. */}
       <span
         aria-hidden
-        className="absolute -left-px -top-px z-20 h-5 w-5 border-l-2 border-t-2 border-gold transition-[width,height] duration-300 group-hover:h-7 group-hover:w-7 max-md:h-4 max-md:w-4"
+        className="absolute -left-px -top-px z-20 h-5 w-5 border-l-2 border-t-2 border-gold max-md:h-4 max-md:w-4"
       />
       <span
         aria-hidden
-        className="absolute -bottom-px -right-px z-20 h-5 w-5 border-b-2 border-r-2 border-gold transition-[width,height] duration-300 group-hover:h-7 group-hover:w-7 max-md:h-4 max-md:w-4"
+        className="absolute -bottom-px -right-px z-20 h-5 w-5 border-b-2 border-r-2 border-gold max-md:h-4 max-md:w-4"
       />
 
       {isActive ? (
@@ -157,18 +159,19 @@ function Tile({
             alt=""
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 420px, 480px"
-            className="object-cover transition-[transform,filter] duration-700 ease-out motion-reduce:transition-none group-hover:scale-[1.04] group-hover:brightness-110"
+            className="object-cover transition-transform duration-500 ease-out motion-reduce:transition-none group-hover:scale-[1.03]"
           />
-          {/* Stronger gradient at the bottom for caption legibility on busy
-              YouTube thumbs (often have bright text and faces). */}
+          {/* Static gradient — no hover transition, so the GPU can spend the
+              hover-expand interpolation budget on the grid track sizes
+              instead of fighting opacity changes underneath. */}
           <span
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-transparent transition-opacity duration-500 group-hover:from-ink/75"
+            className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/35 to-transparent"
           />
-          {/* Play button — scales down on phones, lifts subtly on hover. */}
+          {/* Play button — single property transitions on hover. */}
           <span
             aria-hidden
-            className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-gold/70 bg-ink/50 text-gold backdrop-blur-sm transition-[transform,background-color,border-color] duration-500 group-hover:scale-110 group-hover:border-gold group-hover:bg-ink/65 motion-reduce:transition-none max-md:h-11 max-md:w-11"
+            className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center border border-gold/70 bg-ink/50 text-gold backdrop-blur-sm transition-transform duration-400 ease-out motion-reduce:transition-none group-hover:scale-110 max-md:h-11 max-md:w-11"
           >
             <svg
               viewBox="0 0 24 24"
@@ -187,16 +190,18 @@ function Tile({
         </button>
       )}
 
-      {/* Caption — kept below the play button via z-index, hidden when the
-          iframe is mounted so the YouTube player owns the surface. */}
+      {/* Caption — sits in the dark band of the gradient. Title gets
+          line-clamp-2 so a long YouTube title doesn't push the eyebrow and
+          date off-tile on a narrow phone. The eyebrow drops out on the
+          tightest viewports where space matters most. */}
       {!isActive ? (
-        <figcaption className="pointer-events-none absolute inset-x-4 bottom-4 z-10 flex flex-col gap-1 text-bone max-md:inset-x-3 max-md:bottom-3">
+        <figcaption className="pointer-events-none absolute inset-x-4 bottom-3 z-10 flex flex-col gap-1 text-bone max-md:inset-x-3 max-md:bottom-2">
           {video.occasion ? (
-            <span className="font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[2px] text-gold-soft max-md:text-[8px] max-md:tracking-[1.5px]">
+            <span className="font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[2px] text-gold-soft max-md:hidden">
               {video.occasion}
             </span>
           ) : null}
-          <h3 className="font-[family-name:var(--font-display)] text-[clamp(15px,1.5vw,22px)] font-medium leading-[1.2] text-bone [text-shadow:0_2px_10px_rgba(0,0,0,0.6)]">
+          <h3 className="font-[family-name:var(--font-display)] text-[clamp(15px,1.5vw,22px)] font-medium leading-[1.2] text-bone line-clamp-2 [text-shadow:0_2px_10px_rgba(0,0,0,0.65)] max-md:text-[13px] max-md:leading-[1.15]">
             {video.title}
           </h3>
           {video.date ? (

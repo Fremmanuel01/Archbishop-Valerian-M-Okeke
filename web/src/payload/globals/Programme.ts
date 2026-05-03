@@ -14,9 +14,15 @@ export const Programme: GlobalConfig = {
       () => {
         // Programme drives both the /diary calendar AND the homepage
         // "Recent Engagements" section. Revalidate both so admin edits
-        // propagate within seconds.
-        revalidatePath("/diary");
-        revalidatePath("/");
+        // propagate within seconds. Wrapped in try/catch because seed
+        // scripts and migrations call this outside a Next.js request
+        // context, where revalidatePath throws.
+        try {
+          revalidatePath("/diary");
+          revalidatePath("/");
+        } catch {
+          /* not a request context — fine. */
+        }
       },
     ],
   },

@@ -74,6 +74,8 @@ export interface Config {
     'gallery-images': GalleryImage;
     'biography-sections': BiographySection;
     'featured-videos': FeaturedVideo;
+    'appointment-slots': AppointmentSlot;
+    'appointment-bookings': AppointmentBooking;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +90,8 @@ export interface Config {
     'gallery-images': GalleryImagesSelect<false> | GalleryImagesSelect<true>;
     'biography-sections': BiographySectionsSelect<false> | BiographySectionsSelect<true>;
     'featured-videos': FeaturedVideosSelect<false> | FeaturedVideosSelect<true>;
+    'appointment-slots': AppointmentSlotsSelect<false> | AppointmentSlotsSelect<true>;
+    'appointment-bookings': AppointmentBookingsSelect<false> | AppointmentBookingsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -327,6 +331,71 @@ export interface FeaturedVideo {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Each row is a single bookable time window. Lay faithful book Tuesday slots; priests & religious book Wednesday slots. Set status to 'blocked' to hide a slot without deleting it (e.g. when His Grace is travelling).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointment-slots".
+ */
+export interface AppointmentSlot {
+  id: number;
+  label?: string | null;
+  /**
+   * Tuesday for lay faithful, Wednesday for priests & religious.
+   */
+  date: string;
+  /**
+   * 24-hour, HH:MM format (e.g. 09:00).
+   */
+  startTime: string;
+  /**
+   * 24-hour, HH:MM format (e.g. 09:30).
+   */
+  endTime: string;
+  audience: 'laity' | 'clergy';
+  /**
+   * 'Available' means visitors can book it. 'Booked' is set automatically when a booking is made. 'Blocked' hides the slot from visitors without removing it.
+   */
+  status: 'available' | 'booked' | 'blocked';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Bookings made through the storefront. Each booking links to a specific slot. Cancel a booking here to release its slot back to the available pool.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointment-bookings".
+ */
+export interface AppointmentBooking {
+  id: number;
+  /**
+   * The reserved slot.
+   */
+  slot: number | AppointmentSlot;
+  /**
+   * Auto-set from the slot at booking time.
+   */
+  audience: 'laity' | 'clergy';
+  fullName: string;
+  email: string;
+  phone?: string | null;
+  /**
+   * Parish (lay) or assignment (clergy).
+   */
+  parish?: string | null;
+  reason: string;
+  status: 'confirmed' | 'cancelled' | 'completed' | 'no-show';
+  /**
+   * Random token used in the cancellation link sent to the visitor.
+   */
+  confirmationCode: string;
+  /**
+   * Office-only — notes about the visitor or the meeting. Never shown to the visitor.
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -377,6 +446,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'featured-videos';
         value: number | FeaturedVideo;
+      } | null)
+    | ({
+        relationTo: 'appointment-slots';
+        value: number | AppointmentSlot;
+      } | null)
+    | ({
+        relationTo: 'appointment-bookings';
+        value: number | AppointmentBooking;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -538,6 +615,38 @@ export interface FeaturedVideosSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointment-slots_select".
+ */
+export interface AppointmentSlotsSelect<T extends boolean = true> {
+  label?: T;
+  date?: T;
+  startTime?: T;
+  endTime?: T;
+  audience?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "appointment-bookings_select".
+ */
+export interface AppointmentBookingsSelect<T extends boolean = true> {
+  slot?: T;
+  audience?: T;
+  fullName?: T;
+  email?: T;
+  phone?: T;
+  parish?: T;
+  reason?: T;
+  status?: T;
+  confirmationCode?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -13,6 +13,8 @@ import { PastoralVisits } from "./payload/collections/PastoralVisits";
 import { GalleryImages } from "./payload/collections/GalleryImages";
 import { BiographySections } from "./payload/collections/BiographySections";
 import { FeaturedVideos } from "./payload/collections/FeaturedVideos";
+import { AppointmentSlots } from "./payload/collections/AppointmentSlots";
+import { AppointmentBookings } from "./payload/collections/AppointmentBookings";
 import { Homepage } from "./payload/globals/Homepage";
 import { Programme } from "./payload/globals/Programme";
 
@@ -45,6 +47,8 @@ export default buildConfig({
     GalleryImages,
     BiographySections,
     FeaturedVideos,
+    AppointmentSlots,
+    AppointmentBookings,
   ],
   globals: [Homepage, Programme],
   secret: payloadSecret,

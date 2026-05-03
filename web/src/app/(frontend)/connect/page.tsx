@@ -10,6 +10,16 @@ export const metadata: Metadata = {
 
 const ROUTES = [
   {
+    href: "/connect/appointment-laity",
+    title: "Appointment · Lay Faithful",
+    body: "Book a meeting with His Grace on his Tuesday office day. Slots are available on a first-come, first-served basis.",
+  },
+  {
+    href: "/connect/appointment-clergy",
+    title: "Appointment · Priests & Religious",
+    body: "Priests and religious are received on Wednesdays. Pick a free slot below for instant confirmation.",
+  },
+  {
     href: "/connect/prayer-requests",
     title: "Prayer Requests",
     body: "Submit an intention to be remembered in the prayers of His Grace and the cathedral community.",
@@ -35,7 +45,7 @@ export default function ConnectPage() {
       lead="The Office of His Grace welcomes correspondence, prayer intentions, and quiet communion with the faithful."
     >
       <PageSection>
-        <div className="grid grid-cols-3 gap-10 max-lg:grid-cols-1">
+        <div className="grid grid-cols-3 gap-10 max-lg:grid-cols-2 max-md:grid-cols-1">
           {ROUTES.map((r) => (
             <Link
               key={r.href}

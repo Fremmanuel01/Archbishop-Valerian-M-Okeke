@@ -16,6 +16,8 @@ const HIS_GRACE = [
   { label: "Pastoral Diary", href: "/diary" },
 ];
 const CONNECT = [
+  { label: "Appointment · Lay", href: "/connect/appointment-laity" },
+  { label: "Appointment · Clergy", href: "/connect/appointment-clergy" },
   { label: "Prayer Requests", href: "/connect/prayer-requests" },
   { label: "Contact", href: "/connect/contact" },
   { label: "Newsletter", href: "/connect/newsletter" },

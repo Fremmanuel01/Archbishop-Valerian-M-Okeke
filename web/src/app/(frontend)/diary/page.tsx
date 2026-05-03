@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
+import { CalendarSubscribe } from "@/components/calendar-subscribe";
 import {
   Chalice,
   Crozier,
@@ -68,6 +69,7 @@ export default async function DiaryPage() {
       lead="Masses, pastoral visits, ordinations, meetings, retreats, and the ordinary life of the Archdiocese — as it unfolds through the liturgical year."
     >
       <PageSection>
+        <CalendarSubscribe />
         <div className="relative mx-auto max-w-[960px]">
           <div
             aria-hidden

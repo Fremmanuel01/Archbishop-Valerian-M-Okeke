@@ -29,14 +29,14 @@ export default async function PastoralLettersPage() {
       titleAccent="Letters"
       lead="Over twenty years of teaching and shepherding the faithful of the Archdiocese — a living archive of pastoral wisdom."
     >
-      <PageSection>
+      <PageSection containerClassName="!max-w-[1520px]">
         {sorted.length === 0 ? (
           <EmptyState
             title="The library is briefly unavailable"
             body="Pastoral letters will return shortly. Please check back in a few minutes."
           />
         ) : (
-        <div className="grid grid-cols-3 gap-14 max-lg:grid-cols-2 max-lg:gap-10 max-md:grid-cols-1">
+        <div className="grid grid-cols-3 gap-14 max-lg:grid-cols-2 max-lg:gap-10 max-md:grid-cols-1 2xl:grid-cols-4">
           {sorted.map((letter) => {
             const slug = `${letter.id}-${slugify(letter.title)}`;
             const year = yearOf(letter.date);

@@ -139,15 +139,24 @@ export function PageShell({
 export function PageSection({
   children,
   className = "",
+  containerClassName = "",
 }: {
   children: React.ReactNode;
   className?: string;
+  /**
+   * Additional Tailwind classes for the inner max-width wrapper. Pages with
+   * dense card grids (e.g. /pastoral-letters) can widen the default
+   * 1240px cap to use more horizontal space on large monitors.
+   */
+  containerClassName?: string;
 }) {
   return (
     <section
       className={`px-14 py-24 max-lg:px-8 max-md:px-6 max-md:py-16 ${className}`}
     >
-      <div className="mx-auto max-w-[1240px]">{children}</div>
+      <div className={`mx-auto max-w-[1240px] ${containerClassName}`}>
+        {children}
+      </div>
     </section>
   );
 }

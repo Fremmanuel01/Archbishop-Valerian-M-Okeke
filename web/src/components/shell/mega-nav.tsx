@@ -45,6 +45,7 @@ const NAV: NavItem[] = [
   { label: "Pastoral Letters", href: "/pastoral-letters", panel: "library" },
   { label: "Reflections", href: "/reflections", panel: "reflections" },
   { label: "Diary", href: "/diary", panel: null },
+  { label: "Appointments", href: "/appointments", panel: null },
   { label: "Connect", href: "/connect", panel: "connect" },
 ];
 
@@ -96,6 +97,12 @@ const CONNECT_ITEMS: Array<{
   description: string;
   Icon: IconCmp;
 }> = [
+  {
+    label: "Appointments",
+    href: "/appointments",
+    description: "Book a meeting with His Grace — Tuesdays for laity, Wednesdays for clergy.",
+    Icon: Mitre,
+  },
   {
     label: "Prayer Requests",
     href: "/connect/prayer-requests",

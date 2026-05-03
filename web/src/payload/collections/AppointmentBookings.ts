@@ -1,4 +1,23 @@
 import type { CollectionConfig } from "payload";
+import { sendEmail, resendConfigured } from "@/lib/resend";
+import { SITE_URL } from "@/lib/site";
+
+function audienceLabel(a: string): string {
+  return a === "laity" ? "Lay Faithful" : "Priests & Religious";
+}
+
+function formatLongDate(iso: string): string {
+  if (!iso) return "";
+  const d = new Date(`${iso.slice(0, 10)}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(d);
+}
 
 export const AppointmentBookings: CollectionConfig = {
   slug: "appointment-bookings",
@@ -14,7 +33,110 @@ export const AppointmentBookings: CollectionConfig = {
     defaultColumns: ["fullName", "audience", "slot", "status", "createdAt"],
     group: "Appointments",
     description:
-      "Bookings made through the storefront. Each booking links to a specific slot. Cancel a booking here to release its slot back to the available pool.",
+      "Bookings made through the storefront. To cancel a booking on behalf of the visitor (e.g. when His Grace is travelling), set its status to 'Cancelled' and save — the slot is released and the visitor receives a polite cancellation email automatically.",
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, previousDoc, operation, req }) => {
+        if (operation !== "update") return;
+        const wasCancelled = previousDoc?.status === "cancelled";
+        const nowCancelled = doc.status === "cancelled";
+        if (wasCancelled || !nowCancelled) return;
+
+        // 1. Release the slot back to the available pool so a new visitor
+        //    can book it.
+        const slotId =
+          typeof doc.slot === "object" && doc.slot
+            ? Number((doc.slot as { id: number | string }).id)
+            : Number(doc.slot);
+        if (Number.isFinite(slotId)) {
+          try {
+            await req.payload.update({
+              collection: "appointment-slots",
+              id: slotId,
+              data: { status: "available" },
+              overrideAccess: true,
+            });
+          } catch (err) {
+            console.error(
+              "[appointment-bookings] failed to release slot:",
+              err,
+            );
+          }
+        }
+
+        // 2. Notify the visitor. Wrap in try/catch so an email outage
+        //    doesn't roll back the cancellation itself.
+        if (!resendConfigured()) return;
+        const officeRecipient =
+          process.env.APPOINTMENTS_TO || process.env.CONTACT_TO || null;
+
+        const slotData =
+          typeof doc.slot === "object" && doc.slot
+            ? (doc.slot as {
+                date?: string;
+                startTime?: string;
+                endTime?: string;
+              })
+            : {};
+        const longDate = slotData.date ? formatLongDate(slotData.date) : "";
+        const audience = audienceLabel(doc.audience ?? "laity");
+        const visitorEmail = typeof doc.email === "string" ? doc.email : "";
+        const visitorName =
+          typeof doc.fullName === "string" ? doc.fullName : "Friend";
+        const cancelUrl = `${SITE_URL}/connect/appointments/confirmed/${doc.confirmationCode}`;
+
+        const visitorBody = [
+          `Dear ${visitorName},`,
+          "",
+          "We're sorry — your appointment with His Grace Most Rev. Valerian M. Okeke could not be kept on the day you had scheduled:",
+          "",
+          `  When:  ${longDate} ${slotData.startTime ?? ""}–${slotData.endTime ?? ""}`,
+          `  Group: ${audience}`,
+          "",
+          "Please feel free to book a new slot at your convenience:",
+          "",
+          `  ${SITE_URL}/appointments`,
+          "",
+          "If you have any questions, simply reply to this email and the office will get back to you.",
+          "",
+          "Yours in Christ,",
+          "The Office of His Grace",
+        ].join("\n");
+
+        try {
+          if (visitorEmail) {
+            await sendEmail({
+              to: visitorEmail,
+              subject: `Appointment cancelled · ${longDate}`,
+              text: visitorBody,
+              replyTo: officeRecipient ?? undefined,
+            });
+          }
+          if (officeRecipient) {
+            await sendEmail({
+              to: officeRecipient,
+              subject: `Cancellation issued · ${visitorName} · ${longDate}`,
+              text: [
+                "An appointment was cancelled from the admin (or by the visitor).",
+                "",
+                `  When:  ${longDate} ${slotData.startTime ?? ""}–${slotData.endTime ?? ""}`,
+                `  Group: ${audience}`,
+                `  Name:  ${visitorName}`,
+                `  Email: ${visitorEmail}`,
+                "",
+                `Confirmation page: ${cancelUrl}`,
+              ].join("\n"),
+            });
+          }
+        } catch (err) {
+          console.error(
+            "[appointment-bookings] cancellation emails failed:",
+            err,
+          );
+        }
+      },
+    ],
   },
   fields: [
     {

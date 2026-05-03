@@ -62,30 +62,26 @@ export function VideoGrid({ videos }: { videos: PastoralVideo[] }) {
 
   const count = videos.length;
   const cols = desktopCols(count);
-  const rows = Math.ceil(count / cols);
   const expandable = canHover && !reducedMotion && count >= 4;
 
-  // Inline grid-template-* override only fires on desktop with hover-capable
-  // pointer AND when there are enough tiles to make the expand feel intentional.
-  // On every other surface, Tailwind responsive grid classes drive the layout
-  // and tiles use aspect-video so they scale predictably.
+  // Inline grid-template-columns override fires only on desktop with a
+  // hover-capable pointer AND when there are enough tiles to make the expand
+  // feel intentional. We deliberately DO NOT interpolate grid-template-rows
+  // — animating both axes at once felt jittery and made the hovered cell
+  // dominate the layout. Columns-only keeps the row rhythm steady; the
+  // hovered tile gets wider, neighbours get narrower, every tile stays the
+  // same height.
   const expandStyle: CSSProperties | undefined =
     expandable && hovered !== null
       ? {
           gridTemplateColumns: trackValues(
             cols,
             hovered % cols,
-            5,
-            3,
-          ),
-          gridTemplateRows: trackValues(
-            rows,
-            Math.floor(hovered / cols),
-            5,
+            4,
             3,
           ),
           transition:
-            "grid-template-columns 420ms cubic-bezier(0.22, 1, 0.36, 1), grid-template-rows 420ms cubic-bezier(0.22, 1, 0.36, 1)",
+            "grid-template-columns 320ms cubic-bezier(0.22, 1, 0.36, 1)",
         }
       : undefined;
 

@@ -44,7 +44,7 @@ export function SiteFooter() {
   return (
     <footer
       id="connect"
-      className="relative overflow-hidden border-t border-[color:var(--rule)] bg-tan px-14 pb-10 pt-24 text-ink max-lg:px-8 max-md:px-6 max-md:pt-20"
+      className="relative overflow-hidden border-t border-[color:var(--rule)] bg-tan px-14 pb-10 pt-12 text-ink max-lg:px-8 max-md:px-6 max-md:pt-10"
     >
       <Image
         src="/coat-of-arms.png"

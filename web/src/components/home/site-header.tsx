@@ -55,7 +55,7 @@ export async function SiteHeader() {
 
       <MegaNav letters={letters} homilies={homilies} variant="light" />
 
-      <div className="flex items-center gap-2.5 pb-3.5 max-md:gap-2 max-md:pb-2.5">
+      <div className="ml-auto flex items-center gap-2.5 pb-3.5 max-md:gap-2 max-md:pb-2.5">
         <NavOverlay variant="dark" />
       </div>
 

@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { withPayload } from "@payloadcms/next/withPayload";
+import { LEGACY_REDIRECTS } from "./src/legacy-redirects";
 
 const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -38,6 +39,9 @@ const nextConfig: NextConfig = {
         headers: SECURITY_HEADERS,
       },
     ];
+  },
+  async redirects() {
+    return LEGACY_REDIRECTS;
   },
 };
 

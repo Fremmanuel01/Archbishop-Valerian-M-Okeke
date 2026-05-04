@@ -20,6 +20,7 @@
     "@payloadcms/richtext-lexical": "^3.82.1",
     "@payloadcms/storage-vercel-blob": "^3.82.1",
     "@types/papaparse": "^5.5.2",
+    "@vercel/blob": "^2.3.1",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "framer-motion": "^12.38.0",

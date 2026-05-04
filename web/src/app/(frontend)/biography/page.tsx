@@ -154,6 +154,11 @@ const LEGACY_LETTERS: LegacyLetter[] = [
     title: "The Holy Spirit: Man's Helper and Friend",
     pdf: "/pastoral-letters/legacy/2022-the-holy-spirit.pdf",
   },
+  {
+    year: 2026,
+    title: "On Virtues and Capital Sins",
+    pdf: "/pastoral-letters/legacy/2026-on-virtues-and-capital-sins.pdf",
+  },
 ];
 
 export default async function BiographyPage() {

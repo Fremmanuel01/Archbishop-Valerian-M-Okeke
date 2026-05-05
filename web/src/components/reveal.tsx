@@ -1,70 +1,44 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import type { ReactNode } from "react";
 
 type RevealProps = {
-  children: React.ReactNode;
-  delay?: number;
+  children: ReactNode;
+  delay?: number; // ms — preserved for backwards compat
   as?: keyof React.JSX.IntrinsicElements;
   className?: string;
   once?: boolean;
 };
 
+const SPRING = { type: "spring", stiffness: 90, damping: 22, mass: 0.7 } as const;
+
 export function Reveal({
   children,
   delay = 0,
-  as: Tag = "div",
+  as = "div",
   className = "",
   once = true,
 }: RevealProps) {
-  const ref = useRef<HTMLElement>(null);
-  // Start visible so SSR markup is paintable immediately and slow-JS
-  // devices don't see an empty page header. Only hide-then-animate when we
-  // know the element is below the fold and the browser supports IO.
-  const [hidden, setHidden] = useState(false);
+  const reduce = useReducedMotion();
+  if (reduce) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Tag = as as any;
+    return <Tag className={className}>{children}</Tag>;
+  }
 
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    if (typeof IntersectionObserver === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const rect = node.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-    if (inView) return; // already visible — leave it; no animation needed.
-
-    setHidden(true);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setHidden(false);
-            if (once) observer.disconnect();
-          } else if (!once) {
-            setHidden(true);
-          }
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" },
-    );
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [once]);
-
-  const style: React.CSSProperties = {
-    opacity: hidden ? 0 : 1,
-    transform: hidden ? "translateY(14px)" : "translateY(0)",
-    transition:
-      "opacity 800ms cubic-bezier(0.22, 1, 0.36, 1), transform 800ms cubic-bezier(0.22, 1, 0.36, 1)",
-    transitionDelay: `${delay}ms`,
-    willChange: "opacity, transform",
-  };
-
+  // motion factory keyed by tag name: motion.div, motion.section, etc.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const Component = Tag as any;
+  const Component = ((motion as any)[as] ?? motion.div) as React.ElementType;
+
   return (
-    <Component ref={ref} className={className} style={style}>
+    <Component
+      className={className}
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once, amount: 0.15, margin: "0px 0px -8% 0px" }}
+      transition={{ ...SPRING, delay: delay / 1000 }}
+    >
       {children}
     </Component>
   );

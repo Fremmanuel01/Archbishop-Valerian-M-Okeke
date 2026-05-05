@@ -1,7 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Roman, SectionLabel } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
+import { Stagger } from "@/components/motion";
+import { MagneticBook } from "@/components/home/magnetic-book";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 
 export async function FeaturedLetter() {
@@ -34,58 +35,61 @@ export async function FeaturedLetter() {
       ) : null}
 
       <div className="relative mx-auto grid max-w-[1240px] grid-cols-[1.1fr_1fr] items-center gap-[100px] max-lg:grid-cols-1 max-lg:gap-14">
-        <Link
-          href={`/pastoral-letters/${slug}`}
-          className="group flex justify-center focus:outline-none"
-          aria-label={`Read ${latest.title}`}
-        >
-          {cover ? (
-            <Image
-              src={cover}
-              alt={`Cover of ${latest.title}`}
-              width={1200}
-              height={1500}
-              priority
-              sizes="(max-width: 1024px) 100vw, 520px"
-              className="book-tilt h-auto w-full max-w-[520px] [filter:drop-shadow(0_30px_80px_rgba(10,27,51,0.25))_drop-shadow(0_8px_24px_rgba(10,27,51,0.12))]"
-            />
-          ) : null}
-        </Link>
-        <div>
-          <SectionLabel>
-            Latest Pastoral Letter
-            {year ? (
-              <>
-                {" · "}
-                <Roman year={year} />
-              </>
-            ) : null}
-          </SectionLabel>
-          <h2
-            id="featured-letter-title"
-            className="mb-4 mt-6 font-[family-name:var(--font-display)] text-[clamp(40px,4.5vw,72px)] font-medium leading-[1.05] tracking-[-0.015em]"
-          >
-            {latest.title}
-          </h2>
-          <hr className="my-7 h-px w-[60px] border-0 bg-gold" />
+        {cover ? (
+          <MagneticBook
+            href={`/pastoral-letters/${slug}`}
+            src={cover}
+            alt={`Cover of ${latest.title}`}
+            ariaLabel={`Read ${latest.title}`}
+          />
+        ) : null}
+        <Stagger className="flex flex-col" amount={0.2}>
+          <Stagger.Item>
+            <SectionLabel>
+              Latest Pastoral Letter
+              {year ? (
+                <>
+                  {" · "}
+                  <Roman year={year} />
+                </>
+              ) : null}
+            </SectionLabel>
+          </Stagger.Item>
+          <Stagger.Item>
+            <h2
+              id="featured-letter-title"
+              className="mb-4 mt-6 font-[family-name:var(--font-display)] text-[clamp(40px,4.5vw,72px)] font-medium leading-[1.05] tracking-[-0.015em]"
+            >
+              {latest.title}
+            </h2>
+          </Stagger.Item>
+          <Stagger.Item>
+            <hr className="my-7 h-px w-[60px] border-0 bg-gold" />
+          </Stagger.Item>
           {latest.key_quote ? (
-            <blockquote className="my-8 border-l-2 border-gold pl-7 font-[family-name:var(--font-display)] text-[32px] italic leading-[1.4] text-ink max-md:text-2xl">
-              &ldquo;{latest.key_quote}&rdquo;
-            </blockquote>
+            <Stagger.Item>
+              <blockquote className="my-8 border-l-2 border-gold pl-7 font-[family-name:var(--font-display)] text-[32px] italic leading-[1.4] text-ink max-md:text-2xl">
+                &ldquo;{latest.key_quote}&rdquo;
+              </blockquote>
+            </Stagger.Item>
           ) : null}
           {latest.description ? (
-            <p className="mb-9 text-ink-soft">
-              {plainExcerpt(latest.description, 280)}
-            </p>
+            <Stagger.Item>
+              <p className="mb-9 text-ink-soft">
+                {plainExcerpt(latest.description, 280)}
+              </p>
+            </Stagger.Item>
           ) : null}
-          <Link
-            href={`/pastoral-letters/${slug}`}
-            style={{ ["--sweep-color" as string]: "#c9a664" }}
-            className="btn-ink btn-sweep"
-          >
-            Read in Full →
-          </Link>
-        </div>
+          <Stagger.Item>
+            <Link
+              href={`/pastoral-letters/${slug}`}
+              style={{ ["--sweep-color" as string]: "#c9a664" }}
+              className="btn-ink btn-sweep"
+            >
+              Read in Full →
+            </Link>
+          </Stagger.Item>
+        </Stagger>
       </div>
     </section>
   );

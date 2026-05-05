@@ -5,6 +5,7 @@ import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 import { plainExcerpt } from "@/components/prose";
+import { Stagger } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Pastoral Letters",
@@ -36,16 +37,16 @@ export default async function PastoralLettersPage() {
             body="Pastoral letters will return shortly. Please check back in a few minutes."
           />
         ) : (
-        <div className="grid grid-cols-3 gap-14 max-lg:grid-cols-2 max-lg:gap-10 max-md:grid-cols-1 2xl:grid-cols-4">
+        <Stagger className="grid grid-cols-3 gap-14 max-lg:grid-cols-2 max-lg:gap-10 max-md:grid-cols-1 2xl:grid-cols-4" amount={0.05}>
           {sorted.map((letter) => {
             const slug = `${letter.id}-${slugify(letter.title)}`;
             const year = yearOf(letter.date);
             const cover = letter.cover_photo_url ?? letter.thumbnail_url;
             return (
+              <Stagger.Item key={letter.id} className="flex">
               <Link
-                key={letter.id}
                 href={`/pastoral-letters/${slug}`}
-                className="group flex flex-col"
+                className="group flex flex-1 flex-col"
               >
                 <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone">
                   {cover ? (
@@ -79,9 +80,10 @@ export default async function PastoralLettersPage() {
                   Read the Letter →
                 </span>
               </Link>
+              </Stagger.Item>
             );
           })}
-        </div>
+        </Stagger>
         )}
       </PageSection>
     </PageShell>

@@ -4,6 +4,7 @@ import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
 import { getAddressesAndInterviews, slugify, yearOf } from "@/lib/cms";
+import { Stagger } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Other Teachings",
@@ -35,16 +36,16 @@ export default async function OtherTeachingsPage() {
             body="The archive is briefly unavailable. Please check back in a few minutes."
           />
         ) : (
-        <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1">
+        <Stagger className="grid grid-cols-2 gap-10 max-md:grid-cols-1" amount={0.05}>
           {sorted.map((w) => {
             const year = yearOf(w.date);
             const href = `/other-teachings/${w.id}-${slugify(w.title)}`;
             const hasReadable = Boolean(w.body && w.body.trim().length > 0);
             return (
+              <Stagger.Item key={w.id} className="flex">
               <Link
-                key={w.id}
                 href={href}
-                className="group flex flex-col border border-[color:var(--rule)] bg-bone p-10 transition-colors hover:border-gold max-md:p-7"
+                className="group flex flex-1 flex-col border border-[color:var(--rule)] bg-bone p-10 transition-colors hover:border-gold max-md:p-7"
               >
                 <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">
                   {w.category ?? "Writing"}
@@ -72,9 +73,10 @@ export default async function OtherTeachingsPage() {
                   {hasReadable ? "Read the Teaching →" : "Open →"}
                 </span>
               </Link>
+              </Stagger.Item>
             );
           })}
-        </div>
+        </Stagger>
         )}
       </PageSection>
     </PageShell>

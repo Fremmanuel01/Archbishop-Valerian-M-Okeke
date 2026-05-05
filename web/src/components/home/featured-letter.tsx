@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Roman, SectionLabel } from "@/components/editorial";
+import { plainExcerpt } from "@/components/prose";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 
 export async function FeaturedLetter() {
@@ -73,7 +74,9 @@ export async function FeaturedLetter() {
             </blockquote>
           ) : null}
           {latest.description ? (
-            <p className="mb-9 text-ink-soft">{latest.description}</p>
+            <p className="mb-9 text-ink-soft">
+              {plainExcerpt(latest.description, 280)}
+            </p>
           ) : null}
           <Link
             href={`/pastoral-letters/${slug}`}

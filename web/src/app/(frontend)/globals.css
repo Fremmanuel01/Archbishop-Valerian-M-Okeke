@@ -33,6 +33,17 @@
   --font-ui: var(--font-inter);
 }
 
+html,
+body {
+  /* Belt-and-braces: no element should ever force a horizontal scrollbar.
+     `clip` is preferred over `hidden` because it doesn't establish a new
+     scroll container (so sticky/fixed children behave normally); `hidden`
+     stays as a fallback for the few engines that don't yet support clip. */
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 html {
   -webkit-font-smoothing: antialiased;
 }
@@ -164,20 +175,30 @@ body {
   }
 }
 
-/* Mega nav panel — shows on hover or focus within the nav item wrapper */
+/* Mega nav panel — shows on hover or focus within the nav item wrapper.
+   `visibility: hidden` (rather than just opacity: 0) keeps the panel out
+   of the document's bounding box while resting, so its w-screen width
+   can't push the layout right and create a horizontal scrollbar. */
 .mega-item .mega-panel {
   opacity: 0;
+  visibility: hidden;
   transform: translateY(-4px);
   pointer-events: none;
   transition:
     opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 260ms;
 }
 .mega-item:hover .mega-panel,
 .mega-item:focus-within .mega-panel {
   opacity: 1;
+  visibility: visible;
   transform: translateY(0);
   pointer-events: auto;
+  transition:
+    opacity 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
 }
 
 a {

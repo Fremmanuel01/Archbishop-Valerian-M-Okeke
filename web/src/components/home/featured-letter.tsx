@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Roman, SectionLabel } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
-import { Stagger } from "@/components/motion";
+import { Stagger, StaggerItem } from "@/components/motion";
 import { MagneticBook } from "@/components/home/magnetic-book";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 
@@ -44,7 +44,7 @@ export async function FeaturedLetter() {
           />
         ) : null}
         <Stagger className="flex flex-col" amount={0.2}>
-          <Stagger.Item>
+          <StaggerItem>
             <SectionLabel>
               Latest Pastoral Letter
               {year ? (
@@ -54,33 +54,33 @@ export async function FeaturedLetter() {
                 </>
               ) : null}
             </SectionLabel>
-          </Stagger.Item>
-          <Stagger.Item>
+          </StaggerItem>
+          <StaggerItem>
             <h2
               id="featured-letter-title"
               className="mb-4 mt-6 font-[family-name:var(--font-display)] text-[clamp(40px,4.5vw,72px)] font-medium leading-[1.05] tracking-[-0.015em]"
             >
               {latest.title}
             </h2>
-          </Stagger.Item>
-          <Stagger.Item>
+          </StaggerItem>
+          <StaggerItem>
             <hr className="my-7 h-px w-[60px] border-0 bg-gold" />
-          </Stagger.Item>
+          </StaggerItem>
           {latest.key_quote ? (
-            <Stagger.Item>
+            <StaggerItem>
               <blockquote className="my-8 border-l-2 border-gold pl-7 font-[family-name:var(--font-display)] text-[32px] italic leading-[1.4] text-ink max-md:text-2xl">
                 &ldquo;{latest.key_quote}&rdquo;
               </blockquote>
-            </Stagger.Item>
+            </StaggerItem>
           ) : null}
           {latest.description ? (
-            <Stagger.Item>
+            <StaggerItem>
               <p className="mb-9 text-ink-soft">
                 {plainExcerpt(latest.description, 280)}
               </p>
-            </Stagger.Item>
+            </StaggerItem>
           ) : null}
-          <Stagger.Item>
+          <StaggerItem>
             <Link
               href={`/pastoral-letters/${slug}`}
               style={{ ["--sweep-color" as string]: "#c9a664" }}
@@ -88,7 +88,7 @@ export async function FeaturedLetter() {
             >
               Read in Full →
             </Link>
-          </Stagger.Item>
+          </StaggerItem>
         </Stagger>
       </div>
     </section>

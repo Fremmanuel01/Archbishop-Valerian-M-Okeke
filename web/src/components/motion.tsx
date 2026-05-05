@@ -30,7 +30,7 @@ type FadeProps = {
   children: ReactNode;
   className?: string;
   delay?: number;
-  amount?: number; // viewport visibility threshold (0-1)
+  amount?: number;
   once?: boolean;
 };
 
@@ -66,7 +66,7 @@ type StaggerProps = {
   gap?: number;
 };
 
-/** Wrap a list/grid; each direct child of <Stagger.Item> animates in sequence. */
+/** Wrap a list/grid; each direct <StaggerItem> animates in sequence. */
 export function Stagger({
   children,
   className,
@@ -98,7 +98,10 @@ export function Stagger({
   );
 }
 
-Stagger.Item = function StaggerItem({
+/** Direct child of <Stagger>. Exported as its own component because
+ *  static-property attachment (Stagger.Item = ...) doesn't survive the
+ *  RSC client-module boundary on Next 16 / Turbopack. */
+export function StaggerItem({
   children,
   className,
 }: {
@@ -110,4 +113,4 @@ Stagger.Item = function StaggerItem({
       {children}
     </motion.div>
   );
-};
+}

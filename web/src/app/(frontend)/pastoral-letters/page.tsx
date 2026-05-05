@@ -5,7 +5,7 @@ import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 import { plainExcerpt } from "@/components/prose";
-import { Stagger } from "@/components/motion";
+import { Stagger, StaggerItem } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Pastoral Letters",
@@ -43,7 +43,7 @@ export default async function PastoralLettersPage() {
             const year = yearOf(letter.date);
             const cover = letter.cover_photo_url ?? letter.thumbnail_url;
             return (
-              <Stagger.Item key={letter.id} className="flex">
+              <StaggerItem key={letter.id} className="flex">
               <Link
                 href={`/pastoral-letters/${slug}`}
                 className="group flex flex-1 flex-col"
@@ -80,7 +80,7 @@ export default async function PastoralLettersPage() {
                   Read the Letter →
                 </span>
               </Link>
-              </Stagger.Item>
+              </StaggerItem>
             );
           })}
         </Stagger>

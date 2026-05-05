@@ -4,7 +4,7 @@ import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
 import { getAddressesAndInterviews, slugify, yearOf } from "@/lib/cms";
-import { Stagger } from "@/components/motion";
+import { Stagger, StaggerItem } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Other Teachings",
@@ -42,7 +42,7 @@ export default async function OtherTeachingsPage() {
             const href = `/other-teachings/${w.id}-${slugify(w.title)}`;
             const hasReadable = Boolean(w.body && w.body.trim().length > 0);
             return (
-              <Stagger.Item key={w.id} className="flex">
+              <StaggerItem key={w.id} className="flex">
               <Link
                 href={href}
                 className="group flex flex-1 flex-col border border-[color:var(--rule)] bg-bone p-10 transition-colors hover:border-gold max-md:p-7"
@@ -73,7 +73,7 @@ export default async function OtherTeachingsPage() {
                   {hasReadable ? "Read the Teaching →" : "Open →"}
                 </span>
               </Link>
-              </Stagger.Item>
+              </StaggerItem>
             );
           })}
         </Stagger>

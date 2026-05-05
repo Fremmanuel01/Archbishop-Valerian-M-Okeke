@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
-import { getAddressesAndInterviews, yearOf } from "@/lib/cms";
+import { getAddressesAndInterviews, slugify, yearOf } from "@/lib/cms";
 
 export const metadata: Metadata = {
   title: "Other Teachings",
@@ -37,9 +38,12 @@ export default async function OtherTeachingsPage() {
         <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1">
           {sorted.map((w) => {
             const year = yearOf(w.date);
+            const href = `/other-teachings/${w.id}-${slugify(w.title)}`;
+            const hasReadable = Boolean(w.body && w.body.trim().length > 0);
             return (
-              <article
+              <Link
                 key={w.id}
+                href={href}
                 className="group flex flex-col border border-[color:var(--rule)] bg-bone p-10 transition-colors hover:border-gold max-md:p-7"
               >
                 <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">
@@ -51,7 +55,7 @@ export default async function OtherTeachingsPage() {
                     </>
                   ) : null}
                 </p>
-                <h2 className="mt-4 font-[family-name:var(--font-display)] text-[28px] font-medium leading-[1.2] text-ink max-md:text-2xl">
+                <h2 className="mt-4 font-[family-name:var(--font-display)] text-[28px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold max-md:text-2xl">
                   {w.title}
                 </h2>
                 {w.occasion ? (
@@ -64,21 +68,10 @@ export default async function OtherTeachingsPage() {
                     {plainExcerpt(w.body, 180)}
                   </p>
                 ) : null}
-                {w.pdf_url ? (
-                  <a
-                    href={w.pdf_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-flex w-fit border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink"
-                  >
-                    Read in Full →
-                  </a>
-                ) : (
-                  <p className="mt-6 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink-soft opacity-60">
-                    Coming Soon
-                  </p>
-                )}
-              </article>
+                <span className="mt-6 inline-flex w-fit border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink">
+                  {hasReadable ? "Read the Teaching →" : "Open →"}
+                </span>
+              </Link>
             );
           })}
         </div>

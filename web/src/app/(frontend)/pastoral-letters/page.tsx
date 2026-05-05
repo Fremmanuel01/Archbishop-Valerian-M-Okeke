@@ -6,6 +6,8 @@ import { EmptyState, Roman } from "@/components/editorial";
 import { getPastoralLetters, slugify, yearOf } from "@/lib/cms";
 import { plainExcerpt } from "@/components/prose";
 import { Stagger, StaggerItem } from "@/components/motion";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Pastoral Letters",
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function PastoralLettersPage() {
-  const letters = await getPastoralLetters();
+  const [letters, lang] = await Promise.all([getPastoralLetters(), getLang()]);
+  const t = getDict(lang);
   const sorted = [...letters].sort((a, b) => {
     const ya = yearOf(a.date) ?? 0;
     const yb = yearOf(b.date) ?? 0;
@@ -25,16 +28,16 @@ export default async function PastoralLettersPage() {
 
   return (
     <PageShell
-      eyebrow="The Library"
-      title="Pastoral"
-      titleAccent="Letters"
-      lead="Over twenty years of teaching and shepherding the faithful of the Archdiocese — a living archive of pastoral wisdom."
+      eyebrow={t.pages.pastoralLetters.eyebrow}
+      title={t.pages.pastoralLetters.title}
+      titleAccent={t.pages.pastoralLetters.titleAccent}
+      lead={t.pages.pastoralLetters.lead}
     >
       <PageSection containerClassName="!max-w-[1520px]">
         {sorted.length === 0 ? (
           <EmptyState
-            title="The library is briefly unavailable"
-            body="Pastoral letters will return shortly. Please check back in a few minutes."
+            title={t.empty.pastoralLettersTitle}
+            body={t.empty.pastoralLettersBody}
           />
         ) : (
         <Stagger className="grid grid-cols-3 gap-14 max-lg:grid-cols-2 max-lg:gap-10 max-md:grid-cols-1 2xl:grid-cols-4" amount={0.05}>
@@ -60,7 +63,7 @@ export default async function PastoralLettersPage() {
                   ) : null}
                 </div>
                 <p className="mt-7 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">
-                  Pastoral Letter
+                  {t.panel.libraryTitle}
                   {year ? (
                     <>
                       {" · "}
@@ -77,7 +80,7 @@ export default async function PastoralLettersPage() {
                   </p>
                 ) : null}
                 <span className="mt-5 inline-flex w-fit border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink">
-                  Read the Letter →
+                  {t.cta.readTheLetter}
                 </span>
               </Link>
               </StaggerItem>

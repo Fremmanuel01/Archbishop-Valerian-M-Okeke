@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
 import { Prose } from "@/components/prose";
+import { BodyLanguageNotice } from "@/components/body-language-notice";
+import { getLang } from "@/lib/lang";
 import {
   getAddressesAndInterviews,
   getWriting,
@@ -62,6 +64,7 @@ export default async function OtherTeachingPage({
   if (writing.category === "Message") notFound();
 
   const year = yearOf(writing.date);
+  const lang = await getLang();
 
   return (
     <PageShell
@@ -86,6 +89,7 @@ export default async function OtherTeachingPage({
               {writing.date ? formatLongDate(writing.date) : ""}
             </time>
           </p>
+          <BodyLanguageNotice lang={lang} />
           {writing.body ? (
             <Prose markdown={writing.body} />
           ) : (

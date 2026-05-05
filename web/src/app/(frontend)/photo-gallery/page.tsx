@@ -3,6 +3,8 @@ import Image from "next/image";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Latin } from "@/components/editorial";
 import { getGalleryPhotos } from "@/lib/gallery";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Photo Gallery",
@@ -13,14 +15,15 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function PhotoGalleryPage() {
-  const photos = await getGalleryPhotos();
+  const [photos, lang] = await Promise.all([getGalleryPhotos(), getLang()]);
+  const t = getDict(lang);
 
   return (
     <PageShell
       eyebrow={<Latin>Imagines Pastoris</Latin>}
-      title="Photo"
-      titleAccent="Gallery"
-      lead="Feasts, visitations, ordinations, and the quiet work of the shepherd — a pastoral archive of the Metropolitan See."
+      title={t.pages.photoGallery.title}
+      titleAccent={t.pages.photoGallery.titleAccent}
+      lead={t.pages.photoGallery.lead}
     >
       <PageSection>
         {photos.length === 0 ? (

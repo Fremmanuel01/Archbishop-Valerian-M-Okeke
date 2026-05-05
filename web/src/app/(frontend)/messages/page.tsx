@@ -4,6 +4,8 @@ import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { getMessages, slugify, yearOf, formatLongDate } from "@/lib/cms";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Easter & Christmas Messages",
@@ -14,7 +16,8 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function MessagesPage() {
-  const messages = await getMessages();
+  const [messages, lang] = await Promise.all([getMessages(), getLang()]);
+  const t = getDict(lang);
   const sorted = [...messages].sort((a, b) => {
     if (!a.date) return 1;
     if (!b.date) return -1;
@@ -23,16 +26,16 @@ export default async function MessagesPage() {
 
   return (
     <PageShell
-      eyebrow="Seasonal Messages"
-      title="Easter &"
-      titleAccent="Christmas Messages"
-      lead="Paschal and Nativity addresses of His Grace to the faithful — messages of hope, faith, and fraternal charity."
+      eyebrow={t.pages.messages.eyebrow}
+      title={t.pages.messages.title}
+      titleAccent={t.pages.messages.titleAccent}
+      lead={t.pages.messages.lead}
     >
       <PageSection>
         {sorted.length === 0 ? (
           <EmptyState
-            title="Messages will return shortly"
-            body="The archive is briefly unavailable. Please check back in a few minutes."
+            title={t.empty.messagesTitle}
+            body={t.empty.messagesBody}
           />
         ) : (
           <ul className="grid grid-cols-2 gap-10 max-md:grid-cols-1">

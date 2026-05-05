@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { FleuronDivider, Latin } from "@/components/editorial";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Coat of Arms",
@@ -9,13 +11,15 @@ export const metadata: Metadata = {
     "Explanation of the coat of arms of His Grace Most Rev. Valerian Maduka Okeke, Archbishop of Onitsha.",
 };
 
-export default function CoatOfArmsPage() {
+export default async function CoatOfArmsPage() {
+  const lang = await getLang();
+  const t = getDict(lang);
   return (
     <PageShell
-      eyebrow="Heraldry & Symbol"
-      title="The Coat of"
-      titleAccent="Arms"
-      lead="The Good Shepherd, the gospel of John, and the episcopal motto that has guided the ministry of His Grace."
+      eyebrow={t.pages.coatOfArms.eyebrow}
+      title={t.pages.coatOfArms.title}
+      titleAccent={t.pages.coatOfArms.titleAccent}
+      lead={t.pages.coatOfArms.lead}
     >
       <PageSection>
         <div className="grid grid-cols-[1fr_1.2fr] gap-20 max-lg:grid-cols-1 max-lg:gap-14">

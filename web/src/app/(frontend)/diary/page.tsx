@@ -11,6 +11,8 @@ import {
   Fleuron,
 } from "@/components/icons";
 import { getProgrammeEntries, getProgrammeYear } from "@/lib/programme";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 import type {
   ProgrammeCategory,
   ProgrammeEntry,
@@ -55,18 +57,20 @@ export default async function DiaryPage() {
     getProgrammeEntries(),
     getProgrammeYear(),
   ]);
+  const lang = await getLang();
+  const t = getDict(lang);
   const groups = groupByMonth(entries);
 
   return (
     <PageShell
-      eyebrow="News & Diary"
-      title="My Pastoral"
+      eyebrow={t.pages.diary.eyebrow}
+      title={t.pages.diary.title}
       titleAccent={
         <>
-          Programme for <Roman year={year} />
+          {lang === "ig" ? "n'afọ" : "for"} <Roman year={year} />
         </>
       }
-      lead="Masses, pastoral visits, ordinations, meetings, retreats, and the ordinary life of the Archdiocese — as it unfolds through the liturgical year."
+      lead={t.pages.diary.lead}
     >
       <PageSection>
         <CalendarSubscribe />

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Crest } from "@/components/crest";
+import { LangToggle } from "@/components/lang-toggle";
 import { NavOverlay } from "./nav-overlay";
 import { MegaNav } from "./mega-nav";
 import {
@@ -8,12 +9,16 @@ import {
   slugify,
   yearOf,
 } from "@/lib/cms";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export async function AppHeader() {
-  const [rawLetters, rawHomilies] = await Promise.all([
+  const [rawLetters, rawHomilies, lang] = await Promise.all([
     getPastoralLetters(),
     getHomilies(),
+    getLang(),
   ]);
+  const t = getDict(lang);
 
   const letters = [...rawLetters]
     .sort((a, b) => (yearOf(b.date) ?? 0) - (yearOf(a.date) ?? 0))
@@ -44,19 +49,22 @@ export async function AppHeader() {
       <div className="mx-auto flex max-w-[1440px] items-center gap-5 px-6 py-5 lg:gap-7 lg:px-8 xl:gap-10 xl:px-10 max-md:px-5 max-md:py-4">
         <Link
           href="/"
-          aria-label="Home — The Archbishop of Onitsha"
+          aria-label={`Home — ${t.brandTagline}`}
           className="flex items-center gap-3.5 text-ink"
         >
           <Crest size={56} className="h-14 w-14 max-md:h-11 max-md:w-11" />
           <span className="font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase leading-[1.3] tracking-[1.4px] max-md:text-[10px] max-md:tracking-[1.1px]">
-            <strong className="block font-semibold">The Archbishop</strong>
-            of Onitsha
+            <strong className="block font-semibold">
+              {lang === "ig" ? "Onyenwe" : "The Archbishop"}
+            </strong>
+            {lang === "ig" ? "Onye Isi Bishọp nke Onitsha" : "of Onitsha"}
           </span>
         </Link>
 
-        <MegaNav letters={letters} homilies={homilies} variant="light" />
+        <MegaNav letters={letters} homilies={homilies} variant="light" lang={lang} />
 
-        <div className="ml-auto flex items-center gap-2.5 max-md:gap-2">
+        <div className="ml-auto flex items-center gap-3 max-md:gap-2">
+          <LangToggle current={lang} dict={t} variant="light" />
           <NavOverlay variant="light" />
         </div>
       </div>

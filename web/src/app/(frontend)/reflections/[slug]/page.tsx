@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
 import { Prose, plainExcerpt } from "@/components/prose";
+import { BodyLanguageNotice } from "@/components/body-language-notice";
+import { getLang } from "@/lib/lang";
 import {
   getHomilies,
   getHomily,
@@ -64,6 +66,7 @@ export default async function HomilyPage({
 
   const year = yearOf(homily.date);
   const cover = homily.cover_photo_url ?? homily.thumbnail_url;
+  const lang = await getLang();
 
   return (
     <PageShell
@@ -115,7 +118,10 @@ export default async function HomilyPage({
               </blockquote>
             ) : null}
             {homily.description ? (
-              <Prose markdown={homily.description} />
+              <>
+                <BodyLanguageNotice lang={lang} />
+                <Prose markdown={homily.description} />
+              </>
             ) : (
               <p className="italic text-ink-soft">
                 The full text of this homily will be available here

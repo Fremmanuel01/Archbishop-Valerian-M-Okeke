@@ -1,27 +1,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Latin, Roman } from "@/components/editorial";
+import { getLang } from "@/lib/lang";
+import { getDict, type Dict } from "@/lib/i18n";
 
-const LIBRARY = [
-  { label: "Pastoral Letters", href: "/pastoral-letters" },
-  { label: "Reflections & Homilies", href: "/reflections" },
-  { label: "Easter & Christmas Messages", href: "/messages" },
-  { label: "Other Teachings", href: "/other-teachings" },
-  { label: "Pastoral Visits", href: "/pastoral-visits" },
-];
-const HIS_GRACE = [
-  { label: "Biography", href: "/biography" },
-  { label: "His Episcopacy", href: "/his-episcopacy" },
-  { label: "Coat of Arms", href: "/coat-of-arms" },
-  { label: "Pastoral Diary", href: "/diary" },
-];
-const CONNECT = [
-  { label: "Appointment · Lay", href: "/connect/appointment-laity" },
-  { label: "Appointment · Clergy", href: "/connect/appointment-clergy" },
-  { label: "Prayer Requests", href: "/connect/prayer-requests" },
-  { label: "Contact", href: "/connect/contact" },
-  { label: "Newsletter", href: "/connect/newsletter" },
-];
+const LIBRARY_HREFS = [
+  { key: "pastoralLetters", href: "/pastoral-letters" },
+  { key: "reflectionsAndHomilies", href: "/reflections" },
+  { key: "easterAndChristmasMessages", href: "/messages" },
+  { key: "otherTeachings", href: "/other-teachings" },
+  { key: "pastoralVisits", href: "/pastoral-visits" },
+] as const;
+const HIS_GRACE_HREFS = [
+  { key: "biography", href: "/biography" },
+  { key: "hisEpiscopacy", href: "/his-episcopacy" },
+  { key: "coatOfArms", href: "/coat-of-arms" },
+  { key: "pastoralDiary", href: "/diary" },
+] as const;
+const CONNECT_HREFS = [
+  { key: "appointmentLay", href: "/connect/appointment-laity" },
+  { key: "appointmentClergy", href: "/connect/appointment-clergy" },
+  { key: "prayerRequests", href: "/connect/prayer-requests" },
+  { key: "contact", href: "/connect/contact" },
+  { key: "newsletter", href: "/connect/newsletter" },
+] as const;
+
 const SOCIAL = [
   {
     label: "Facebook",
@@ -40,7 +43,13 @@ const SOCIAL = [
   },
 ];
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const lang = await getLang();
+  const t = getDict(lang);
+  const library = LIBRARY_HREFS.map((l) => ({ label: t.nav[l.key], href: l.href }));
+  const hisGrace = HIS_GRACE_HREFS.map((l) => ({ label: t.nav[l.key], href: l.href }));
+  const connect = CONNECT_HREFS.map((l) => ({ label: t.nav[l.key], href: l.href }));
+
   return (
     <footer
       id="connect"
@@ -61,13 +70,11 @@ export function SiteFooter() {
             <p className="mb-3.5 font-[family-name:var(--font-display)] text-4xl font-medium leading-[1.15] text-ink">
               Valerian M. Okeke
               <span className="mt-1 block text-[22px] italic text-gold">
-                Archbishop of Onitsha
+                {t.footer.archbishopOfOnitsha}
               </span>
             </p>
             <p className="mt-6 max-w-[320px] border-l border-gold pl-4 font-[family-name:var(--font-display)] text-base italic leading-[1.5] text-ink-soft opacity-85">
-              &ldquo;<Latin>Ut Vitam Habeant</Latin> — that they may have life,
-              and have it more abundantly.&rdquo; · John{" "}
-              <abbr title="10">X</abbr>:10
+              {t.footer.motto}
             </p>
 
             <ul className="mt-8 flex items-center gap-3 max-md:gap-4" aria-label="Social media">
@@ -94,17 +101,25 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          <FooterColumn title="Library" links={LIBRARY} />
-          <FooterColumn title="His Grace" links={HIS_GRACE} />
-          <FooterColumn title="Connect" links={CONNECT} />
+          <FooterColumn title={t.footer.libraryHeading} links={library} />
+          <FooterColumn title={t.footer.hisGraceHeading} links={hisGrace} />
+          <FooterColumn title={t.footer.connectHeading} links={connect} />
         </div>
 
         <div className="mt-20 flex justify-between border-t border-stone pt-8 font-[family-name:var(--font-ui)] text-[10px] uppercase tracking-[1.6px] text-ink-soft opacity-70 max-md:mt-14 max-md:flex-col max-md:items-center max-md:gap-2.5 max-md:text-center">
           <span>
-            © <Roman year={2026} /> · The Office of His Grace
+            {t.footer.copyright(
+              // Roman renders 2026 as MMXXVI; we feed the resolved string back
+              // into the localised template so EN/IG share the same glyph.
+              ""
+            )}
+            <Roman year={2026} />
+            {" · "}
+            {lang === "ig" ? "Ụlọ Ọrụ Ọdaa" : "The Office of His Grace"}
           </span>
           <span>
-            <Latin>Domus Episcopalis</Latin> · Onitsha · Anambra · Nigeria
+            <Latin>Domus Episcopalis</Latin>{" · "}
+            {lang === "ig" ? "Onicha · Anambra · Naịjirịa" : "Onitsha · Anambra · Nigeria"}
           </span>
         </div>
       </div>
@@ -139,3 +154,7 @@ function FooterColumn({
     </nav>
   );
 }
+
+// Re-export Dict shape so consumers stay typed; the actual translation
+// dictionary lives in @/lib/i18n.
+export type { Dict };

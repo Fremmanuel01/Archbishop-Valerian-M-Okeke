@@ -5,6 +5,8 @@ import { EmptyState, Roman } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
 import { getAddressesAndInterviews, slugify, yearOf } from "@/lib/cms";
 import { Stagger, StaggerItem } from "@/components/motion";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Other Teachings",
@@ -15,7 +17,11 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function OtherTeachingsPage() {
-  const writings = await getAddressesAndInterviews();
+  const [writings, lang] = await Promise.all([
+    getAddressesAndInterviews(),
+    getLang(),
+  ]);
+  const t = getDict(lang);
   const sorted = [...writings].sort((a, b) => {
     if (!a.date) return 1;
     if (!b.date) return -1;
@@ -24,16 +30,16 @@ export default async function OtherTeachingsPage() {
 
   return (
     <PageShell
-      eyebrow="Writings & Addresses"
-      title="Other"
-      titleAccent="Teachings"
-      lead="Lectures, conference addresses, essays, and occasional writings beyond the formal pastoral letters."
+      eyebrow={t.pages.otherTeachings.eyebrow}
+      title={t.pages.otherTeachings.title}
+      titleAccent={t.pages.otherTeachings.titleAccent}
+      lead={t.pages.otherTeachings.lead}
     >
       <PageSection>
         {sorted.length === 0 ? (
           <EmptyState
-            title="Writings will return shortly"
-            body="The archive is briefly unavailable. Please check back in a few minutes."
+            title={t.empty.writingsTitle}
+            body={t.empty.writingsBody}
           />
         ) : (
         <Stagger className="grid grid-cols-2 gap-10 max-md:grid-cols-1" amount={0.05}>
@@ -70,7 +76,7 @@ export default async function OtherTeachingsPage() {
                   </p>
                 ) : null}
                 <span className="mt-6 inline-flex w-fit border-b border-gold pb-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink">
-                  {hasReadable ? "Read the Teaching →" : "Open →"}
+                  {hasReadable ? t.cta.readTheTeaching : t.cta.open}
                 </span>
               </Link>
               </StaggerItem>

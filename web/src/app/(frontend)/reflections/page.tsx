@@ -4,6 +4,8 @@ import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { EmptyState, Roman } from "@/components/editorial";
 import { plainExcerpt } from "@/components/prose";
 import { getHomilies, slugify, yearOf } from "@/lib/cms";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Reflections & Homilies",
@@ -14,7 +16,8 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function ReflectionsPage() {
-  const homilies = await getHomilies();
+  const [homilies, lang] = await Promise.all([getHomilies(), getLang()]);
+  const t = getDict(lang);
   const sorted = [...homilies].sort((a, b) => {
     if (!a.date) return 1;
     if (!b.date) return -1;
@@ -23,10 +26,14 @@ export default async function ReflectionsPage() {
 
   return (
     <PageShell
-      eyebrow={<><span lang="la">Vox Pastoris</span> · Homilies & Reflections</>}
-      title="Voice of the"
-      titleAccent="Shepherd"
-      lead="Homilies preached at solemnities, feasts, pastoral visits, and ordinary time — gathered for meditation and study."
+      eyebrow={
+        <>
+          <span lang="la">Vox Pastoris</span> · {t.pages.reflections.eyebrow}
+        </>
+      }
+      title={t.pages.reflections.title}
+      titleAccent={t.pages.reflections.titleAccent}
+      lead={t.pages.reflections.lead}
       heroImage={{
         src: "/homily-hero.jpg",
         alt: "His Grace preaching at the Basilica of the Most Holy Trinity",
@@ -35,8 +42,8 @@ export default async function ReflectionsPage() {
       <PageSection>
         {sorted.length === 0 ? (
           <EmptyState
-            title="Homilies will return shortly"
-            body="The reflections archive is briefly unavailable. Please check back in a few minutes."
+            title={t.empty.reflectionsTitle}
+            body={t.empty.reflectionsBody}
           />
         ) : (
         <ul className="divide-y divide-[color:var(--rule)] border-y border-[color:var(--rule)]">

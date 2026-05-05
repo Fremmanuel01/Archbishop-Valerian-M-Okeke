@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
 import { getPastoralVisits } from "@/lib/visits";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const revalidate = 3600;
 
@@ -12,14 +14,15 @@ export const metadata: Metadata = {
 };
 
 export default async function PastoralVisitsPage() {
-  const visits = await getPastoralVisits();
+  const [visits, lang] = await Promise.all([getPastoralVisits(), getLang()]);
+  const t = getDict(lang);
 
   return (
     <PageShell
-      eyebrow="The Ministry of Presence"
-      title="Pastoral"
-      titleAccent="Visits"
-      lead="A chronicle of visitations, confirmations, consecrations, and the quiet rhythm of being among the people of God."
+      eyebrow={t.pages.pastoralVisits.eyebrow}
+      title={t.pages.pastoralVisits.title}
+      titleAccent={t.pages.pastoralVisits.titleAccent}
+      lead={t.pages.pastoralVisits.lead}
     >
       <PageSection>
         {visits.length === 0 ? (

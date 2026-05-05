@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
 import { Prose, renderProse, plainExcerpt } from "@/components/prose";
+import { BodyLanguageNotice } from "@/components/body-language-notice";
+import { getLang } from "@/lib/lang";
 import { LetterToc } from "@/components/letter-toc";
 import { ReadingProgress } from "@/components/reading-progress";
 import {
@@ -64,6 +66,7 @@ export default async function LetterPage({
     notFound();
   }
 
+  const lang = await getLang();
   const year = yearOf(letter.date);
   const cover = letter.cover_photo_url ?? letter.thumbnail_url;
   const bodyMarkdown = letter.description ?? "";
@@ -169,6 +172,7 @@ export default async function LetterPage({
                 &ldquo;{letter.key_quote}&rdquo;
               </blockquote>
             ) : null}
+            <BodyLanguageNotice lang={lang} />
             {bodyHtml ? (
               <div
                 className="prose-editorial-letter mx-auto space-y-5 text-ink"

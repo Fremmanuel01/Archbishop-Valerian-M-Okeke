@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
 import { Prose } from "@/components/prose";
+import { BodyLanguageNotice } from "@/components/body-language-notice";
+import { getLang } from "@/lib/lang";
 import {
   getMessages,
   getWriting,
@@ -59,6 +61,7 @@ export default async function MessagePage({
   } catch {
     notFound();
   }
+  const lang = await getLang();
 
   if (message.category !== "Message") notFound();
 
@@ -108,6 +111,7 @@ export default async function MessagePage({
                 {message.date ? formatLongDate(message.date) : ""}
               </time>
             </p>
+            <BodyLanguageNotice lang={lang} />
             {message.body ? (
               <Prose markdown={message.body} />
             ) : (

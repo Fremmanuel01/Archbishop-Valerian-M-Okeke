@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { FleuronDivider, Latin, SectionLabel } from "@/components/editorial";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "His Episcopacy",
@@ -70,13 +72,15 @@ const COORDINATORS = [
   },
 ];
 
-export default function HisEpiscopacyPage() {
+export default async function HisEpiscopacyPage() {
+  const lang = await getLang();
+  const t = getDict(lang);
   return (
     <PageShell
-      eyebrow="The Missionary Apostolate"
-      title="His"
-      titleAccent="Episcopacy"
-      lead="The Catholic Archdiocese of Onitsha embraces the fundamental understanding that the Church is missionary by nature — as affirmed in Ad Gentes — and carries the Gospel across borders and cultures under the motto Ut Vitam Habeant."
+      eyebrow={t.pages.hisEpiscopacy.eyebrow}
+      title={t.pages.hisEpiscopacy.title}
+      titleAccent={t.pages.hisEpiscopacy.titleAccent}
+      lead={t.pages.hisEpiscopacy.lead}
     >
       {/* ── Opening statement ─────────────────────────── */}
       <PageSection>

@@ -13,6 +13,7 @@ import {
   Lamb,
   Mitre,
 } from "@/components/icons";
+import { getDict, type Lang } from "@/lib/i18n";
 
 export type LetterPreview = {
   id: number;
@@ -35,116 +36,142 @@ type IconCmp = (p: { className?: string; size?: number }) => React.ReactElement;
 type PanelKind = "about" | "library" | "reflections" | "connect" | null;
 
 type NavItem = {
-  label: string;
-  /** Shorter label used between lg and xl breakpoints to keep the nav on one line. */
-  shortLabel?: string;
+  /** Tailwind-`xl`-and-up label (full). */
+  labelKey: keyof ReturnType<typeof getDict>["nav"];
+  /** Optional shorter label between lg and xl. */
+  shortLabelKey?: keyof ReturnType<typeof getDict>["nav"];
   href: string;
   panel: PanelKind;
 };
 
 const NAV: NavItem[] = [
-  { label: "About His Grace", shortLabel: "About", href: "/biography", panel: "about" },
-  { label: "Pastoral Letters", shortLabel: "Letters", href: "/pastoral-letters", panel: "library" },
-  { label: "Reflections", href: "/reflections", panel: "reflections" },
-  { label: "Diary", href: "/diary", panel: null },
-  { label: "Appointments", shortLabel: "Visit", href: "/appointments", panel: null },
-  { label: "Connect", href: "/connect", panel: "connect" },
+  { labelKey: "aboutHisGrace", shortLabelKey: "aboutHisGraceShort", href: "/biography", panel: "about" },
+  { labelKey: "pastoralLetters", shortLabelKey: "pastoralLettersShort", href: "/pastoral-letters", panel: "library" },
+  { labelKey: "reflections", href: "/reflections", panel: "reflections" },
+  { labelKey: "diary", href: "/diary", panel: null },
+  { labelKey: "appointments", shortLabelKey: "appointmentsShort", href: "/appointments", panel: null },
+  { labelKey: "connect", href: "/connect", panel: "connect" },
 ];
 
-const ABOUT_ITEMS: Array<{
-  label: string;
+type Dict = ReturnType<typeof getDict>;
+
+type NavSubItem = {
+  labelKey: keyof Dict["nav"];
   href: string;
-  description: string;
+  description: { en: string; ig: string };
   Icon: IconCmp;
-}> = [
+};
+
+const ABOUT_ITEMS: NavSubItem[] = [
   {
-    label: "Biography",
+    labelKey: "biography",
     href: "/biography",
-    description:
-      "The life and ministry of His Grace — from Umudioka to the Metropolitan See.",
+    description: {
+      en: "The life and ministry of His Grace — from Umudioka to the Metropolitan See.",
+      ig: "Ndụ na ọrụ Ọdaa — site n'Umudioka ruo Ocheeze Mmetropolitan.",
+    },
     Icon: Crozier,
   },
   {
-    label: "His Episcopacy",
+    labelKey: "hisEpiscopacy",
     href: "/his-episcopacy",
-    description:
-      "The missionary apostolate: education, prison ministry, riverine evangelisation.",
+    description: {
+      en: "The missionary apostolate: education, prison ministry, riverine evangelisation.",
+      ig: "Ọrụ ozi ọma: mmụta, ozi mkpọrọ, izisa ozi ọma n'akụkụ osimiri.",
+    },
     Icon: Mitre,
   },
   {
-    label: "Coat of Arms",
+    labelKey: "coatOfArms",
     href: "/coat-of-arms",
-    description: "The Good Shepherd and the episcopal motto — Ut Vitam Habeant.",
+    description: {
+      en: "The Good Shepherd and the episcopal motto — Ut Vitam Habeant.",
+      ig: "Ezi Onye Ọzụzụ Atụrụ na okwu ọchịchị bishọp — Ut Vitam Habeant.",
+    },
     Icon: Lamb,
   },
   {
-    label: "Photo Gallery",
+    labelKey: "photoGallery",
     href: "/photo-gallery",
-    description:
-      "A pastoral archive — feasts, visitations, and the daily life of the See.",
+    description: {
+      en: "A pastoral archive — feasts, visitations, and the daily life of the See.",
+      ig: "Akwụkwọ akụkọ ọchịchị — ememme, nleta, na ndụ kwa ụbọchị nke Ocheeze.",
+    },
     Icon: Dove,
   },
   {
-    label: "Pastoral Diary",
+    labelKey: "pastoralDiary",
     href: "/diary",
-    description:
-      "Masses, visits, ordinations, and the liturgical year of the Archdiocese.",
+    description: {
+      en: "Masses, visits, ordinations, and the liturgical year of the Archdiocese.",
+      ig: "Mass, nleta, ịchụaja, na afọ ụka nke Archdiocese.",
+    },
     Icon: Candle,
   },
 ];
 
-const CONNECT_ITEMS: Array<{
-  label: string;
-  href: string;
-  description: string;
-  Icon: IconCmp;
-}> = [
+const CONNECT_ITEMS: NavSubItem[] = [
   {
-    label: "Appointments",
+    labelKey: "appointments",
     href: "/appointments",
-    description: "Book a meeting with His Grace — Tuesdays for laity, Wednesdays for clergy.",
+    description: {
+      en: "Book a meeting with His Grace — Tuesdays for laity, Wednesdays for clergy.",
+      ig: "Họrọ oge ka i kpọtụrụ Ọdaa — Tuesday maka ndị otu, Wednesday maka ndị ụkọchukwu.",
+    },
     Icon: Mitre,
   },
   {
-    label: "Prayer Requests",
+    labelKey: "prayerRequests",
     href: "/connect/prayer-requests",
-    description: "Submit an intention to be remembered at the cathedral altar.",
+    description: {
+      en: "Submit an intention to be remembered at the cathedral altar.",
+      ig: "Zipu arịrịọ ekpere ka e kpebata ya n'ebe ịchụ aja Cathedral.",
+    },
     Icon: Chalice,
   },
   {
-    label: "Contact",
+    labelKey: "contact",
     href: "/connect/contact",
-    description: "Write to the Office of His Grace — correspondence and inquiries.",
+    description: {
+      en: "Write to the Office of His Grace — correspondence and inquiries.",
+      ig: "Dee leta na Ụlọ Ọrụ Ọdaa — edemede na ajụjụ.",
+    },
     Icon: Dove,
   },
   {
-    label: "Newsletter",
+    labelKey: "newsletter",
     href: "/connect/newsletter",
-    description: "Pastoral letters and reflections delivered to your inbox.",
+    description: {
+      en: "Pastoral letters and reflections delivered to your inbox.",
+      ig: "Akwụkwọ ozi ọchịchị na ntụgharị uche n'ebe nnata ozi gị.",
+    },
     Icon: ChiRho,
   },
 ];
 
 const OTHER_LIBRARY: Array<{
-  label: string;
+  labelKey: keyof Dict["nav"];
   href: string;
   Icon: IconCmp;
 }> = [
-  { label: "Reflections & Homilies", href: "/reflections", Icon: Dove },
-  { label: "Easter & Christmas Messages", href: "/messages", Icon: Candle },
-  { label: "Other Teachings", href: "/other-teachings", Icon: Keys },
+  { labelKey: "reflectionsAndHomilies", href: "/reflections", Icon: Dove },
+  { labelKey: "easterAndChristmasMessages", href: "/messages", Icon: Candle },
+  { labelKey: "otherTeachings", href: "/other-teachings", Icon: Keys },
 ];
 
 export function MegaNav({
   letters,
   homilies,
   variant = "light",
+  lang = "en",
 }: {
   letters: LetterPreview[];
   homilies: HomilyPreview[];
   variant?: "light" | "dark";
+  lang?: Lang;
 }) {
   const pathname = usePathname();
+  const t = getDict(lang);
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : (pathname?.startsWith(href) ?? false);
 
@@ -159,12 +186,14 @@ export function MegaNav({
 
   return (
     <nav
-      aria-label="Primary"
+      aria-label={t.primaryNav}
       className="flex flex-1 items-stretch justify-center gap-4 font-[family-name:var(--font-ui)] text-[11px] font-medium uppercase tracking-[1.1px] max-lg:hidden lg:gap-5 xl:gap-9 xl:text-[12px] xl:tracking-[1.4px]"
     >
       {NAV.map((item) => {
         const active = isActive(item.href);
         const hasPanel = item.panel !== null;
+        const fullLabel = t.nav[item.labelKey];
+        const shortLabel = item.shortLabelKey ? t.nav[item.shortLabelKey] : undefined;
         return (
           <div
             key={item.href}
@@ -180,13 +209,13 @@ export function MegaNav({
               data-active={active ? "true" : undefined}
               className={`whitespace-nowrap py-5 ${active ? linkActive : linkBase}`}
             >
-              {item.shortLabel ? (
+              {shortLabel ? (
                 <>
-                  <span className="xl:hidden">{item.shortLabel}</span>
-                  <span className="hidden xl:inline">{item.label}</span>
+                  <span className="xl:hidden">{shortLabel}</span>
+                  <span className="hidden xl:inline">{fullLabel}</span>
                 </>
               ) : (
-                item.label
+                fullLabel
               )}
             </Link>
 
@@ -194,14 +223,14 @@ export function MegaNav({
               <div className="mega-panel absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 pt-2">
                 <div className="border-y border-[color:var(--rule)] bg-bone-deep shadow-[0_30px_60px_-20px_rgba(10,27,51,0.18)]">
                   <div className="mx-auto grid max-w-[1240px] gap-10 px-8 py-10 lg:px-10 xl:gap-14 xl:px-14 xl:py-14">
-                    {item.panel === "about" ? <AboutPanel /> : null}
+                    {item.panel === "about" ? <AboutPanel t={t} lang={lang} /> : null}
                     {item.panel === "library" ? (
-                      <LibraryPanel letters={letters} />
+                      <LibraryPanel letters={letters} t={t} lang={lang} />
                     ) : null}
                     {item.panel === "reflections" ? (
-                      <ReflectionsPanel homilies={homilies} />
+                      <ReflectionsPanel homilies={homilies} t={t} />
                     ) : null}
-                    {item.panel === "connect" ? <ConnectPanel /> : null}
+                    {item.panel === "connect" ? <ConnectPanel t={t} lang={lang} /> : null}
                   </div>
                 </div>
               </div>
@@ -240,13 +269,13 @@ function PanelHeading({
   );
 }
 
-function AboutPanel() {
+function AboutPanel({ t, lang }: { t: Dict; lang: Lang }) {
   return (
     <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <PanelHeading
-        eyebrow="About His Grace"
-        title="A Life in the Lord's Vineyard"
-        lead="Shepherd, teacher, and servant of the Church of Onitsha."
+        eyebrow={t.panel.aboutEyebrow}
+        title={t.panel.aboutTitle}
+        lead={t.panel.aboutLead}
       />
       <ul className="grid grid-cols-2 gap-x-8 gap-y-5 xl:gap-x-10 xl:gap-y-6">
         {ABOUT_ITEMS.map((item) => {
@@ -263,10 +292,10 @@ function AboutPanel() {
                 />
                 <div>
                   <p className="font-[family-name:var(--font-display)] text-[19px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[22px]">
-                    {item.label}
+                    {t.nav[item.labelKey]}
                   </p>
                   <p className="mt-1 text-[13px] leading-[1.5] text-ink-soft normal-case tracking-normal xl:text-[14px]">
-                    {item.description}
+                    {item.description[lang]}
                   </p>
                 </div>
               </Link>
@@ -278,22 +307,23 @@ function AboutPanel() {
   );
 }
 
-function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
+function LibraryPanel({ letters, t, lang }: { letters: LetterPreview[]; t: Dict; lang: Lang }) {
   const recent = letters.slice(0, 3);
+  void lang; // reserved for future per-letter title localisation
   return (
     <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <div>
         <PanelHeading
-          eyebrow="The Library"
-          title="Pastoral Letters"
-          lead="Twenty-four years of teaching — the annual letters of His Grace."
+          eyebrow={t.panel.libraryEyebrow}
+          title={t.panel.libraryTitle}
+          lead={t.panel.libraryLead}
         />
         <div className="mt-8 space-y-4">
           <Link
             href="/pastoral-letters"
             className="link-underline inline-flex font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink"
           >
-            Browse all letters →
+            {t.panel.libraryBrowse}
           </Link>
           <div className="flex flex-col gap-3 border-t border-[color:var(--rule)] pt-4">
             {OTHER_LIBRARY.map((item) => {
@@ -309,7 +339,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
                     size={16}
                   />
                   <span className="font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[1.8px] text-ink group-hover:text-gold-text">
-                    {item.label}
+                    {t.nav[item.labelKey]}
                   </span>
                 </Link>
               );
@@ -337,7 +367,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
               </div>
               {letter.year ? (
                 <p className="mt-4 font-[family-name:var(--font-ui)] text-[9px] font-semibold uppercase tracking-[2px] text-gold-text">
-                  Pastoral Letter · {letter.year}
+                  {t.panel.libraryTitle} · {letter.year}
                 </p>
               ) : null}
               <p className="mt-2 font-[family-name:var(--font-display)] text-[16px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[18px]">
@@ -351,21 +381,21 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
   );
 }
 
-function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
+function ReflectionsPanel({ homilies, t }: { homilies: HomilyPreview[]; t: Dict }) {
   const recent = homilies.slice(0, 4);
   return (
     <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <div>
         <PanelHeading
-          eyebrow="Homilies & Reflections"
-          title="Spoken from the Cathedra"
-          lead="Homilies at solemnities, feasts, and ordinary time."
+          eyebrow={t.panel.reflectionsEyebrow}
+          title={t.panel.reflectionsTitle}
+          lead={t.panel.reflectionsLead}
         />
         <Link
           href="/reflections"
           className="link-underline mt-8 inline-flex font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink"
         >
-          Browse all reflections →
+          {t.panel.reflectionsBrowse}
         </Link>
       </div>
       <ul className="grid grid-cols-2 gap-x-8 gap-y-5 xl:gap-x-10 xl:gap-y-6">
@@ -391,13 +421,13 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
   );
 }
 
-function ConnectPanel() {
+function ConnectPanel({ t, lang }: { t: Dict; lang: Lang }) {
   return (
     <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <PanelHeading
-        eyebrow="Domus Episcopalis"
-        title="Connect with His Grace"
-        lead="Correspondence, prayer intentions, and quiet communion."
+        eyebrow={t.panel.connectEyebrow}
+        title={t.panel.connectTitle}
+        lead={t.panel.connectLead}
       />
       <ul className="grid grid-cols-2 gap-6 max-md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 xl:gap-8">
         {CONNECT_ITEMS.map((item) => {
@@ -410,10 +440,10 @@ function ConnectPanel() {
               >
                 <Icon className="h-6 w-6 text-gold-text" size={24} />
                 <p className="mt-4 font-[family-name:var(--font-display)] text-[19px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[22px]">
-                  {item.label}
+                  {t.nav[item.labelKey]}
                 </p>
                 <p className="mt-2 text-[13px] leading-[1.5] text-ink-soft normal-case tracking-normal xl:text-[14px]">
-                  {item.description}
+                  {item.description[lang]}
                 </p>
               </Link>
             </li>

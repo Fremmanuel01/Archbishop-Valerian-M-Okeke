@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Latin } from "@/components/editorial";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Appointments",
@@ -28,13 +30,15 @@ const OPTIONS = [
   },
 ];
 
-export default function AppointmentsLandingPage() {
+export default async function AppointmentsLandingPage() {
+  const lang = await getLang();
+  const t = getDict(lang);
   return (
     <PageShell
       eyebrow={<Latin>Audientia · Schedule</Latin>}
-      title="Schedule a Meeting"
-      titleAccent="with His Grace"
-      lead="Each meeting is personally received by the Archbishop. Choose the appropriate audience to view available slots."
+      title={t.pages.appointments.title}
+      titleAccent={t.pages.appointments.titleAccent}
+      lead={t.pages.appointments.lead}
     >
       <PageSection>
         <div className="grid grid-cols-2 gap-10 max-md:grid-cols-1 max-md:gap-6">

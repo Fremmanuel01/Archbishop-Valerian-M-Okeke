@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Connect",
@@ -36,13 +38,15 @@ const ROUTES = [
   },
 ];
 
-export default function ConnectPage() {
+export default async function ConnectPage() {
+  const lang = await getLang();
+  const t = getDict(lang);
   return (
     <PageShell
-      eyebrow="Domus Episcopalis"
-      title="Connect with"
-      titleAccent="His Grace"
-      lead="The Office of His Grace welcomes correspondence, prayer intentions, and quiet communion with the faithful."
+      eyebrow={t.pages.connect.eyebrow}
+      title={t.pages.connect.title}
+      titleAccent={t.pages.connect.titleAccent}
+      lead={t.pages.connect.lead}
     >
       <PageSection>
         <div className="grid grid-cols-3 gap-10 max-lg:grid-cols-2 max-md:grid-cols-1">

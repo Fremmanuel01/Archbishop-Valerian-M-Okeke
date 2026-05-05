@@ -41,7 +41,7 @@ export async function AppHeader() {
 
   return (
     <header className="relative border-b border-[color:var(--rule)] bg-bone">
-      <div className="mx-auto flex max-w-[1440px] items-center gap-10 px-10 py-5 max-lg:px-7 max-md:px-5 max-md:py-4">
+      <div className="mx-auto flex max-w-[1440px] items-center gap-5 px-6 py-5 lg:gap-7 lg:px-8 xl:gap-10 xl:px-10 max-md:px-5 max-md:py-4">
         <Link
           href="/"
           aria-label="Home — The Archbishop of Onitsha"

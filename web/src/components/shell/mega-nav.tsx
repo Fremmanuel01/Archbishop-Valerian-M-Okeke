@@ -36,16 +36,18 @@ type PanelKind = "about" | "library" | "reflections" | "connect" | null;
 
 type NavItem = {
   label: string;
+  /** Shorter label used between lg and xl breakpoints to keep the nav on one line. */
+  shortLabel?: string;
   href: string;
   panel: PanelKind;
 };
 
 const NAV: NavItem[] = [
-  { label: "About His Grace", href: "/biography", panel: "about" },
-  { label: "Pastoral Letters", href: "/pastoral-letters", panel: "library" },
+  { label: "About His Grace", shortLabel: "About", href: "/biography", panel: "about" },
+  { label: "Pastoral Letters", shortLabel: "Letters", href: "/pastoral-letters", panel: "library" },
   { label: "Reflections", href: "/reflections", panel: "reflections" },
   { label: "Diary", href: "/diary", panel: null },
-  { label: "Appointments", href: "/appointments", panel: null },
+  { label: "Appointments", shortLabel: "Visit", href: "/appointments", panel: null },
   { label: "Connect", href: "/connect", panel: "connect" },
 ];
 
@@ -158,7 +160,7 @@ export function MegaNav({
   return (
     <nav
       aria-label="Primary"
-      className="flex flex-1 items-stretch justify-center gap-9 font-[family-name:var(--font-ui)] text-[12px] font-medium uppercase tracking-[1.4px] max-xl:hidden"
+      className="flex flex-1 items-stretch justify-center gap-4 font-[family-name:var(--font-ui)] text-[11px] font-medium uppercase tracking-[1.1px] max-lg:hidden lg:gap-5 xl:gap-9 xl:text-[12px] xl:tracking-[1.4px]"
     >
       {NAV.map((item) => {
         const active = isActive(item.href);
@@ -176,15 +178,22 @@ export function MegaNav({
               href={item.href}
               aria-current={active ? "page" : undefined}
               data-active={active ? "true" : undefined}
-              className={`py-5 ${active ? linkActive : linkBase}`}
+              className={`whitespace-nowrap py-5 ${active ? linkActive : linkBase}`}
             >
-              {item.label}
+              {item.shortLabel ? (
+                <>
+                  <span className="xl:hidden">{item.shortLabel}</span>
+                  <span className="hidden xl:inline">{item.label}</span>
+                </>
+              ) : (
+                item.label
+              )}
             </Link>
 
             {hasPanel ? (
               <div className="mega-panel absolute left-1/2 top-full z-40 w-screen -translate-x-1/2 pt-2">
                 <div className="border-y border-[color:var(--rule)] bg-bone-deep shadow-[0_30px_60px_-20px_rgba(10,27,51,0.18)]">
-                  <div className="mx-auto grid max-w-[1240px] gap-14 px-14 py-14 max-lg:px-8">
+                  <div className="mx-auto grid max-w-[1240px] gap-10 px-8 py-10 lg:px-10 xl:gap-14 xl:px-14 xl:py-14">
                     {item.panel === "about" ? <AboutPanel /> : null}
                     {item.panel === "library" ? (
                       <LibraryPanel letters={letters} />
@@ -221,10 +230,10 @@ function PanelHeading({
         <span aria-hidden className="block h-px w-9 bg-gold" />
         {eyebrow}
       </p>
-      <h3 className="mt-4 font-[family-name:var(--font-display)] text-[32px] font-medium leading-[1.1] text-ink">
+      <h3 className="mt-4 font-[family-name:var(--font-display)] text-[26px] font-medium leading-[1.1] text-ink xl:text-[32px]">
         {title}
       </h3>
-      <p className="mt-3 font-[family-name:var(--font-display)] text-[17px] italic leading-[1.5] text-ink-soft">
+      <p className="mt-3 font-[family-name:var(--font-display)] text-[15px] italic leading-[1.5] text-ink-soft xl:text-[17px]">
         {lead}
       </p>
     </div>
@@ -233,13 +242,13 @@ function PanelHeading({
 
 function AboutPanel() {
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-14 max-lg:grid-cols-1">
+    <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <PanelHeading
         eyebrow="About His Grace"
         title="A Life in the Lord's Vineyard"
         lead="Shepherd, teacher, and servant of the Church of Onitsha."
       />
-      <ul className="grid grid-cols-2 gap-x-10 gap-y-6">
+      <ul className="grid grid-cols-2 gap-x-8 gap-y-5 xl:gap-x-10 xl:gap-y-6">
         {ABOUT_ITEMS.map((item) => {
           const Icon = item.Icon;
           return (
@@ -253,10 +262,10 @@ function AboutPanel() {
                   size={20}
                 />
                 <div>
-                  <p className="font-[family-name:var(--font-display)] text-[22px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
+                  <p className="font-[family-name:var(--font-display)] text-[19px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[22px]">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-[14px] leading-[1.5] text-ink-soft normal-case tracking-normal">
+                  <p className="mt-1 text-[13px] leading-[1.5] text-ink-soft normal-case tracking-normal xl:text-[14px]">
                     {item.description}
                   </p>
                 </div>
@@ -272,7 +281,7 @@ function AboutPanel() {
 function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
   const recent = letters.slice(0, 3);
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-14 max-lg:grid-cols-1">
+    <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <div>
         <PanelHeading
           eyebrow="The Library"
@@ -308,7 +317,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
           </div>
         </div>
       </div>
-      <ul className="grid grid-cols-3 gap-8 max-md:grid-cols-1">
+      <ul className="grid grid-cols-3 gap-6 max-md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
         {recent.map((letter) => (
           <li key={letter.id}>
             <Link
@@ -321,7 +330,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
                     src={letter.cover}
                     alt={letter.title}
                     fill
-                    sizes="200px"
+                    sizes="(max-width: 1280px) 30vw, 200px"
                     className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
                 ) : null}
@@ -331,7 +340,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
                   Pastoral Letter · {letter.year}
                 </p>
               ) : null}
-              <p className="mt-2 font-[family-name:var(--font-display)] text-[18px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
+              <p className="mt-2 font-[family-name:var(--font-display)] text-[16px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[18px]">
                 {letter.title}
               </p>
             </Link>
@@ -345,7 +354,7 @@ function LibraryPanel({ letters }: { letters: LetterPreview[] }) {
 function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
   const recent = homilies.slice(0, 4);
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-14 max-lg:grid-cols-1">
+    <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <div>
         <PanelHeading
           eyebrow="Homilies & Reflections"
@@ -359,7 +368,7 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
           Browse all reflections →
         </Link>
       </div>
-      <ul className="grid grid-cols-2 gap-x-10 gap-y-6">
+      <ul className="grid grid-cols-2 gap-x-8 gap-y-5 xl:gap-x-10 xl:gap-y-6">
         {recent.map((h) => (
           <li key={h.id}>
             <Link
@@ -371,7 +380,7 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
                   {h.occasion}
                 </p>
               ) : null}
-              <p className="mt-2 font-[family-name:var(--font-display)] text-[18px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
+              <p className="mt-2 font-[family-name:var(--font-display)] text-[16px] font-medium normal-case tracking-normal leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[18px]">
                 {h.title}
               </p>
             </Link>
@@ -384,13 +393,13 @@ function ReflectionsPanel({ homilies }: { homilies: HomilyPreview[] }) {
 
 function ConnectPanel() {
   return (
-    <div className="grid grid-cols-[1fr_2fr] gap-14 max-lg:grid-cols-1">
+    <div className="grid grid-cols-1 gap-10 xl:grid-cols-[1fr_2fr] xl:gap-14">
       <PanelHeading
         eyebrow="Domus Episcopalis"
         title="Connect with His Grace"
         lead="Correspondence, prayer intentions, and quiet communion."
       />
-      <ul className="grid grid-cols-3 gap-8 max-md:grid-cols-1">
+      <ul className="grid grid-cols-2 gap-6 max-md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 xl:gap-8">
         {CONNECT_ITEMS.map((item) => {
           const Icon = item.Icon;
           return (
@@ -400,10 +409,10 @@ function ConnectPanel() {
                 className="group block border-t border-[color:var(--rule)] pt-5 transition-colors hover:border-gold"
               >
                 <Icon className="h-6 w-6 text-gold-text" size={24} />
-                <p className="mt-4 font-[family-name:var(--font-display)] text-[22px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text">
+                <p className="mt-4 font-[family-name:var(--font-display)] text-[19px] font-medium leading-[1.2] text-ink transition-colors group-hover:text-gold-text xl:text-[22px]">
                   {item.label}
                 </p>
-                <p className="mt-2 text-[14px] leading-[1.5] text-ink-soft normal-case tracking-normal">
+                <p className="mt-2 text-[13px] leading-[1.5] text-ink-soft normal-case tracking-normal xl:text-[14px]">
                   {item.description}
                 </p>
               </Link>

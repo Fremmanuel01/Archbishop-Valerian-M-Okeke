@@ -40,7 +40,7 @@ export async function SiteHeader() {
     }));
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50 flex items-center gap-10 bg-[linear-gradient(180deg,rgba(247,244,238,0.92)_0%,rgba(247,244,238,0.6)_60%,transparent_100%)] px-10 pt-[22px] text-ink max-lg:px-7 max-md:px-5 max-md:pt-4">
+    <header className="absolute inset-x-0 top-0 z-50 flex items-center gap-5 bg-[linear-gradient(180deg,rgba(247,244,238,0.92)_0%,rgba(247,244,238,0.6)_60%,transparent_100%)] px-6 pt-[22px] text-ink lg:gap-7 lg:px-8 xl:gap-10 xl:px-10 max-md:px-5 max-md:pt-4">
       <Link
         href="/"
         aria-label="Home — The Archbishop of Onitsha"
@@ -61,7 +61,7 @@ export async function SiteHeader() {
 
       <div
         aria-hidden
-        className="absolute inset-x-10 -bottom-px h-px bg-ink/15 max-lg:inset-x-7 max-md:inset-x-5"
+        className="absolute inset-x-6 -bottom-px h-px bg-ink/15 lg:inset-x-8 xl:inset-x-10 max-md:inset-x-5"
       />
     </header>
   );

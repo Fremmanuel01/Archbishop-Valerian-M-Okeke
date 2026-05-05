@@ -64,7 +64,7 @@ export async function AppHeader() {
         <MegaNav letters={letters} homilies={homilies} variant="light" lang={lang} />
 
         <div className="ml-auto flex items-center gap-3 max-md:gap-2">
-          <LangToggle current={lang} dict={t} variant="light" />
+          <LangToggle current={lang} ariaLabel={t.langToggleLabel} variant="light" />
           <NavOverlay variant="light" />
         </div>
       </div>

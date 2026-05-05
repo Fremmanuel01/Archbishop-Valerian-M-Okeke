@@ -3,15 +3,16 @@
 import { usePathname } from "next/navigation";
 import { useTransition } from "react";
 import { setLang } from "@/app/(frontend)/actions/lang";
-import type { Dict, Lang } from "@/lib/i18n";
+import type { Lang } from "@/lib/i18n";
 
 export function LangToggle({
   current,
-  dict,
+  ariaLabel,
   variant = "light",
 }: {
   current: Lang;
-  dict: Dict;
+  /** Localised "Language" label for screen readers. */
+  ariaLabel: string;
   variant?: "light" | "dark";
 }) {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ export function LangToggle({
   return (
     <div
       role="group"
-      aria-label={dict.langToggleLabel}
+      aria-label={ariaLabel}
       className={`flex items-center gap-1.5 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.6px] ${
         pending ? "opacity-60" : ""
       }`}

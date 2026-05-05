@@ -108,14 +108,10 @@ export async function SiteFooter() {
 
         <div className="mt-20 flex justify-between border-t border-stone pt-8 font-[family-name:var(--font-ui)] text-[10px] uppercase tracking-[1.6px] text-ink-soft opacity-70 max-md:mt-14 max-md:flex-col max-md:items-center max-md:gap-2.5 max-md:text-center">
           <span>
-            {t.footer.copyright(
-              // Roman renders 2026 as MMXXVI; we feed the resolved string back
-              // into the localised template so EN/IG share the same glyph.
-              ""
-            )}
+            {"© "}
             <Roman year={2026} />
-            {" · "}
-            {lang === "ig" ? "Ụlọ Ọrụ Ọdaa" : "The Office of His Grace"}
+            {" "}
+            {t.footer.copyrightSuffix}
           </span>
           <span>
             <Latin>Domus Episcopalis</Latin>{" · "}

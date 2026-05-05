@@ -123,7 +123,8 @@ export type Dict = {
     connectHeading: string;
     motto: string;
     archbishopOfOnitsha: string;
-    copyright: (year: string) => string;
+    /** "© · The Office of His Grace" — concatenated with the Roman numeral year at render time. */
+    copyrightSuffix: string;
     domus: string;
   };
 };
@@ -298,7 +299,7 @@ export const dict: Record<Lang, Dict> = {
       motto:
         "“Ut Vitam Habeant — that they may have life, and have it more abundantly.” · John 10:10",
       archbishopOfOnitsha: "Archbishop of Onitsha",
-      copyright: (year) => `© ${year} · The Office of His Grace`,
+      copyrightSuffix: "· The Office of His Grace",
       domus: "Domus Episcopalis · Onitsha · Anambra · Nigeria",
     },
   },
@@ -473,7 +474,7 @@ export const dict: Record<Lang, Dict> = {
       motto:
         "“Ut Vitam Habeant — ka ha nwee ndụ, ka ha nweekwa ya n'ụba.” · Jọn 10:10",
       archbishopOfOnitsha: "Onye Isi Bishọp nke Onitsha",
-      copyright: (year) => `© ${year} · Ụlọ Ọrụ Ọdaa`,
+      copyrightSuffix: "· Ụlọ Ọrụ Ọdaa",
       domus: "Domus Episcopalis · Onicha · Anambra · Nigeria",
     },
   },

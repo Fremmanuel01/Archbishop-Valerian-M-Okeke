@@ -63,7 +63,7 @@ export async function SiteHeader() {
       <MegaNav letters={letters} homilies={homilies} variant="light" lang={lang} />
 
       <div className="ml-auto flex items-center gap-3 pb-3.5 max-md:gap-2 max-md:pb-2.5">
-        <LangToggle current={lang} dict={t} variant="light" />
+        <LangToggle current={lang} ariaLabel={t.langToggleLabel} variant="light" />
         <NavOverlay variant="dark" />
       </div>
 

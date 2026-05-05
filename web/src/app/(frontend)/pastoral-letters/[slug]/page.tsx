@@ -14,7 +14,6 @@ import {
   getPastoralLetters,
   slugify,
   yearOf,
-  formatLongDate,
 } from "@/lib/cms";
 
 export const revalidate = 3600;
@@ -112,16 +111,6 @@ export default async function LetterPage({
                   </p>
                 ) : null}
               </div>
-              {letter.date ? (
-                <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
-                    Given
-                  </p>
-                  <p className="mt-1 text-[13px] text-ink">
-                    <time dateTime={letter.date}>{formatLongDate(letter.date)}</time>
-                  </p>
-                </div>
-              ) : null}
               {readingTime > 0 ? (
                 <div>
                   <p className="text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">

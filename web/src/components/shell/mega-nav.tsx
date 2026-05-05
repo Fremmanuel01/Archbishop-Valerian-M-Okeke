@@ -59,7 +59,7 @@ const ABOUT_ITEMS: Array<{
     label: "Biography",
     href: "/biography",
     description:
-      "The life and ministry of His Grace — from Amesi to the Metropolitan See.",
+      "The life and ministry of His Grace — from Umudioka to the Metropolitan See.",
     Icon: Crozier,
   },
   {

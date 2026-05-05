@@ -20,8 +20,8 @@ type Milestone = {
 const MILESTONES: Milestone[] = [
   {
     year: 1953,
-    heading: "Born in Amesi",
-    body: "Born on Tuesday, 20 October 1953 in Amesi, Aguata Local Government Area of Anambra State, Nigeria.",
+    heading: "Born in Umudioka",
+    body: "Born on Tuesday, 20 October 1953 in Umudioka, Dunukofia Local Government Area of Anambra State, Nigeria.",
   },
   {
     year: 1973,
@@ -194,7 +194,7 @@ export default async function BiographyPage() {
               Metropolitan Archbishop of Onitsha, one of the oldest and most
               venerable local Churches in Nigeria. Born on the twentieth day
               of October in the year of Our Lord <Roman year={1953} /> in
-              Amesi, Aguata Local Government Area of Anambra State, his life
+              Umudioka, Dunukofia Local Government Area of Anambra State, his life
               and ministry have been shaped by a deep love for the Eucharist
               and for the faithful of the Church.
             </p>

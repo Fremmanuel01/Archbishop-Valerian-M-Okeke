@@ -56,10 +56,21 @@ async function safeList<T>(path: string): Promise<T[]> {
   }
 }
 
-export const getPastoralLetters = () =>
-  safeList<PastoralLetter>("/pastoral-letters");
-export const getPastoralLetter = (id: number | string) =>
-  get<PastoralLetter>(`/pastoral-letters/${id}`);
+// Old WordPress URLs that still linger in a couple of CMS records but no
+// longer serve a usable file (the apex domain now points at Vercel and the
+// title↔PDF pairing was wrong anyway). Treat them as missing so the
+// "Download PDF" affordance doesn't render a broken link.
+function scrubStalePdf<T extends { pdf_url: string | null }>(letter: T): T {
+  if (letter.pdf_url && /archbishopvalokeke\.org\/wp-content\//i.test(letter.pdf_url)) {
+    return { ...letter, pdf_url: null };
+  }
+  return letter;
+}
+
+export const getPastoralLetters = async () =>
+  (await safeList<PastoralLetter>("/pastoral-letters")).map(scrubStalePdf);
+export const getPastoralLetter = async (id: number | string) =>
+  scrubStalePdf(await get<PastoralLetter>(`/pastoral-letters/${id}`));
 
 export const getHomilies = () => safeList<Homily>("/homilies");
 export const getHomily = (id: number | string) =>

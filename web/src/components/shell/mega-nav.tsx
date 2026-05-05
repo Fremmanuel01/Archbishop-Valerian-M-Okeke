@@ -170,8 +170,8 @@ export function MegaNav({
             key={item.href}
             className={
               hasPanel
-                ? "mega-item relative flex items-center"
-                : "relative flex items-center"
+                ? "mega-item flex items-center"
+                : "flex items-center"
             }
           >
             <Link

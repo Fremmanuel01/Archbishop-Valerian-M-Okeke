@@ -1,5 +1,7 @@
 # CLAUDE.md — Archbishop Valerian M. Okeke
 
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
 Operating context for Claude / AI agents working in this repository.
 **Read this before doing anything.**
 
@@ -37,7 +39,8 @@ ornament. Light mode only.
 | 5 — Page implementation | ✅ Done | Routes: `biography`, `coat-of-arms`, `connect`, `diary`, `his-episcopacy`, `messages`, `other-teachings`, `pastoral-letters`, `pastoral-visits`, `photo-gallery`, `reflections` |
 | 6 — CMS integration | ✅ Done | `web/src/lib/cms.ts` reads pastoral letters / homilies / writings from the Archbishop Library API |
 | 7 — GitHub repo + deploy | ✅ Done | GitHub: `Fremmanuel01/Archbishop-Valerian-M-Okeke` (public). Vercel project: `emmanuel-nwabufos-projects/archbishop-valerian-m-okeke` (Deployment Protection disabled — public). Live: <https://archbishop-valerian-m-okeke.vercel.app>. |
-| 8 — CMS admin dashboard  | 🚧 In progress | Payload CMS 3.82 mounted at `(payload)/admin` with Postgres. Collections: `Users`, `Media`, `DiaryEntries`, `PastoralVisits`, `GalleryImages`, `BiographySections`. Globals: `Homepage`, `Programme`. Storefront pages still mostly read static data — wiring them through Payload is the open work. |
+| 8 — CMS admin dashboard  | 🚧 In progress | Payload CMS 3.82 mounted at `(payload)/admin` with Postgres. Collections: `Users`, `Media`, `DiaryEntries`, `PastoralVisits`, `GalleryImages`, `BiographySections`. Globals: `Homepage`, `Programme`. The `Programme` global is already wired (`src/lib/programme.ts` reads from Payload, falls back to static `src/data/pastoral-programme.ts`); the other collections/globals are still mostly unwired and storefront pages read static data. |
+| 9 — Bilingual chrome (EN/Igbo) | ✅ Done | English ↔ Igbo language toggle live. Dictionary lives in `web/src/lib/i18n.ts` and covers navigation, eyebrows/titles/leads, buttons, footer, form labels. Body content (pastoral letters, homilies, writings) stays English — Igbo locale surfaces a small notice on long-form pages. |
 
 **The latest approved artifact** is the homepage mockup at:
 - `docs/mockups/homepage-v1.html`
@@ -268,17 +271,17 @@ won't change.
 
 ## Open questions / decisions still owed to the user
 
-1. Should the site be **bilingual** English + Igbo eventually?
-2. The 5 pastoral letters with no original cover (IDs 2, 4, 5, 6, 22 in the
+1. The 5 pastoral letters with no original cover (IDs 2, 4, 5, 6, 22 in the
    live CMS) — extract first page of PDF or wait for re-upload?
-3. Hero photo for the homepage — current mockup uses a gold-vestments
+2. Hero photo for the homepage — current mockup uses a gold-vestments
    cathedraticum shot. Should we commission proper portraits?
-4. Phase 8 hand-off: which storefront pages migrate from static `src/data/` /
-   the legacy Archbishop Library API to Payload first? (Programme is the
-   obvious first candidate — the data-access layer in `src/lib/programme.ts`
-   already anticipates the swap.)
+3. Phase 8 hand-off, after Programme: which storefront page migrates from
+   static `src/data/` / the legacy Archbishop Library API to Payload next?
+   (Homepage global is mounted in Payload but not yet read; Diary / Pastoral
+   Visits / Gallery / Biography collections likewise.)
 
-*(Resolved earlier: repo is public; Resend chosen for forms / email; Phase 7 deploy live.)*
+*(Resolved earlier: repo is public; Resend chosen for forms / email; Phase 7
+deploy live; bilingual EN/Igbo chrome is implemented — see Phase 9.)*
 
 ---
 

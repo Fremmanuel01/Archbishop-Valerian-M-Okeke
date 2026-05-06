@@ -36,10 +36,30 @@ export default function ContactPage() {
               <h2 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">
                 Chancery
               </h2>
-              <p className="mt-4 font-[family-name:var(--font-body)] text-[17px] leading-[1.7] text-ink">
-                For administrative correspondence, please address the Chancery
-                of the Archdiocese of Onitsha directly.
-              </p>
+              <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 font-[family-name:var(--font-body)] text-[17px] leading-[1.55] text-ink">
+                <dt className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
+                  Telephone
+                </dt>
+                <dd>
+                  <a
+                    href="tel:+2348176804048"
+                    className="link-underline tabular-nums text-ink"
+                  >
+                    +234 817 680 4048
+                  </a>
+                </dd>
+                <dt className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
+                  Email
+                </dt>
+                <dd>
+                  <a
+                    href="mailto:secretariat@onitsha-archdiocese.org"
+                    className="link-underline text-ink"
+                  >
+                    secretariat@onitsha-archdiocese.org
+                  </a>
+                </dd>
+              </dl>
             </div>
             <div>
               <h2 className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold">

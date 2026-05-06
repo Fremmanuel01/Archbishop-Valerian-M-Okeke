@@ -127,6 +127,24 @@ export type Dict = {
     copyrightSuffix: string;
     domus: string;
   };
+
+  // ── Pastoral letter chrome ────────────────────────────────
+  letter: {
+    contents: string;
+    /** Eyebrow label above the reading-time value in the left rail. */
+    readingLabel: string;
+    /** Suffix after the reading-time number, e.g. "5 min read". */
+    minRead: string;
+    /** Visually-hidden suffix announcing PDF + new-tab to screen readers. */
+    pdfNewTabHint: string;
+    /** Section eyebrow above the prev / next pastoral letter nav. */
+    continueReading: string;
+    previousLetter: string;
+    nextLetter: string;
+    allLetters: string;
+    fullTextUnavailableTitle: string;
+    fullTextUnavailableBody: string;
+  };
 };
 
 export const dict: Record<Lang, Dict> = {
@@ -192,7 +210,7 @@ export const dict: Record<Lang, Dict> = {
       readTheTeaching: "Read the Teaching →",
       readTheReflection: "Read the Reflection →",
       open: "Open →",
-      downloadPdf: "Download PDF ↓",
+      downloadPdf: "Download PDF",
       browseAll: "Browse all",
       backTo: "Back to",
       submit: "Send",
@@ -302,6 +320,20 @@ export const dict: Record<Lang, Dict> = {
       copyrightSuffix: "· The Office of His Grace",
       domus: "Domus Episcopalis · Onitsha · Anambra · Nigeria",
     },
+
+    letter: {
+      contents: "Contents",
+      readingLabel: "Reading",
+      minRead: "min read",
+      pdfNewTabHint: "(opens in a new tab, PDF)",
+      continueReading: "Continue reading",
+      previousLetter: "Previous letter",
+      nextLetter: "Next letter",
+      allLetters: "All Pastoral Letters",
+      fullTextUnavailableTitle: "The full text isn't available yet",
+      fullTextUnavailableBody:
+        "This letter's body is being prepared for the Library. The original PDF is available below, and the full archive is one click away.",
+    },
   },
 
   ig: {
@@ -367,7 +399,7 @@ export const dict: Record<Lang, Dict> = {
       readTheTeaching: "Gụọ Nkuzi a →",
       readTheReflection: "Gụọ Ntụgharị Uche a →",
       open: "Mepee →",
-      downloadPdf: "Budata PDF ↓",
+      downloadPdf: "Budata PDF",
       browseAll: "Lelee niile",
       backTo: "Laghachi",
       submit: "Zipu",
@@ -476,6 +508,20 @@ export const dict: Record<Lang, Dict> = {
       archbishopOfOnitsha: "Onye Isi Bishọp nke Onitsha",
       copyrightSuffix: "· Ụlọ Ọrụ Ọdaa",
       domus: "Domus Episcopalis · Onicha · Anambra · Nigeria",
+    },
+
+    letter: {
+      contents: "Ihe dị n'ime",
+      readingLabel: "Ọgụgụ",
+      minRead: "nkeji ọgụgụ",
+      pdfNewTabHint: "(mepee na windo ọhụrụ, PDF)",
+      continueReading: "Gaa n'ihu n'ọgụgụ",
+      previousLetter: "Akwụkwọ gara aga",
+      nextLetter: "Akwụkwọ na-esote",
+      allLetters: "Akwụkwọ Ozi Ọchịchị Niile",
+      fullTextUnavailableTitle: "Ederede zuru ezu adịghị ugbu a",
+      fullTextUnavailableBody:
+        "A na-akwadebe ozi a maka Ụlọ Akwụkwọ. Akwụkwọ PDF mbụ dị n'okpuru, ụlọ akwụkwọ niile dịkwa otu mpịaka.",
     },
   },
 };

@@ -11,7 +11,7 @@ export function BodyLanguageNotice({ lang }: { lang: Lang }) {
     <aside
       role="note"
       lang="ig"
-      className="mb-10 border-l-2 border-gold bg-bone-deep px-5 py-4 font-[family-name:var(--font-display)] text-[15px] italic leading-[1.55] text-ink-soft"
+      className="mb-10 border border-[color:var(--rule)] bg-bone-deep px-5 py-4 font-[family-name:var(--font-display)] text-[15px] italic leading-[1.55] text-ink-soft"
     >
       {t.bodyEnglishNotice}
     </aside>

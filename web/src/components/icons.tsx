@@ -156,3 +156,30 @@ export function Fleuron(props: IconProps) {
     </svg>
   );
 }
+
+export function ArrowDown(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M12 5 L12 19" />
+      <path d="M6 13 L12 19 L18 13" />
+    </svg>
+  );
+}
+
+export function ArrowLeft(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M19 12 L5 12" />
+      <path d="M11 6 L5 12 L11 18" />
+    </svg>
+  );
+}
+
+export function ArrowRight(props: IconProps) {
+  return (
+    <svg {...base(props)}>
+      <path d="M5 12 L19 12" />
+      <path d="M13 6 L19 12 L13 18" />
+    </svg>
+  );
+}

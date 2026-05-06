@@ -51,14 +51,14 @@ export default async function PastoralLettersPage() {
                 href={`/pastoral-letters/${slug}`}
                 className="group flex flex-1 flex-col"
               >
-                <div className="relative aspect-[4/5] w-full overflow-hidden bg-stone">
+                <div className="book-tilt relative aspect-[4/5] w-full overflow-hidden bg-stone">
                   {cover ? (
                     <Image
                       src={cover}
                       alt={`Cover of ${letter.title}`}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-[1.03] [filter:drop-shadow(0_20px_60px_rgba(10,27,51,0.2))]"
+                      className="object-cover [filter:drop-shadow(0_20px_60px_rgba(10,27,51,0.2))]"
                     />
                   ) : null}
                 </div>

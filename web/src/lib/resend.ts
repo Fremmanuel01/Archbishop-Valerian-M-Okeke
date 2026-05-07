@@ -4,6 +4,10 @@ type SendEmailInput = {
   to: string | string[];
   subject: string;
   text: string;
+  /** Optional branded HTML body. The plain `text` field stays as the
+   *  fallback for clients that don't render HTML, and is also what spam
+   *  filters score against — so it's required even when html is provided. */
+  html?: string;
   replyTo?: string;
 };
 
@@ -16,7 +20,7 @@ export function resendConfigured(): boolean {
   return Boolean(getEnv("RESEND_API_KEY"));
 }
 
-export async function sendEmail({ to, subject, text, replyTo }: SendEmailInput) {
+export async function sendEmail({ to, subject, text, html, replyTo }: SendEmailInput) {
   const apiKey = getEnv("RESEND_API_KEY");
   const from = getEnv("RESEND_FROM") ?? "Archbishop's Office <onboarding@resend.dev>";
   if (!apiKey) {
@@ -33,6 +37,7 @@ export async function sendEmail({ to, subject, text, replyTo }: SendEmailInput) 
       to: Array.isArray(to) ? to : [to],
       subject,
       text,
+      ...(html ? { html } : {}),
       reply_to: replyTo,
     }),
   });

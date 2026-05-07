@@ -2,7 +2,8 @@
 
 import { addAudienceContact, resendConfigured, sendEmail } from "@/lib/resend";
 import { getLang } from "@/lib/lang";
-import { getDict } from "@/lib/i18n";
+import { getDict, type Lang } from "@/lib/i18n";
+import { renderConfirmationHtml } from "@/lib/email-templates";
 import type { FormState } from "./form-state";
 
 const MAX_NAME = 120;
@@ -38,14 +39,25 @@ function prayerRecipient(): string | null {
 // Send a confirmation back to the form submitter. Failures are swallowed —
 // the primary notification to the Chancery has already succeeded by the time
 // we get here, so a confirmation hiccup must not flip the form into an error
-// state for the user.
+// state for the user. The body text is sent as the plaintext fallback;
+// branded HTML is rendered alongside via renderConfirmationHtml.
 async function sendConfirmation(input: {
   to: string;
   subject: string;
   body: string;
+  lang: Lang;
 }): Promise<void> {
   try {
-    await sendEmail({ to: input.to, subject: input.subject, text: input.body });
+    await sendEmail({
+      to: input.to,
+      subject: input.subject,
+      text: input.body,
+      html: renderConfirmationHtml({
+        subject: input.subject,
+        body: input.body,
+        lang: input.lang,
+      }),
+    });
   } catch (err) {
     console.warn("[connect] confirmation send failed:", err);
   }
@@ -85,11 +97,13 @@ export async function submitContact(
       text: `From: ${name} <${email}>\n\n${message}`,
       replyTo: email,
     });
-    const t = getDict(await getLang());
+    const lang = await getLang();
+    const t = getDict(lang);
     await sendConfirmation({
       to: email,
       subject: t.confirmations.contact.subject,
       body: fillTemplate(t.confirmations.contact.bodyTemplate, { name, subject }),
+      lang,
     });
     return {
       status: "success",
@@ -127,11 +141,13 @@ export async function submitPrayerRequest(
       text: `From: ${name} <${email}>\n\nIntention:\n${intention}`,
       replyTo: email,
     });
-    const t = getDict(await getLang());
+    const lang = await getLang();
+    const t = getDict(lang);
     await sendConfirmation({
       to: email,
       subject: t.confirmations.prayer.subject,
       body: fillTemplate(t.confirmations.prayer.bodyTemplate, { name }),
+      lang,
     });
     return {
       status: "success",
@@ -169,11 +185,13 @@ export async function subscribeNewsletter(
       firstName: firstName || undefined,
       lastName: rest.join(" ") || undefined,
     });
-    const t = getDict(await getLang());
+    const lang = await getLang();
+    const t = getDict(lang);
     await sendConfirmation({
       to: email,
       subject: t.confirmations.newsletter.subject,
       body: fillTemplate(t.confirmations.newsletter.bodyTemplate, { name }),
+      lang,
     });
     return {
       status: "success",

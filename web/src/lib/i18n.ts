@@ -332,19 +332,19 @@ export const dict: Record<Lang, Dict> = {
 
     confirmations: {
       contact: {
-        subject: "We received your message — Office of His Grace",
+        subject: "Your letter has reached us",
         bodyTemplate:
-          "Dear {name},\n\nThank you for writing to the Office of His Grace, the Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha.\n\nYour message regarding \"{subject}\" has been received. The Chancery will respond as soon as possible — pastoral correspondence typically receives a reply within a few business days, though some matters require longer reflection.\n\nIn the meantime, you remain in our prayers.\n\nDomus Episcopalis · Onitsha",
+          "Dear {name},\n\nYour letter regarding \"{subject}\" has reached the Office of His Grace.\n\nEach correspondence sent to this house is read and ordered for response. If the matter calls for the Archbishop's own pen, His Grace will write in his time; if it is for the Chancery, you will hear from us in due course.\n\nBe assured of our prayers.\n\nPax tecum,\nThe Office of the Archbishop of Onitsha",
       },
       prayer: {
-        subject: "Your prayer intention has been received",
+        subject: "Your intention has been received",
         bodyTemplate:
-          "Dear {name},\n\nYour intention has been received and will be remembered at the cathedral altar.\n\nThe prayer intentions of the faithful are gathered each day and offered during the celebration of the Holy Eucharist at the Basilica of the Most Holy Trinity, Onitsha.\n\nMay the Lord, who knows the depths of every heart, grant you the grace you seek.\n\nDomus Episcopalis · Onitsha",
+          "Dear {name},\n\nYour intention has been received and added to those read at the altar of the Basilica of the Most Holy Trinity, Onitsha, where Mass is offered each day for the people of this Archdiocese.\n\nWhat you have asked, the Lord — who looks upon the heart and not upon the multitude of words — has already heard. The Church only adds her voice to yours.\n\nIn Christo,\nThe Office of the Archbishop of Onitsha",
       },
       newsletter: {
-        subject: "Welcome — letters from His Grace",
+        subject: "Welcome — letters from the Office of His Grace",
         bodyTemplate:
-          "Dear {name},\n\nYou are now subscribed to receive pastoral letters, reflections, and occasional messages from the Office of His Grace, the Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha.\n\nLetters arrive a few times a month, never more — and only when there is something pastoral to share.\n\nTo unsubscribe at any time, write to admin@archbishopvalokeke.org with the subject line \"Unsubscribe.\"\n\nDomus Episcopalis · Onitsha",
+          "Dear {name},\n\nYou are now on the list to receive pastoral letters, reflections, and seasonal messages from this office.\n\nLetters arrive a few times a month, never more, and only when there is something to say. The list is kept here at the Domus Episcopalis and is not shared with anyone. To leave it at any time, write to admin@archbishopvalokeke.org with the subject \"Unsubscribe\"; this is honoured at once.\n\nUntil the next letter, the Lord be with you.\n\nThe Office of the Archbishop of Onitsha",
       },
     },
 
@@ -539,19 +539,19 @@ export const dict: Record<Lang, Dict> = {
 
     confirmations: {
       contact: {
-        subject: "Anata ozi gị — Ụlọ Ọrụ Ọdaa",
+        subject: "Akwụkwọ ozi gị eruola n'aka anyị",
         bodyTemplate:
-          "Ezigbo {name},\n\nDaalụ maka idere Ụlọ Ọrụ Ọdaa, Onye Kachasị Mma Onye Isi Bishọp Valerian Maduka Okeke, Onye Isi Bishọp Onitsha.\n\nAnatala ozi gị banyere \"{subject}\". Ụlọ Ọrụ Ọchịchị ga-aza n'oge na-adịghị anya — ọzịza ozi nkịtị na-abịa n'ime ụbọchị ole na ole, ma ụfọdụ okwu chọrọ ogologo oge ntụgharị uche.\n\nN'oge a, anyị na-echeta gị n'ekpere.\n\nDomus Episcopalis · Onicha",
+          "Ezigbo {name},\n\nAkwụkwọ ozi gị banyere \"{subject}\" eruola n'Ụlọ Ọrụ Ọdaa.\n\nA na-agụ ozi ọ bụla na-erute ụlọ a ma debe ya maka ọzịza. Ọ bụrụ na okwu ahụ na-akpọ Ọdaa n'onwe ya idere, ọ ga-edere n'oge ya; ọ bụrụ na ọ bụ maka Ụlọ Ọrụ Ọchịchị, ị ga-anụ n'aka anyị mgbe oge ruru.\n\nCheta na anyị na-ekpere maka gị.\n\nPax tecum,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
       prayer: {
-        subject: "Anatala arịrịọ ekpere gị",
+        subject: "Anatala arịrịọ gị",
         bodyTemplate:
-          "Ezigbo {name},\n\nAnatala arịrịọ gị, a ga-echetakwa ya n'ebe ịchụ àjà nke katidral.\n\nA na-ekpokọta arịrịọ ekpere ndị kwere ekwe kwa ụbọchị, jiri ha chụọ àjà n'oge a na-eme Mass dị nsọ na Bazilika nke Atọ N'Otu Kachasị Nsọ, Onicha.\n\nKa Onyenwe anyị, onye maara ihe niile dị n'obi onye ọ bụla, nye gị amara ị na-achọ.\n\nDomus Episcopalis · Onicha",
+          "Ezigbo {name},\n\nAnatala arịrịọ gị ma tinye ya na ndị a na-agụ n'ebe ịchụ àjà nke Bazilika nke Atọ N'Otu Kachasị Nsọ, Onicha, ebe a na-eme Mass kwa ụbọchị maka ndị nke Archdiocese a.\n\nIhe ị rịọrọ, Onyenwe anyị — onye na-elele obi ọ bụghị ọtụtụ okwu — anụlarị. Ụka na-atụkwasị olu nke ya na nke gị.\n\nIn Christo,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
       newsletter: {
-        subject: "Nnọọ — akwụkwọ ozi sitere n'aka Ọdaa",
+        subject: "Nnọọ — akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa",
         bodyTemplate:
-          "Ezigbo {name},\n\nE debanyere aha gị inata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'aka Ụlọ Ọrụ Ọdaa, Onye Kachasị Mma Onye Isi Bishọp Valerian Maduka Okeke, Onye Isi Bishọp Onitsha.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa ya — naanị mgbe e nwere ihe ọchịchị a ga-ekekọrịta.\n\nIji wepụ aha gị mgbe ọ bụla, dee admin@archbishopvalokeke.org jiri isiokwu \"Unsubscribe.\"\n\nDomus Episcopalis · Onicha",
+          "Ezigbo {name},\n\nE debanyere aha gị ka ị nata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'ụlọ ọrụ a.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa, naanị mgbe e nwere ihe a ga-ekwu. Ndepụta a debere n'Ụlọ Ọrụ Ọdaa, ọ bụghị ihe a na-ekekọrịta. Iji wepụ aha gị mgbe ọ bụla, dee admin@archbishopvalokeke.org jiri isiokwu \"Unsubscribe\"; a na-asọpụrụ ya ozugbo.\n\nRuo akwụkwọ ozi na-esote, ka Onyenwe anyị nọnyere gị.\n\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
     },
 

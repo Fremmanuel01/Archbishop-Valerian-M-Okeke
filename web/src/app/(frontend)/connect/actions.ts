@@ -1,13 +1,7 @@
 "use server";
 
 import { addAudienceContact, resendConfigured, sendEmail } from "@/lib/resend";
-
-export type FormState =
-  | { status: "idle" }
-  | { status: "success"; message: string }
-  | { status: "error"; message: string };
-
-export const initialFormState: FormState = { status: "idle" };
+import type { FormState } from "./form-state";
 
 const MAX_NAME = 120;
 const MAX_SUBJECT = 200;

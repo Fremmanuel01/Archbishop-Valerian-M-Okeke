@@ -4,12 +4,11 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { FormField, TextArea } from "@/components/form";
 import {
-  initialFormState,
   submitContact,
   submitPrayerRequest,
   subscribeNewsletter,
-  type FormState,
 } from "@/app/(frontend)/connect/actions";
+import { initialFormState, type FormState } from "@/app/(frontend)/connect/form-state";
 
 function Honeypot() {
   return (

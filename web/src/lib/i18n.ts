@@ -128,6 +128,15 @@ export type Dict = {
     domus: string;
   };
 
+  // ── Confirmation emails sent back to form submitters ─────
+  // bodyTemplate may contain "{name}" and "{subject}" placeholders that the
+  // server action substitutes before send.
+  confirmations: {
+    contact: { subject: string; bodyTemplate: string };
+    prayer: { subject: string; bodyTemplate: string };
+    newsletter: { subject: string; bodyTemplate: string };
+  };
+
   // ── Pastoral letter chrome ────────────────────────────────
   letter: {
     contents: string;
@@ -321,6 +330,24 @@ export const dict: Record<Lang, Dict> = {
       domus: "Domus Episcopalis · Onitsha · Anambra · Nigeria",
     },
 
+    confirmations: {
+      contact: {
+        subject: "We received your message — Office of His Grace",
+        bodyTemplate:
+          "Dear {name},\n\nThank you for writing to the Office of His Grace, the Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha.\n\nYour message regarding \"{subject}\" has been received. The Chancery will respond as soon as possible — pastoral correspondence typically receives a reply within a few business days, though some matters require longer reflection.\n\nIn the meantime, you remain in our prayers.\n\nDomus Episcopalis · Onitsha",
+      },
+      prayer: {
+        subject: "Your prayer intention has been received",
+        bodyTemplate:
+          "Dear {name},\n\nYour intention has been received and will be remembered at the cathedral altar.\n\nThe prayer intentions of the faithful are gathered each day and offered during the celebration of the Holy Eucharist at the Basilica of the Most Holy Trinity, Onitsha.\n\nMay the Lord, who knows the depths of every heart, grant you the grace you seek.\n\nDomus Episcopalis · Onitsha",
+      },
+      newsletter: {
+        subject: "Welcome — letters from His Grace",
+        bodyTemplate:
+          "Dear {name},\n\nYou are now subscribed to receive pastoral letters, reflections, and occasional messages from the Office of His Grace, the Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha.\n\nLetters arrive a few times a month, never more — and only when there is something pastoral to share.\n\nTo unsubscribe at any time, write to admin@archbishopvalokeke.org with the subject line \"Unsubscribe.\"\n\nDomus Episcopalis · Onitsha",
+      },
+    },
+
     letter: {
       contents: "Contents",
       readingLabel: "Reading",
@@ -508,6 +535,24 @@ export const dict: Record<Lang, Dict> = {
       archbishopOfOnitsha: "Onye Isi Bishọp nke Onitsha",
       copyrightSuffix: "· Ụlọ Ọrụ Ọdaa",
       domus: "Domus Episcopalis · Onicha · Anambra · Nigeria",
+    },
+
+    confirmations: {
+      contact: {
+        subject: "Anata ozi gị — Ụlọ Ọrụ Ọdaa",
+        bodyTemplate:
+          "Ezigbo {name},\n\nDaalụ maka idere Ụlọ Ọrụ Ọdaa, Onye Kachasị Mma Onye Isi Bishọp Valerian Maduka Okeke, Onye Isi Bishọp Onitsha.\n\nAnatala ozi gị banyere \"{subject}\". Ụlọ Ọrụ Ọchịchị ga-aza n'oge na-adịghị anya — ọzịza ozi nkịtị na-abịa n'ime ụbọchị ole na ole, ma ụfọdụ okwu chọrọ ogologo oge ntụgharị uche.\n\nN'oge a, anyị na-echeta gị n'ekpere.\n\nDomus Episcopalis · Onicha",
+      },
+      prayer: {
+        subject: "Anatala arịrịọ ekpere gị",
+        bodyTemplate:
+          "Ezigbo {name},\n\nAnatala arịrịọ gị, a ga-echetakwa ya n'ebe ịchụ àjà nke katidral.\n\nA na-ekpokọta arịrịọ ekpere ndị kwere ekwe kwa ụbọchị, jiri ha chụọ àjà n'oge a na-eme Mass dị nsọ na Bazilika nke Atọ N'Otu Kachasị Nsọ, Onicha.\n\nKa Onyenwe anyị, onye maara ihe niile dị n'obi onye ọ bụla, nye gị amara ị na-achọ.\n\nDomus Episcopalis · Onicha",
+      },
+      newsletter: {
+        subject: "Nnọọ — akwụkwọ ozi sitere n'aka Ọdaa",
+        bodyTemplate:
+          "Ezigbo {name},\n\nE debanyere aha gị inata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'aka Ụlọ Ọrụ Ọdaa, Onye Kachasị Mma Onye Isi Bishọp Valerian Maduka Okeke, Onye Isi Bishọp Onitsha.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa ya — naanị mgbe e nwere ihe ọchịchị a ga-ekekọrịta.\n\nIji wepụ aha gị mgbe ọ bụla, dee admin@archbishopvalokeke.org jiri isiokwu \"Unsubscribe.\"\n\nDomus Episcopalis · Onicha",
+      },
     },
 
     letter: {

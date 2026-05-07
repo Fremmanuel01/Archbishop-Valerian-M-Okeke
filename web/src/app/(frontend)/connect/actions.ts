@@ -1,6 +1,8 @@
 "use server";
 
 import { addAudienceContact, resendConfigured, sendEmail } from "@/lib/resend";
+import { getLang } from "@/lib/lang";
+import { getDict } from "@/lib/i18n";
 import type { FormState } from "./form-state";
 
 const MAX_NAME = 120;
@@ -33,6 +35,32 @@ function prayerRecipient(): string | null {
   return process.env.PRAYER_TO ?? null;
 }
 
+// Send a confirmation back to the form submitter. Failures are swallowed —
+// the primary notification to the Chancery has already succeeded by the time
+// we get here, so a confirmation hiccup must not flip the form into an error
+// state for the user.
+async function sendConfirmation(input: {
+  to: string;
+  subject: string;
+  body: string;
+}): Promise<void> {
+  try {
+    await sendEmail({ to: input.to, subject: input.subject, text: input.body });
+  } catch (err) {
+    console.warn("[connect] confirmation send failed:", err);
+  }
+}
+
+function fillTemplate(
+  template: string,
+  values: Record<string, string>,
+): string {
+  return Object.entries(values).reduce(
+    (acc, [key, value]) => acc.replaceAll(`{${key}}`, value),
+    template,
+  );
+}
+
 export async function submitContact(
   _prev: FormState,
   data: FormData,
@@ -57,10 +85,16 @@ export async function submitContact(
       text: `From: ${name} <${email}>\n\n${message}`,
       replyTo: email,
     });
+    const t = getDict(await getLang());
+    await sendConfirmation({
+      to: email,
+      subject: t.confirmations.contact.subject,
+      body: fillTemplate(t.confirmations.contact.bodyTemplate, { name, subject }),
+    });
     return {
       status: "success",
       message:
-        "Your message has been received. The Chancery will respond as soon as possible.",
+        "Your message has been received. A confirmation has been sent to your email; the Chancery will respond as soon as possible.",
     };
   } catch {
     return {
@@ -93,10 +127,16 @@ export async function submitPrayerRequest(
       text: `From: ${name} <${email}>\n\nIntention:\n${intention}`,
       replyTo: email,
     });
+    const t = getDict(await getLang());
+    await sendConfirmation({
+      to: email,
+      subject: t.confirmations.prayer.subject,
+      body: fillTemplate(t.confirmations.prayer.bodyTemplate, { name }),
+    });
     return {
       status: "success",
       message:
-        "Your intention has been received and will be remembered at the cathedral altar.",
+        "Your intention has been received and will be remembered at the cathedral altar. A confirmation is on its way to your inbox.",
     };
   } catch {
     return {
@@ -129,10 +169,16 @@ export async function subscribeNewsletter(
       firstName: firstName || undefined,
       lastName: rest.join(" ") || undefined,
     });
+    const t = getDict(await getLang());
+    await sendConfirmation({
+      to: email,
+      subject: t.confirmations.newsletter.subject,
+      body: fillTemplate(t.confirmations.newsletter.bodyTemplate, { name }),
+    });
     return {
       status: "success",
       message:
-        "You are subscribed. A confirmation message will arrive shortly — thank you.",
+        "You are subscribed. A welcome message has been sent to your inbox — thank you.",
     };
   } catch {
     return {

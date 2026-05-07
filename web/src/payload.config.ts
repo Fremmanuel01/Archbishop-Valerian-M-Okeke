@@ -15,6 +15,7 @@ import { BiographySections } from "./payload/collections/BiographySections";
 import { FeaturedVideos } from "./payload/collections/FeaturedVideos";
 import { AppointmentSlots } from "./payload/collections/AppointmentSlots";
 import { AppointmentBookings } from "./payload/collections/AppointmentBookings";
+import { NewsletterEditions } from "./payload/collections/NewsletterEditions";
 import { Homepage } from "./payload/globals/Homepage";
 import { Programme } from "./payload/globals/Programme";
 
@@ -49,6 +50,7 @@ export default buildConfig({
     FeaturedVideos,
     AppointmentSlots,
     AppointmentBookings,
+    NewsletterEditions,
   ],
   globals: [Homepage, Programme],
   secret: payloadSecret,

@@ -76,6 +76,7 @@ export interface Config {
     'featured-videos': FeaturedVideo;
     'appointment-slots': AppointmentSlot;
     'appointment-bookings': AppointmentBooking;
+    'newsletter-editions': NewsletterEdition;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +93,7 @@ export interface Config {
     'featured-videos': FeaturedVideosSelect<false> | FeaturedVideosSelect<true>;
     'appointment-slots': AppointmentSlotsSelect<false> | AppointmentSlotsSelect<true>;
     'appointment-bookings': AppointmentBookingsSelect<false> | AppointmentBookingsSelect<true>;
+    'newsletter-editions': NewsletterEditionsSelect<false> | NewsletterEditionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -360,7 +362,7 @@ export interface AppointmentSlot {
   createdAt: string;
 }
 /**
- * Bookings made through the storefront. Each booking links to a specific slot. Cancel a booking here to release its slot back to the available pool.
+ * Bookings made through the storefront. To cancel a booking on behalf of the visitor (e.g. when His Grace is travelling), set its status to 'Cancelled' and save — the slot is released and the visitor receives a polite cancellation email automatically.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "appointment-bookings".
@@ -392,6 +394,88 @@ export interface AppointmentBooking {
    * Office-only — notes about the visitor or the meeting. Never shown to the visitor.
    */
   internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Monthly Pastoral Diary editions. Drafts are auto-generated on the 28th by the cron. Review posts, edit copy if needed, set status to 'Ready to send (approved)', then trigger the send from /admin-tools/send-newsletter.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-editions".
+ */
+export interface NewsletterEdition {
+  id: number;
+  /**
+   * The first day of the month this edition covers. e.g. 1 May 2026 for the May 2026 edition.
+   */
+  editionDate: string;
+  /**
+   * Auto-derived from editionDate (e.g. 'may-2026'). Editable but uniqueness is enforced.
+   */
+  slug: string;
+  /**
+   * The email subject. e.g. 'Pastoral Diary · May 2026'.
+   */
+  subjectLine: string;
+  /**
+   * Small uppercase label above the heading, e.g. 'PASTORAL DIARY · MMXXVI · MAY'.
+   */
+  eyebrow?: string | null;
+  /**
+   * Italic subhead under the display heading. One short sentence describing what this month's diary covers.
+   */
+  lead?: string | null;
+  /**
+   * Posts pulled from the FB page (chronological). The first post is the lead — it gets the full-bleed photo treatment.
+   */
+  posts?:
+    | {
+        /**
+         * Facebook post id (for de-duplication).
+         */
+        fbPostId?: string | null;
+        /**
+         * Public Facebook permalink to the post.
+         */
+        permalinkUrl?: string | null;
+        createdTime: string;
+        /**
+         * Post text from the FB caption. Edited copy is OK — this is what readers will see in the email.
+         */
+        message?: string | null;
+        /**
+         * Permanent image URL (mirrored from FB to Vercel Blob). Empty if the post has no image.
+         */
+        imageUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Final HTML rendered at send-time. Read-only — populated by the send action.
+   */
+  htmlSnapshot?: string | null;
+  status: 'draft' | 'ready_to_send' | 'sending' | 'sent' | 'failed' | 'skipped_no_posts';
+  /**
+   * Resend Broadcast id, set on first successful create call.
+   */
+  resendBroadcastId?: string | null;
+  sentAt?: string | null;
+  /**
+   * Audience size at send-time.
+   */
+  sentCount?: number | null;
+  failedCount?: number | null;
+  /**
+   * Structured errors logged during draft creation or send.
+   */
+  errors?:
+    | {
+        at: string;
+        kind: string;
+        message: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -454,6 +538,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'appointment-bookings';
         value: number | AppointmentBooking;
+      } | null)
+    | ({
+        relationTo: 'newsletter-editions';
+        value: number | NewsletterEdition;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -645,6 +733,43 @@ export interface AppointmentBookingsSelect<T extends boolean = true> {
   status?: T;
   confirmationCode?: T;
   internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletter-editions_select".
+ */
+export interface NewsletterEditionsSelect<T extends boolean = true> {
+  editionDate?: T;
+  slug?: T;
+  subjectLine?: T;
+  eyebrow?: T;
+  lead?: T;
+  posts?:
+    | T
+    | {
+        fbPostId?: T;
+        permalinkUrl?: T;
+        createdTime?: T;
+        message?: T;
+        imageUrl?: T;
+        id?: T;
+      };
+  htmlSnapshot?: T;
+  status?: T;
+  resendBroadcastId?: T;
+  sentAt?: T;
+  sentCount?: T;
+  failedCount?: T;
+  errors?:
+    | T
+    | {
+        at?: T;
+        kind?: T;
+        message?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

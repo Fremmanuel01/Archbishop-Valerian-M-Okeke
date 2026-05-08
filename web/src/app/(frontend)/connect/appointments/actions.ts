@@ -81,13 +81,10 @@ export async function bookAppointment(
 
   const payload = await getPayloadClient();
 
-  // Read the slot first so the form can give a precise reason if the
-  // booking can't proceed (slot deleted, slot blocked by admin, slot
-  // already booked by someone else). Without this pre-check the only
-  // visible error is "slot just taken", which is misleading when the
-  // real cause is a deleted/blocked slot or a stale form id.
+  // Read the slot first so we can give a precise error if the booking
+  // can't proceed (slot deleted, slot blocked, slot already booked).
   const slotRecord = await payload
-    .findByID({ collection: "appointment-slots", id: slotId })
+    .findByID({ collection: "appointment-slots", id: slotId, overrideAccess: true })
     .catch(() => null);
 
   if (!slotRecord) {
@@ -123,63 +120,53 @@ export async function bookAppointment(
     };
   }
 
-  // Atomic claim: only flip status if it is still 'available'. If
-  // another visitor genuinely raced us between the read above and this
-  // write, the where clause matches 0 rows and we report "just taken".
-  const claim = await payload.update({
-    collection: "appointment-slots",
+  // Race guard: if another visitor already created a confirmed booking
+  // for this slot in the brief window since we read its status, refuse.
+  // We check the bookings collection rather than relying on a
+  // bulk-update-with-where (which can silently roll back when the slot
+  // collection's afterChange hook calls revalidatePath inside the bulk
+  // transaction). This is how the cancellation flow elsewhere in this
+  // file already operates against the slots table.
+  const conflicting = await payload.find({
+    collection: "appointment-bookings",
     where: {
       and: [
-        { id: { equals: slotId } },
-        { status: { equals: "available" } },
+        { slot: { equals: slotId } },
+        { status: { equals: "confirmed" } },
       ],
     },
-    data: { status: "booked" },
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
   });
-
-  // Some Payload bulk-update paths can return an empty `docs` array even
-  // when the underlying SQL succeeded — re-read the slot to confirm the
-  // status flipped before deciding it's a race.
-  let slot = claim.docs[0];
-  if (!slot) {
-    const reread = await payload
-      .findByID({ collection: "appointment-slots", id: slotId })
-      .catch(() => null);
-    if (reread && (reread as { status?: string }).status === "booked") {
-      // Status is booked. Either we just did it or another visitor did.
-      // Disambiguate by checking for an existing confirmed booking.
-      const conflicting = await payload.find({
-        collection: "appointment-bookings",
-        where: {
-          and: [
-            { slot: { equals: slotId } },
-            { status: { equals: "confirmed" } },
-          ],
-        },
-        limit: 1,
-        depth: 0,
-      });
-      if (conflicting.docs.length > 0) {
-        return {
-          ok: false,
-          error:
-            "This slot was just taken by another visitor. Please refresh the page and pick a different time.",
-        };
-      }
-      slot = reread;
-    } else {
-      console.warn(
-        `[appointments] claim returned no docs for slot ${slotId}; reread status=${
-          reread ? (reread as { status?: string }).status : "missing"
-        }`,
-      );
-      return {
-        ok: false,
-        error:
-          "We couldn't reserve that slot. Please refresh the page and try again.",
-      };
-    }
+  if (conflicting.docs.length > 0) {
+    return {
+      ok: false,
+      error:
+        "This slot was just taken by another visitor. Please refresh the page and pick a different time.",
+    };
   }
+
+  // Flip the slot to booked using a single-id update. This is the same
+  // pattern the cancellation flow uses to release a slot.
+  try {
+    await payload.update({
+      collection: "appointment-slots",
+      id: slotId,
+      data: { status: "booked" },
+      overrideAccess: true,
+    });
+  } catch (err) {
+    console.error(`[appointments] failed to flip slot ${slotId} to booked:`, err);
+    return {
+      ok: false,
+      error:
+        "We couldn't reserve that slot. Please refresh the page and try again.",
+    };
+  }
+
+  // Use the pre-fetched record for the rest of the booking flow.
+  const slot = slotRecord;
 
   const audience = (slot.audience as Audience) ?? "laity";
   const slotDate =

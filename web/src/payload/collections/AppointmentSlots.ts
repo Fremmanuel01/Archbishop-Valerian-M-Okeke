@@ -14,14 +14,26 @@ export const AppointmentSlots: CollectionConfig = {
   hooks: {
     afterChange: [
       () => {
-        revalidatePath("/connect/appointment-laity");
-        revalidatePath("/connect/appointment-clergy");
+        // Wrap in try/catch — when this hook runs inside a bulk-update
+        // operation, Payload may have started a transaction and a throw
+        // here would roll the whole update back, leaving the storefront
+        // looking like the update never happened.
+        try {
+          revalidatePath("/connect/appointment-laity");
+          revalidatePath("/connect/appointment-clergy");
+        } catch (err) {
+          console.warn("[appointment-slots] revalidatePath failed:", err);
+        }
       },
     ],
     afterDelete: [
       () => {
-        revalidatePath("/connect/appointment-laity");
-        revalidatePath("/connect/appointment-clergy");
+        try {
+          revalidatePath("/connect/appointment-laity");
+          revalidatePath("/connect/appointment-clergy");
+        } catch (err) {
+          console.warn("[appointment-slots] revalidatePath failed:", err);
+        }
       },
     ],
     beforeChange: [

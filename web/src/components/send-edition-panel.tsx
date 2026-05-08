@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   initialSendState,
+  retryFailedEdition,
   sendEdition,
   sendTestEdition,
   type SendState,
@@ -64,13 +65,44 @@ export function SendEditionPanel({
 }) {
   const [testState, testAction] = useActionState(sendTestEdition, initialSendState);
   const [sendState, sendStateAction] = useActionState(sendEdition, initialSendState);
+  const [retryState, retryAction] = useActionState(
+    retryFailedEdition,
+    initialSendState,
+  );
   const [confirmText, setConfirmText] = useState("");
 
+  // A failed edition is locked against direct broadcast until retry resets
+  // it. This avoids accidentally re-sending the broken render twice.
+  const isFailed = status === "failed";
   const broadcastDisabled =
-    !hasPosts || status === "sent" || status === "sending" || confirmText !== "SEND";
+    !hasPosts ||
+    status === "sent" ||
+    status === "sending" ||
+    isFailed ||
+    confirmText !== "SEND";
 
   return (
     <div className="mt-5 space-y-7">
+      {isFailed ? (
+        <form
+          action={retryAction}
+          className="border border-[#e8b8b0] bg-[#fbf3f1] p-4"
+        >
+          <input type="hidden" name="editionId" value={editionId} />
+          <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-[#7a2f22]">
+            Last send failed
+          </p>
+          <p className="mt-2 max-w-[560px] text-[14px] leading-[1.6] text-[#7a2f22]">
+            Reset this edition to &ldquo;Ready to send&rdquo; so you can try
+            again. The error log above is preserved for diagnosis.
+          </p>
+          <div className="mt-4">
+            <StatusButton variant="outline">Reset & retry</StatusButton>
+          </div>
+          <StatusMessage state={retryState} />
+        </form>
+      ) : null}
+
       <form action={testAction} className="space-y-3">
         <input type="hidden" name="editionId" value={editionId} />
         <label className="block">

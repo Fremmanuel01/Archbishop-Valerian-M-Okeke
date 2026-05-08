@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Roman } from "@/components/editorial";
 import { CalendarSubscribe } from "@/components/calendar-subscribe";
@@ -74,6 +75,15 @@ export default async function DiaryPage() {
     >
       <PageSection>
         <CalendarSubscribe />
+        <div className="mx-auto mb-12 flex max-w-[960px] items-center justify-between border-y border-[color:var(--rule)] py-4 font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink-soft max-md:flex-col max-md:gap-3 max-md:text-center">
+          <span>Past editions of the monthly newsletter</span>
+          <Link
+            href="/diary/newsletter"
+            className="link-underline text-ink"
+          >
+            Newsletter archive →
+          </Link>
+        </div>
         <div className="relative mx-auto max-w-[960px]">
           <div
             aria-hidden

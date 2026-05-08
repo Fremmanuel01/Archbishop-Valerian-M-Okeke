@@ -108,15 +108,16 @@ export function NewsletterForm() {
         type="email"
         required
         autoComplete="email"
-        helper="We will send an email to confirm your subscription."
+        helper="We will send a confirmation link to this address. Click it to complete your subscription."
       />
       <div className="mt-2 flex justify-center">
         <StatusButton>Subscribe →</StatusButton>
       </div>
       <StatusMessage state={state} />
       <p className="mt-6 text-center text-[13px] leading-[1.6] text-ink-soft">
-        Your email is kept in confidence. You may unsubscribe at any time — the link is
-        included in every message.
+        Your email is kept in confidence. You will only be added to the list
+        after you click the confirmation link, and you may unsubscribe at any
+        time — the link is included in every message.
       </p>
     </form>
   );

@@ -1,5 +1,6 @@
 import "server-only";
 import { toRoman } from "@/components/editorial";
+import { SITE_URL } from "@/lib/site";
 
 // Server-only HTML email renderer for the monthly Pastoral Diary.
 // This email IS the substance, not chrome — so it carries more weight than
@@ -51,6 +52,14 @@ export type NewsletterRenderInput = {
   posts: NewsletterPost[];
   /** Display name shown next to "Read on Facebook" links. */
   pageName?: string;
+  /** Unsubscribe link rendered in the footer.
+   *  - Broadcasts: pass `"{{{RESEND_UNSUBSCRIBE_URL}}}"` so Resend
+   *    interpolates a per-recipient link with the right `List-Unsubscribe`
+   *    semantics.
+   *  - Test sends: pass an absolute /connect/newsletter/unsubscribe URL
+   *    (the merge tag is not expanded outside broadcasts).
+   *  Defaults to the manual page URL. */
+  unsubscribeUrl?: string;
 };
 
 function escapeHtml(s: string): string {
@@ -175,7 +184,13 @@ function renderHeader(eyebrow: string, heading: string, lead: string | undefined
 </table>`;
 }
 
-function renderFooter(): string {
+function renderFooter(unsubscribeUrl: string): string {
+  // Resend's broadcast pipeline replaces `{{{RESEND_UNSUBSCRIBE_URL}}}` with
+  // a per-recipient one-click unsubscribe link. For test sends and other
+  // non-broadcast paths the placeholder won't be expanded — so we always
+  // also include a plain link to /connect/newsletter/unsubscribe as a
+  // manual fallback.
+  const manualUrl = `${SITE_URL}/connect/newsletter/unsubscribe`;
   return `
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
@@ -191,9 +206,11 @@ function renderFooter(): string {
   <tr>
     <td style="padding-top:24px;font-family:Helvetica,Arial,sans-serif;font-size:10px;color:${COLORS.inkSoft};line-height:1.6;">
       You are receiving this because you subscribed to the Archbishop's diary.
-      To unsubscribe, use the link below this message — or write to admin@archbishopvalokeke.org with the subject &quot;Unsubscribe.&quot;
+      The Office keeps your address in confidence and does not share it.
       <br><br>
-      The Office of the Archbishop of Onitsha keeps your address in confidence and does not share it.
+      <a href="${unsubscribeUrl}" style="color:${COLORS.goldText};text-decoration:underline;">Unsubscribe instantly</a>
+      &nbsp;·&nbsp;
+      <a href="${escapeHtml(manualUrl)}" style="color:${COLORS.goldText};text-decoration:underline;">Manage subscription</a>
     </td>
   </tr>
 </table>`;
@@ -207,6 +224,8 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
   const restHtml = rest
     .map((p) => `${hairline()}${renderFollowingPost(p)}`)
     .join("");
+  const unsubscribeUrl =
+    input.unsubscribeUrl ?? `${SITE_URL}/connect/newsletter/unsubscribe`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -227,7 +246,7 @@ export function renderNewsletterHtml(input: NewsletterRenderInput): string {
 <tr><td>${leadHtml}</td></tr>
 ${restHtml ? `<tr><td>${restHtml}</td></tr>` : ""}
 <tr><td>${hairline()}</td></tr>
-<tr><td>${renderFooter()}</td></tr>
+<tr><td>${renderFooter(unsubscribeUrl)}</td></tr>
 </table>
 </td>
 </tr>

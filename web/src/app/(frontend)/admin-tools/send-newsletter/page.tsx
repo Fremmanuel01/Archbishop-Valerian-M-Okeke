@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+type EditionError = { at: string; kind: string; message: string };
+
 type EditionRow = {
   id: string | number;
   editionDate: string;
@@ -23,6 +25,7 @@ type EditionRow = {
   postsCount: number;
   sentCount?: number | null;
   sentAt?: string | null;
+  errors: EditionError[];
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -56,6 +59,7 @@ export default async function SendNewsletterPage() {
       posts?: unknown[] | null;
       sentCount?: number | null;
       sentAt?: string | null;
+      errors?: EditionError[] | null;
     };
     return {
       id: doc.id,
@@ -66,6 +70,7 @@ export default async function SendNewsletterPage() {
       postsCount: Array.isArray(doc.posts) ? doc.posts.length : 0,
       sentCount: doc.sentCount ?? null,
       sentAt: doc.sentAt ?? null,
+      errors: Array.isArray(doc.errors) ? doc.errors : [],
     };
   });
 
@@ -119,7 +124,35 @@ export default async function SendNewsletterPage() {
                       Edit in Payload →
                     </Link>
                   </div>
-                  {e.sentAt ? (
+                  {e.errors.length > 0 ? (
+                    <details className="mt-4 border border-[#e8b8b0] bg-[#fbf3f1] p-4">
+                      <summary className="cursor-pointer font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-[#7a2f22]">
+                        {e.errors.length} error
+                        {e.errors.length === 1 ? "" : "s"} · open log
+                      </summary>
+                      <ul className="mt-3 space-y-3 text-[13px] leading-[1.55] text-[#7a2f22]">
+                        {e.errors.map((err, idx) => (
+                          <li
+                            key={idx}
+                            className="border-l-2 border-[#a84233] pl-3"
+                          >
+                            <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.5px]">
+                              {err.kind} ·{" "}
+                              {new Date(err.at).toLocaleString("en-US", {
+                                dateStyle: "medium",
+                                timeStyle: "short",
+                              })}
+                            </p>
+                            <p className="mt-1 whitespace-pre-wrap break-words font-[family-name:var(--font-body)]">
+                              {err.message}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : null}
+
+                  {e.sentAt && e.status === "sent" ? (
                     <p className="mt-4 text-[14px] text-ink-soft">
                       Sent {new Date(e.sentAt).toLocaleString("en-US", {
                         dateStyle: "medium",

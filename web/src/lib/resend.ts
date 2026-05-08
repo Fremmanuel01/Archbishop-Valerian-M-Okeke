@@ -49,19 +49,60 @@ export async function sendEmail({ to, subject, text, html, replyTo }: SendEmailI
 }
 
 /** Count of active (non-unsubscribed) contacts in a Resend audience. Used at
- *  send-time to record the audience size onto the edition record. */
+ *  send-time to record the audience size onto the edition record. Resend's
+ *  list endpoint paginates at 100 per page, so we walk pages until exhausted.
+ */
 export async function getActiveAudienceCount(audienceId: string): Promise<number> {
   const apiKey = getEnv("RESEND_API_KEY");
   if (!apiKey) throw new Error("RESEND_API_KEY is not set");
-  const res = await fetch(`${RESEND_API}/audiences/${audienceId}/contacts`, {
-    headers: { Authorization: `Bearer ${apiKey}` },
-  });
-  if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`Resend audience read failed (${res.status}): ${body.slice(0, 200)}`);
+  let active = 0;
+  let cursor: string | null = null;
+  // Hard cap so a malformed cursor loop can't run forever.
+  for (let page = 0; page < 200; page++) {
+    const url = new URL(`${RESEND_API}/audiences/${audienceId}/contacts`);
+    if (cursor) url.searchParams.set("after", cursor);
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      throw new Error(`Resend audience read failed (${res.status}): ${body.slice(0, 200)}`);
+    }
+    const json = (await res.json()) as {
+      data?: { id?: string; unsubscribed?: boolean }[];
+      has_more?: boolean;
+    };
+    const rows = json.data ?? [];
+    for (const c of rows) if (!c.unsubscribed) active++;
+    if (!json.has_more || rows.length === 0) break;
+    cursor = rows[rows.length - 1]?.id ?? null;
+    if (!cursor) break;
   }
-  const json = (await res.json()) as { data?: { unsubscribed?: boolean }[] };
-  return (json.data ?? []).filter((c) => !c.unsubscribed).length;
+  return active;
+}
+
+/** Mark a contact as unsubscribed in a Resend audience. Resend addresses
+ *  contacts by email when the email is URL-encoded into the path. */
+export async function unsubscribeAudienceContact(input: {
+  audienceId: string;
+  email: string;
+}): Promise<{ ok: true } | { ok: false; status: number; body: string }> {
+  const apiKey = getEnv("RESEND_API_KEY");
+  if (!apiKey) throw new Error("RESEND_API_KEY is not set");
+  const res = await fetch(
+    `${RESEND_API}/audiences/${input.audienceId}/contacts/${encodeURIComponent(input.email)}`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ unsubscribed: true }),
+    },
+  );
+  if (res.ok) return { ok: true };
+  const body = await res.text().catch(() => "");
+  return { ok: false, status: res.status, body: body.slice(0, 200) };
 }
 
 /** Create a Resend Broadcast targeting an audience. Returns the broadcast id;

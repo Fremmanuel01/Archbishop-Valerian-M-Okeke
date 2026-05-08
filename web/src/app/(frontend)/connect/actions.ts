@@ -4,6 +4,8 @@ import { addAudienceContact, resendConfigured, sendEmail } from "@/lib/resend";
 import { getLang } from "@/lib/lang";
 import { getDict, type Lang } from "@/lib/i18n";
 import { renderConfirmationHtml } from "@/lib/email-templates";
+import { createNewsletterToken } from "@/lib/newsletter-token";
+import { SITE_URL } from "@/lib/site";
 import type { FormState } from "./form-state";
 
 const MAX_NAME = 120;
@@ -162,12 +164,17 @@ export async function submitPrayerRequest(
   }
 }
 
+// Step 1 of double opt-in: send a confirmation email with an HMAC-signed
+// link. We do NOT touch the Resend audience yet — that happens in step 2
+// when the recipient clicks the link (see /connect/newsletter/confirm).
+// This prevents drive-by subscriptions and silent re-subscription of
+// previously-unsubscribed contacts.
 export async function subscribeNewsletter(
   _prev: FormState,
   data: FormData,
 ): Promise<FormState> {
   const name = field(data, "name", MAX_NAME);
-  const email = field(data, "email", MAX_NAME);
+  const email = field(data, "email", MAX_NAME).toLowerCase();
   const honeypot = field(data, "website", 200);
 
   if (honeypot) return { status: "success", message: "Thank you." };
@@ -178,30 +185,92 @@ export async function subscribeNewsletter(
     return notConfiguredError();
   }
 
-  const [firstName, ...rest] = name.split(/\s+/);
+  try {
+    const token = createNewsletterToken("confirm", email, { name });
+    const confirmUrl = `${SITE_URL}/connect/newsletter/confirm?token=${encodeURIComponent(token)}`;
+    const lang = await getLang();
+    const t = getDict(lang);
+    await sendEmail({
+      to: email,
+      subject: t.confirmations.newsletter.subject,
+      text: fillTemplate(t.confirmations.newsletter.bodyTemplate, {
+        name,
+        confirmUrl,
+      }),
+      html: renderConfirmationHtml({
+        subject: t.confirmations.newsletter.subject,
+        body: fillTemplate(t.confirmations.newsletter.bodyTemplate, {
+          name,
+          confirmUrl,
+        }),
+        lang,
+        cta: { label: t.confirmations.newsletter.ctaLabel, href: confirmUrl },
+      }),
+    });
+    return {
+      status: "success",
+      message:
+        "Almost done — please check your inbox and click the confirmation link to complete your subscription.",
+    };
+  } catch (err) {
+    console.warn("[connect] newsletter confirmation send failed:", err);
+    return {
+      status: "error",
+      message: "We could not send the confirmation email. Please try again shortly.",
+    };
+  }
+}
+
+// Step 2 of double opt-in: invoked from the /confirm route after the
+// HMAC token has been verified. Adds the contact to the Resend audience
+// and sends a friendly welcome email.
+export async function finaliseNewsletterSubscription(input: {
+  email: string;
+  name: string | null;
+}): Promise<{ ok: true } | { ok: false; message: string }> {
+  if (!resendConfigured() || !process.env.RESEND_AUDIENCE_ID) {
+    return { ok: false, message: "Newsletter is not currently configured." };
+  }
+  const { email, name } = input;
+  if (!isEmail(email)) return { ok: false, message: "Invalid email." };
+
+  const displayName = (name ?? "").trim();
+  const [firstName, ...rest] = displayName.split(/\s+/);
+
   try {
     await addAudienceContact({
       email,
       firstName: firstName || undefined,
       lastName: rest.join(" ") || undefined,
     });
-    const lang = await getLang();
-    const t = getDict(lang);
-    await sendConfirmation({
-      to: email,
-      subject: t.confirmations.newsletter.subject,
-      body: fillTemplate(t.confirmations.newsletter.bodyTemplate, { name }),
-      lang,
-    });
+  } catch (err) {
     return {
-      status: "success",
-      message:
-        "You are subscribed. A welcome message has been sent to your inbox — thank you.",
-    };
-  } catch {
-    return {
-      status: "error",
-      message: "We could not complete your subscription. Please try again shortly.",
+      ok: false,
+      message: err instanceof Error ? err.message : "Subscription failed.",
     };
   }
+
+  // Send a quiet welcome email (best-effort).
+  try {
+    const lang = await getLang();
+    const t = getDict(lang);
+    await sendEmail({
+      to: email,
+      subject: t.confirmations.newsletter.welcomeSubject,
+      text: fillTemplate(t.confirmations.newsletter.welcomeBodyTemplate, {
+        name: displayName || "friend",
+      }),
+      html: renderConfirmationHtml({
+        subject: t.confirmations.newsletter.welcomeSubject,
+        body: fillTemplate(t.confirmations.newsletter.welcomeBodyTemplate, {
+          name: displayName || "friend",
+        }),
+        lang,
+      }),
+    });
+  } catch (err) {
+    console.warn("[connect] newsletter welcome send failed:", err);
+  }
+
+  return { ok: true };
 }

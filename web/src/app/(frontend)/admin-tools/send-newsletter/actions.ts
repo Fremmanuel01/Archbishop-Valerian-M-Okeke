@@ -13,6 +13,8 @@ import {
   renderNewsletterHtml,
   type NewsletterPost,
 } from "@/lib/newsletter-template";
+import { createNewsletterToken } from "@/lib/newsletter-token";
+import { SITE_URL } from "@/lib/site";
 
 export type SendState =
   | { status: "idle" }
@@ -125,6 +127,10 @@ export async function sendEdition(
     eyebrow: edition.eyebrow ?? undefined,
     lead: edition.lead ?? undefined,
     posts: renderPosts,
+    // Resend interpolates this merge tag per-recipient with the right
+    // List-Unsubscribe semantics. Outside broadcasts the placeholder is not
+    // expanded and the manual /unsubscribe page remains in the footer too.
+    unsubscribeUrl: "{{{RESEND_UNSUBSCRIBE_URL}}}",
   });
 
   try {
@@ -162,12 +168,24 @@ export async function sendEdition(
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
+    // Append to existing errors[] rather than replacing — past failures are
+    // useful diagnostic context for retries.
+    const previousErrors = await payload
+      .findByID({ collection: "newsletter-editions", id: edition.id })
+      .then((d) => {
+        const arr = (d as unknown as EditionDoc & {
+          errors?: Array<{ at: string; kind: string; message: string }>;
+        }).errors;
+        return Array.isArray(arr) ? arr : [];
+      })
+      .catch(() => [] as Array<{ at: string; kind: string; message: string }>);
     await payload.update({
       collection: "newsletter-editions",
       id: edition.id,
       data: {
         status: "failed",
         errors: [
+          ...previousErrors,
           {
             at: new Date().toISOString(),
             kind: "send",
@@ -176,11 +194,63 @@ export async function sendEdition(
         ],
       },
     });
+    revalidatePath("/admin-tools/send-newsletter");
     return {
       status: "error",
       message: `Send failed: ${message}`,
     };
   }
+}
+
+// Reset a failed edition back to ready_to_send so the admin can broadcast
+// again. Errors[] history is preserved for audit. The edition's
+// `resendBroadcastId` is also cleared so the next send creates a fresh
+// broadcast — old broadcast objects in Resend are not re-triggered.
+export async function retryFailedEdition(
+  _prev: SendState,
+  data: FormData,
+): Promise<SendState> {
+  const headersList = await headers();
+  const payload = await getPayloadClient();
+  const { user } = await payload.auth({ headers: headersList });
+  if (!user) {
+    return { status: "error", message: "You must be signed in to retry." };
+  }
+  const editionId = String(data.get("editionId") ?? "").trim();
+  if (!editionId) {
+    return { status: "error", message: "Missing edition id." };
+  }
+  let edition: EditionDoc;
+  try {
+    edition = (await payload.findByID({
+      collection: "newsletter-editions",
+      id: editionId,
+    })) as unknown as EditionDoc;
+  } catch {
+    return { status: "error", message: "Edition not found." };
+  }
+  if (edition.status !== "failed") {
+    return {
+      status: "error",
+      message: `Only failed editions can be retried (current status: ${edition.status ?? "unknown"}).`,
+    };
+  }
+  await payload.update({
+    collection: "newsletter-editions",
+    id: edition.id,
+    data: {
+      status: "ready_to_send",
+      resendBroadcastId: null,
+    },
+  });
+  revalidatePath("/admin-tools/send-newsletter");
+  return {
+    status: "success",
+    message:
+      "Edition reset to 'ready to send'. Type SEND below to broadcast again.",
+    broadcastId: "",
+    sentCount: 0,
+  };
 }
 
 export async function previewEdition(editionId: string): Promise<string> {
@@ -241,12 +311,15 @@ export async function sendTestEdition(
       permalinkUrl: p.permalinkUrl ?? null,
       createdTime: new Date(p.createdTime),
     }));
+    const unsubToken = createNewsletterToken("unsubscribe", testRecipient);
+    const unsubscribeUrl = `${SITE_URL}/connect/newsletter/unsubscribe?token=${encodeURIComponent(unsubToken)}`;
     const html = renderNewsletterHtml({
       editionDate: new Date(edition.editionDate),
       subjectLine: edition.subjectLine,
       eyebrow: edition.eyebrow ?? undefined,
       lead: edition.lead ?? undefined,
       posts,
+      unsubscribeUrl,
     });
     const { sendEmail } = await import("@/lib/resend");
     await sendEmail({

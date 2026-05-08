@@ -55,9 +55,30 @@ export function renderConfirmationHtml(input: {
   subject: string;
   body: string;
   lang: "en" | "ig";
+  /** Optional call-to-action button rendered between the body and the
+   *  hairline rule. Used by the newsletter confirmation email to surface
+   *  the double opt-in link. */
+  cta?: { label: string; href: string };
 }): string {
   const eyebrow = EYEBROWS[input.lang] ?? EYEBROWS.en;
   const paragraphs = bodyToParagraphs(input.body);
+  const ctaHtml = input.cta
+    ? `<tr>
+<td style="padding:32px 0 8px 0;" align="left">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0">
+<tr><td style="background:${COLORS.ink};">
+<a href="${escapeHtml(input.cta.href)}" style="display:inline-block;padding:14px 28px;font-family:Helvetica,Arial,sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:${COLORS.bone};text-decoration:none;">${escapeHtml(input.cta.label)} &rarr;</a>
+</td></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td style="padding-top:14px;font-family:Helvetica,Arial,sans-serif;font-size:11px;line-height:1.6;color:${COLORS.inkSoft};word-break:break-all;">
+If the button does not work, paste this link into your browser:<br>
+<span style="color:${COLORS.goldText};">${escapeHtml(input.cta.href)}</span>
+</td>
+</tr>`
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="${input.lang}">
@@ -83,6 +104,7 @@ ${escapeHtml(eyebrow)}
 ${paragraphs}
 </td>
 </tr>
+${ctaHtml}
 <tr>
 <td style="padding:36px 0 28px 0;line-height:1px;font-size:1px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">

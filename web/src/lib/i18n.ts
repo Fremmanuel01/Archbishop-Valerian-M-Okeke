@@ -129,12 +129,21 @@ export type Dict = {
   };
 
   // ── Confirmation emails sent back to form submitters ─────
-  // bodyTemplate may contain "{name}" and "{subject}" placeholders that the
-  // server action substitutes before send.
+  // bodyTemplate may contain "{name}", "{subject}", and "{confirmUrl}"
+  // placeholders that the server action substitutes before send.
+  // The newsletter is double opt-in: `subject` / `bodyTemplate` /
+  // `ctaLabel` describe the verify-your-email step; `welcomeSubject` /
+  // `welcomeBodyTemplate` describe the post-confirmation welcome.
   confirmations: {
     contact: { subject: string; bodyTemplate: string };
     prayer: { subject: string; bodyTemplate: string };
-    newsletter: { subject: string; bodyTemplate: string };
+    newsletter: {
+      subject: string;
+      bodyTemplate: string;
+      ctaLabel: string;
+      welcomeSubject: string;
+      welcomeBodyTemplate: string;
+    };
   };
 
   // ── Pastoral letter chrome ────────────────────────────────
@@ -342,9 +351,13 @@ export const dict: Record<Lang, Dict> = {
           "Dear {name},\n\nYour intention has been received and added to those read at the altar of the Basilica of the Most Holy Trinity, Onitsha, where Mass is offered each day for the people of this Archdiocese.\n\nWhat you have asked, the Lord — who looks upon the heart and not upon the multitude of words — has already heard. The Church only adds her voice to yours.\n\nIn Christo,\nThe Office of the Archbishop of Onitsha",
       },
       newsletter: {
-        subject: "Welcome — letters from the Office of His Grace",
+        subject: "Please confirm your subscription",
         bodyTemplate:
-          "Dear {name},\n\nYou are now on the list to receive pastoral letters, reflections, and seasonal messages from this office.\n\nLetters arrive a few times a month, never more, and only when there is something to say. The list is kept here at the Domus Episcopalis and is not shared with anyone. To leave it at any time, write to admin@archbishopvalokeke.org with the subject \"Unsubscribe\"; this is honoured at once.\n\nUntil the next letter, the Lord be with you.\n\nThe Office of the Archbishop of Onitsha",
+          "Dear {name},\n\nThank you for asking to receive letters from the Office of His Grace.\n\nTo complete your subscription, please confirm that this email address belongs to you by clicking the link below. Until you confirm, your address is not added to our list.\n\nIf you did not request this, no action is needed — simply ignore this message and you will hear nothing further.\n\nPax tecum,\nThe Office of the Archbishop of Onitsha",
+        ctaLabel: "Confirm subscription",
+        welcomeSubject: "Welcome — letters from the Office of His Grace",
+        welcomeBodyTemplate:
+          "Dear {name},\n\nYour subscription is now confirmed. You are on the list to receive pastoral letters, reflections, and seasonal messages from this office.\n\nLetters arrive a few times a month, never more, and only when there is something to say. The list is kept here at the Domus Episcopalis and is not shared with anyone. An unsubscribe link is included in every message — it is honoured at once.\n\nUntil the next letter, the Lord be with you.\n\nThe Office of the Archbishop of Onitsha",
       },
     },
 
@@ -549,9 +562,13 @@ export const dict: Record<Lang, Dict> = {
           "Ezigbo {name},\n\nAnatala arịrịọ gị ma tinye ya na ndị a na-agụ n'ebe ịchụ àjà nke Bazilika nke Atọ N'Otu Kachasị Nsọ, Onicha, ebe a na-eme Mass kwa ụbọchị maka ndị nke Archdiocese a.\n\nIhe ị rịọrọ, Onyenwe anyị — onye na-elele obi ọ bụghị ọtụtụ okwu — anụlarị. Ụka na-atụkwasị olu nke ya na nke gị.\n\nIn Christo,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
       newsletter: {
-        subject: "Nnọọ — akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa",
+        subject: "Biko gosi na ọ bụ gị debara aha",
         bodyTemplate:
-          "Ezigbo {name},\n\nE debanyere aha gị ka ị nata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'ụlọ ọrụ a.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa, naanị mgbe e nwere ihe a ga-ekwu. Ndepụta a debere n'Ụlọ Ọrụ Ọdaa, ọ bụghị ihe a na-ekekọrịta. Iji wepụ aha gị mgbe ọ bụla, dee admin@archbishopvalokeke.org jiri isiokwu \"Unsubscribe\"; a na-asọpụrụ ya ozugbo.\n\nRuo akwụkwọ ozi na-esote, ka Onyenwe anyị nọnyere gị.\n\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
+          "Ezigbo {name},\n\nDaalụ maka ịchọ ịnata akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa.\n\nIji mezue ndebanye aha gị, biko gosi na adres email a bụ nke gị site n'ịpị njikọ dị n'okpuru. Tutu ị gosipụtara nke a, anaghị etinye adres gị na ndepụta anyị.\n\nỌ bụrụ na ọ bụghị gị rịọrọ nke a, ọ dịghị ihe ị ga-eme — gafee ozi a ma ị gaghị anụkwa ihe ọzọ.\n\nPax tecum,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
+        ctaLabel: "Gosi ndebanye aha",
+        welcomeSubject: "Nnọọ — akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa",
+        welcomeBodyTemplate:
+          "Ezigbo {name},\n\nA gosipụtala ndebanye aha gị. Ị nọ ugbu a na ndepụta ndị na-anata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'ụlọ ọrụ a.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa, naanị mgbe e nwere ihe a ga-ekwu. Ndepụta a debere n'Ụlọ Ọrụ Ọdaa, ọ bụghị ihe a na-ekekọrịta. A ga-eso njikọ iji kwụsị ndebanye n'ozi ọ bụla — a na-asọpụrụ ya ozugbo.\n\nRuo akwụkwọ ozi na-esote, ka Onyenwe anyị nọnyere gị.\n\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
     },
 

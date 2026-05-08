@@ -81,8 +81,51 @@ export async function bookAppointment(
 
   const payload = await getPayloadClient();
 
-  // Atomic claim: only flip status if it is still 'available'.
-  // If another visitor booked it first, this returns no docs.
+  // Read the slot first so the form can give a precise reason if the
+  // booking can't proceed (slot deleted, slot blocked by admin, slot
+  // already booked by someone else). Without this pre-check the only
+  // visible error is "slot just taken", which is misleading when the
+  // real cause is a deleted/blocked slot or a stale form id.
+  const slotRecord = await payload
+    .findByID({ collection: "appointment-slots", id: slotId })
+    .catch(() => null);
+
+  if (!slotRecord) {
+    console.warn(`[appointments] slot ${slotId} not found at booking time`);
+    return {
+      ok: false,
+      error:
+        "We couldn't find that slot — it may have been removed. Please refresh the page and pick a different time.",
+    };
+  }
+
+  const currentStatus =
+    typeof slotRecord.status === "string" ? slotRecord.status : "unknown";
+
+  if (currentStatus === "booked") {
+    return {
+      ok: false,
+      error:
+        "This slot has already been booked. Please refresh the page and pick a different time.",
+    };
+  }
+  if (currentStatus === "blocked") {
+    return {
+      ok: false,
+      error:
+        "His Grace is unavailable for that slot. Please refresh and pick a different time.",
+    };
+  }
+  if (currentStatus !== "available") {
+    return {
+      ok: false,
+      error: `That slot is currently ${currentStatus} and cannot be booked. Please pick a different time.`,
+    };
+  }
+
+  // Atomic claim: only flip status if it is still 'available'. If
+  // another visitor genuinely raced us between the read above and this
+  // write, the where clause matches 0 rows and we report "just taken".
   const claim = await payload.update({
     collection: "appointment-slots",
     where: {
@@ -94,13 +137,48 @@ export async function bookAppointment(
     data: { status: "booked" },
   });
 
-  const slot = claim.docs[0];
+  // Some Payload bulk-update paths can return an empty `docs` array even
+  // when the underlying SQL succeeded — re-read the slot to confirm the
+  // status flipped before deciding it's a race.
+  let slot = claim.docs[0];
   if (!slot) {
-    return {
-      ok: false,
-      error:
-        "This slot was just taken by another visitor. Please refresh the page and pick a different time.",
-    };
+    const reread = await payload
+      .findByID({ collection: "appointment-slots", id: slotId })
+      .catch(() => null);
+    if (reread && (reread as { status?: string }).status === "booked") {
+      // Status is booked. Either we just did it or another visitor did.
+      // Disambiguate by checking for an existing confirmed booking.
+      const conflicting = await payload.find({
+        collection: "appointment-bookings",
+        where: {
+          and: [
+            { slot: { equals: slotId } },
+            { status: { equals: "confirmed" } },
+          ],
+        },
+        limit: 1,
+        depth: 0,
+      });
+      if (conflicting.docs.length > 0) {
+        return {
+          ok: false,
+          error:
+            "This slot was just taken by another visitor. Please refresh the page and pick a different time.",
+        };
+      }
+      slot = reread;
+    } else {
+      console.warn(
+        `[appointments] claim returned no docs for slot ${slotId}; reread status=${
+          reread ? (reread as { status?: string }).status : "missing"
+        }`,
+      );
+      return {
+        ok: false,
+        error:
+          "We couldn't reserve that slot. Please refresh the page and try again.",
+      };
+    }
   }
 
   const audience = (slot.audience as Audience) ?? "laity";

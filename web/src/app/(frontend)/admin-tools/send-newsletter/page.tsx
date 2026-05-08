@@ -117,12 +117,20 @@ export default async function SendNewsletterPage() {
                         {e.subjectLine}
                       </h2>
                     </div>
-                    <Link
-                      href={`/admin/collections/newsletter-editions/${e.id}`}
-                      className="link-underline font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink"
-                    >
-                      Edit in Payload →
-                    </Link>
+                    <div className="flex items-center gap-5">
+                      <Link
+                        href={`/admin-tools/send-newsletter/${e.id}`}
+                        className="link-underline font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink"
+                      >
+                        Preview &amp; edit →
+                      </Link>
+                      <Link
+                        href={`/admin/collections/newsletter-editions/${e.id}`}
+                        className="link-underline font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2px] text-ink-soft"
+                      >
+                        Payload ↗
+                      </Link>
+                    </div>
                   </div>
                   {e.errors.length > 0 ? (
                     <details className="mt-4 border border-[#e8b8b0] bg-[#fbf3f1] p-4">

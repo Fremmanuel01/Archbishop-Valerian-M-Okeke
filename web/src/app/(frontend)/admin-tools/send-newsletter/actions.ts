@@ -23,6 +23,39 @@ export type SendState =
 
 export const initialSendState: SendState = { status: "idle" };
 
+// State returned by edit actions on the per-edition editor page. Carries a
+// freshly rendered HTML snapshot so the preview iframe can re-paint without
+// a round-trip to Payload.
+export type EditState =
+  | { status: "idle" }
+  | { status: "success"; message: string; html: string; editionStatus: string }
+  | { status: "error"; message: string };
+
+export const initialEditState: EditState = { status: "idle" };
+
+export type EditorPostInput = {
+  fbPostId?: string | null;
+  permalinkUrl?: string | null;
+  createdTime: string;
+  message?: string | null;
+  imageUrl?: string | null;
+};
+
+export type EditorPayload = {
+  subjectLine: string;
+  eyebrow: string;
+  lead: string;
+  posts: EditorPostInput[];
+};
+
+type NewsletterStatus =
+  | "draft"
+  | "ready_to_send"
+  | "sending"
+  | "sent"
+  | "failed"
+  | "skipped_no_posts";
+
 type EditionDoc = {
   id: string | number;
   editionDate: string;
@@ -340,4 +373,164 @@ export async function sendTestEdition(
       message: `Test send failed: ${err instanceof Error ? err.message : String(err)}`,
     };
   }
+}
+
+// Persist subject / eyebrow / lead / posts edits from the per-edition editor.
+// Editions in `sending` or `sent` state are locked. After saving, returns a
+// freshly rendered HTML snapshot so the editor's iframe preview can refresh
+// without an extra fetch. Does NOT touch the `htmlSnapshot` field — that is
+// only written by `sendEdition` to record exactly what subscribers received.
+export async function updateEdition(
+  editionId: string,
+  body: EditorPayload,
+): Promise<EditState> {
+  const headersList = await headers();
+  const payload = await getPayloadClient();
+  const { user } = await payload.auth({ headers: headersList });
+  if (!user) {
+    return { status: "error", message: "You must be signed in to edit." };
+  }
+  if (!editionId) {
+    return { status: "error", message: "Missing edition id." };
+  }
+  const subjectLine = body.subjectLine.trim();
+  if (!subjectLine) {
+    return { status: "error", message: "Subject line is required." };
+  }
+
+  let edition: EditionDoc;
+  try {
+    edition = (await payload.findByID({
+      collection: "newsletter-editions",
+      id: editionId,
+    })) as unknown as EditionDoc;
+  } catch {
+    return { status: "error", message: "Edition not found." };
+  }
+  if (edition.status === "sent" || edition.status === "sending") {
+    return {
+      status: "error",
+      message: `This edition is ${edition.status} — edits are locked. Create a new edition for changes.`,
+    };
+  }
+
+  // Drop empty posts (no message AND no image) so the admin can clear a row
+  // by blanking both fields. Preserve fbPostId for de-duplication.
+  const cleanPosts = body.posts
+    .map((p) => ({
+      fbPostId: p.fbPostId?.trim() || null,
+      permalinkUrl: p.permalinkUrl?.trim() || null,
+      message: p.message?.trim() || "",
+      imageUrl: p.imageUrl?.trim() || null,
+      createdTime: p.createdTime,
+    }))
+    .filter((p) => p.message.length > 0 || p.imageUrl);
+
+  for (const p of cleanPosts) {
+    const t = new Date(p.createdTime);
+    if (Number.isNaN(t.getTime())) {
+      return {
+        status: "error",
+        message: `One of the posts has an invalid date/time: ${p.createdTime}`,
+      };
+    }
+  }
+
+  try {
+    const updated = (await payload.update({
+      collection: "newsletter-editions",
+      id: edition.id,
+      data: {
+        subjectLine,
+        eyebrow: body.eyebrow.trim() || null,
+        lead: body.lead.trim() || null,
+        posts: cleanPosts,
+      },
+    })) as unknown as EditionDoc;
+
+    const html = renderNewsletterHtml({
+      editionDate: new Date(updated.editionDate),
+      subjectLine: updated.subjectLine,
+      eyebrow: updated.eyebrow ?? undefined,
+      lead: updated.lead ?? undefined,
+      posts: (updated.posts ?? []).map((p) => ({
+        message: p.message ?? "",
+        imageUrl: p.imageUrl ?? null,
+        permalinkUrl: p.permalinkUrl ?? null,
+        createdTime: new Date(p.createdTime),
+      })),
+    });
+    revalidatePath("/admin-tools/send-newsletter");
+    revalidatePath(`/admin-tools/send-newsletter/${edition.id}`);
+    return {
+      status: "success",
+      message: `Saved · ${cleanPosts.length} post${cleanPosts.length === 1 ? "" : "s"}.`,
+      html,
+      editionStatus: updated.status ?? "draft",
+    };
+  } catch (err) {
+    return {
+      status: "error",
+      message: `Save failed: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+// Flip the edition's status (e.g. draft → ready_to_send, or back to draft).
+// Used by the "Mark ready to send" / "Move back to draft" buttons in the
+// editor. Sending and post-send transitions are still owned by sendEdition.
+const ALLOWED_STATUS_TRANSITIONS: Record<string, string[]> = {
+  draft: ["ready_to_send", "skipped_no_posts"],
+  ready_to_send: ["draft", "skipped_no_posts"],
+  skipped_no_posts: ["draft"],
+  failed: ["draft"],
+};
+
+export async function markEditionStatus(
+  _prev: SendState,
+  data: FormData,
+): Promise<SendState> {
+  const headersList = await headers();
+  const payload = await getPayloadClient();
+  const { user } = await payload.auth({ headers: headersList });
+  if (!user) return { status: "error", message: "Not authorised." };
+
+  const editionId = String(data.get("editionId") ?? "").trim();
+  const next = String(data.get("nextStatus") ?? "").trim();
+  if (!editionId || !next) {
+    return { status: "error", message: "Missing edition id or status." };
+  }
+
+  let edition: EditionDoc;
+  try {
+    edition = (await payload.findByID({
+      collection: "newsletter-editions",
+      id: editionId,
+    })) as unknown as EditionDoc;
+  } catch {
+    return { status: "error", message: "Edition not found." };
+  }
+
+  const current = edition.status ?? "draft";
+  const allowed = ALLOWED_STATUS_TRANSITIONS[current] ?? [];
+  if (!allowed.includes(next)) {
+    return {
+      status: "error",
+      message: `Cannot move from ${current} to ${next}.`,
+    };
+  }
+
+  await payload.update({
+    collection: "newsletter-editions",
+    id: edition.id,
+    data: { status: next as NewsletterStatus },
+  });
+  revalidatePath("/admin-tools/send-newsletter");
+  revalidatePath(`/admin-tools/send-newsletter/${edition.id}`);
+  return {
+    status: "success",
+    message: `Status changed to "${next.replace(/_/g, " ")}".`,
+    broadcastId: "",
+    sentCount: 0,
+  };
 }

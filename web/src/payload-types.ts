@@ -77,6 +77,7 @@ export interface Config {
     'appointment-slots': AppointmentSlot;
     'appointment-bookings': AppointmentBooking;
     'newsletter-editions': NewsletterEdition;
+    'rate-limits': RateLimit;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -94,6 +95,7 @@ export interface Config {
     'appointment-slots': AppointmentSlotsSelect<false> | AppointmentSlotsSelect<true>;
     'appointment-bookings': AppointmentBookingsSelect<false> | AppointmentBookingsSelect<true>;
     'newsletter-editions': NewsletterEditionsSelect<false> | NewsletterEditionsSelect<true>;
+    'rate-limits': RateLimitsSelect<false> | RateLimitsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -146,6 +148,10 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   name?: string | null;
+  /**
+   * Controls which admin-tools pages and server actions this user can use. Admin = unrestricted; Newsletter editor = only the monthly Pastoral Diary editor + send pipeline.
+   */
+  role: 'admin' | 'newsletter_editor';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -484,6 +490,25 @@ export interface NewsletterEdition {
   createdAt: string;
 }
 /**
+ * Internal sliding-window ledger backing rate-limit checks on public form submissions. Rows expire automatically — admins should not edit by hand.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rate-limits".
+ */
+export interface RateLimit {
+  id: number;
+  /**
+   * Composite key — typically `<action>:<ip-or-email>`. Multiple rows per key are expected; the helper counts them within the window.
+   */
+  key: string;
+  /**
+   * When this hit drops out of the sliding window. Older rows are pruned opportunistically on each check.
+   */
+  expiresAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -546,6 +571,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'newsletter-editions';
         value: number | NewsletterEdition;
+      } | null)
+    | ({
+        relationTo: 'rate-limits';
+        value: number | RateLimit;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -595,6 +624,7 @@ export interface PayloadMigration {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -775,6 +805,16 @@ export interface NewsletterEditionsSelect<T extends boolean = true> {
         message?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "rate-limits_select".
+ */
+export interface RateLimitsSelect<T extends boolean = true> {
+  key?: T;
+  expiresAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

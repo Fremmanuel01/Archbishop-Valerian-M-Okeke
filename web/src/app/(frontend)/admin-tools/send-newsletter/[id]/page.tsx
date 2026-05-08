@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Latin } from "@/components/editorial";
 import { EditionEditor } from "@/components/edition-editor";
 import { SendEditionPanel } from "@/components/send-edition-panel";
+import { getAdminUserOr403, NEWSLETTER_ROLES } from "@/lib/admin-auth";
 import { getPayloadClient } from "@/lib/payload";
 import {
   renderNewsletterHtml,
@@ -46,10 +46,31 @@ export default async function EditEditionPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const headersList = await headers();
+  const auth = await getAdminUserOr403(NEWSLETTER_ROLES);
+  if (!auth.user) {
+    if (auth.reason === "unauthenticated") redirect("/admin");
+    return (
+      <PageShell
+        eyebrow={<Latin>Instrumenta · Edit Edition</Latin>}
+        title="Not"
+        titleAccent="Authorised"
+        lead="This page requires a newsletter editor or admin role."
+      >
+        <PageSection>
+          <div className="mx-auto max-w-[600px] border border-[color:var(--rule)] bg-bone-deep p-8 text-center">
+            <Link
+              href="/admin"
+              className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink"
+            >
+              Return to Payload admin
+            </Link>
+          </div>
+        </PageSection>
+      </PageShell>
+    );
+  }
+  const user = auth.user;
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) redirect("/admin");
 
   let edition: EditionDoc;
   try {

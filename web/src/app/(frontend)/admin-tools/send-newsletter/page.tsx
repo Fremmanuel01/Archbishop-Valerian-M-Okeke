@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Latin } from "@/components/editorial";
 import { getPayloadClient } from "@/lib/payload";
+import { getAdminUserOr403, NEWSLETTER_ROLES } from "@/lib/admin-auth";
 import { SendEditionPanel } from "@/components/send-edition-panel";
 
 export const dynamic = "force-dynamic";
@@ -38,10 +38,31 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function SendNewsletterPage() {
-  const headersList = await headers();
+  const auth = await getAdminUserOr403(NEWSLETTER_ROLES);
+  if (!auth.user) {
+    if (auth.reason === "unauthenticated") redirect("/admin");
+    return (
+      <PageShell
+        eyebrow={<Latin>Instrumenta · Admin</Latin>}
+        title="Not"
+        titleAccent="Authorised"
+        lead="This page requires a newsletter editor or admin role. Speak to the site owner if you believe you should have access."
+      >
+        <PageSection>
+          <div className="mx-auto max-w-[600px] border border-[color:var(--rule)] bg-bone-deep p-8 text-center">
+            <Link
+              href="/admin"
+              className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink"
+            >
+              Return to Payload admin
+            </Link>
+          </div>
+        </PageSection>
+      </PageShell>
+    );
+  }
+  const user = auth.user;
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) redirect("/admin");
 
   const result = await payload.find({
     collection: "newsletter-editions",

@@ -48,12 +48,18 @@ export async function generateMetadata({
 
 // Re-render the email HTML for archive viewing if the snapshot is missing
 // (older editions sent before htmlSnapshot was captured). For editions with
-// a snapshot, return it verbatim — this is the exact HTML subscribers got.
+// a snapshot, return it after rewriting the broadcast-only Resend merge tag
+// so anonymous archive readers get a working manage-subscription link
+// instead of the literal `{{{RESEND_UNSUBSCRIBE_URL}}}` placeholder.
 async function getEditionHtml(slug: string): Promise<string | null> {
   const edition = await getSentEditionBySlug(slug);
   if (!edition) return null;
+  const manualUnsubscribeUrl = `${SITE_URL}/connect/newsletter/unsubscribe`;
   if (edition.htmlSnapshot && edition.htmlSnapshot.length > 0) {
-    return edition.htmlSnapshot;
+    return edition.htmlSnapshot.replaceAll(
+      "{{{RESEND_UNSUBSCRIBE_URL}}}",
+      manualUnsubscribeUrl,
+    );
   }
   // Fallback: re-render from the stored posts.
   const payload = await getPayloadClient();

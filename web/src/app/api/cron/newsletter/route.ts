@@ -5,7 +5,9 @@ import {
   isFacebookConfigured,
   type FBPost,
 } from "@/lib/facebook";
+import { mirrorImageToBlob } from "@/lib/blob-mirror";
 import { resendConfigured, sendEmail } from "@/lib/resend";
+import { SITE_URL } from "@/lib/site";
 
 // Daily cron entry point. Vercel hits this at 08:00 UTC every day; the
 // handler decides what to do based on the day of the month.
@@ -106,6 +108,7 @@ async function draft(today: Date) {
   // by hand if desired).
   let posts: FBPost[] = [];
   let fbError: string | null = null;
+  const mirrorWarnings: Array<{ at: string; kind: string; message: string }> = [];
   if (isFacebookConfigured()) {
     try {
       posts = await fetchPagePosts({ since: start, until: end });
@@ -114,6 +117,31 @@ async function draft(today: Date) {
     }
   } else {
     fbError = "Facebook not yet configured (token + page id missing).";
+  }
+
+  // Mirror each post's image to Vercel Blob so the URL stays alive after
+  // FB rotates its CDN signatures. Failures are non-fatal — we keep the
+  // original URL so the edition still drafts, but log the warning into
+  // the edition's errors[] log so the editor knows the image will rot.
+  if (posts.length > 0) {
+    posts = await Promise.all(
+      posts.map(async (post, index) => {
+        if (!post.imageUrl) return post;
+        const result = await mirrorImageToBlob({
+          sourceUrl: post.imageUrl,
+          pathname: `newsletter/${slug}/${post.id || `pos-${index}`}`,
+        });
+        if (!result.ok) {
+          mirrorWarnings.push({
+            at: new Date().toISOString(),
+            kind: "image_mirror",
+            message: `Could not mirror ${post.imageUrl}: ${result.reason}`,
+          });
+          return post;
+        }
+        return { ...post, imageUrl: result.url };
+      }),
+    );
   }
 
   const monthLabel = today.toLocaleString("en-US", {
@@ -156,9 +184,18 @@ async function draft(today: Date) {
     })),
     status: posts.length > 0 ? "draft" : "skipped_no_posts",
   };
-  if (fbError) {
+  if (fbError || mirrorWarnings.length > 0) {
     data.errors = [
-      { at: new Date().toISOString(), kind: "facebook_fetch", message: fbError },
+      ...(fbError
+        ? [
+            {
+              at: new Date().toISOString(),
+              kind: "facebook_fetch",
+              message: fbError,
+            },
+          ]
+        : []),
+      ...mirrorWarnings,
     ];
   }
 
@@ -176,7 +213,7 @@ async function draft(today: Date) {
   if (resendConfigured() && process.env.CONTACT_TO) {
     try {
       const recipient = process.env.CONTACT_TO;
-      const reviewUrl = "https://archbishopvalokeke.org/admin-tools/send-newsletter";
+      const reviewUrl = `${SITE_URL}/admin-tools/send-newsletter`;
       await sendEmail({
         to: recipient,
         subject: posts.length
@@ -242,7 +279,7 @@ async function escalate(today: Date) {
         text: `Today is the last day of the month and the ${monthLabel} edition is still in status: ${status}.
 
 If the Office wishes to send, approve and trigger via:
-https://archbishopvalokeke.org/admin-tools/send-newsletter
+${SITE_URL}/admin-tools/send-newsletter
 
 If not, set status to 'skipped_no_posts' or 'failed' to silence this escalation.
 

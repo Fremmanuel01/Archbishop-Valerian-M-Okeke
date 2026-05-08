@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getPayloadClient } from "@/lib/payload";
+import { NEWSLETTER_ROLES, requireRole } from "@/lib/admin-auth";
 import {
   createBroadcast,
   getActiveAudienceCount,
@@ -15,6 +15,18 @@ import {
 } from "@/lib/newsletter-template";
 import { createNewsletterToken } from "@/lib/newsletter-token";
 import { SITE_URL } from "@/lib/site";
+
+function unauthorisedSendState(
+  reason: "unauthenticated" | "forbidden",
+): { status: "error"; message: string } {
+  return {
+    status: "error",
+    message:
+      reason === "unauthenticated"
+        ? "Please sign in to Payload before continuing."
+        : "Your account does not have a newsletter role.",
+  };
+}
 
 export type SendState =
   | { status: "idle" }
@@ -86,12 +98,9 @@ export async function sendEdition(
   _prev: SendState,
   data: FormData,
 ): Promise<SendState> {
-  const headersList = await headers();
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) return unauthorisedSendState(auth.reason);
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
-    return { status: "error", message: "You must be signed in to admin to send." };
-  }
 
   const editionId = String(data.get("editionId") ?? "").trim();
   if (!editionId) {
@@ -251,12 +260,10 @@ export async function retryFailedEdition(
   _prev: SendState,
   data: FormData,
 ): Promise<SendState> {
-  const headersList = await headers();
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) return unauthorisedSendState(auth.reason);
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
-    return { status: "error", message: "You must be signed in to retry." };
-  }
+
   const editionId = String(data.get("editionId") ?? "").trim();
   if (!editionId) {
     return { status: "error", message: "Missing edition id." };
@@ -295,10 +302,9 @@ export async function retryFailedEdition(
 }
 
 export async function previewEdition(editionId: string): Promise<string> {
-  const headersList = await headers();
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) return "<p>Not authorised.</p>";
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) return "<p>Not authorised.</p>";
   const edition = (await payload.findByID({
     collection: "newsletter-editions",
     id: editionId,
@@ -324,10 +330,9 @@ export async function sendTestEdition(
 ): Promise<SendState> {
   // Send the edition's HTML to a single address (the admin's email) for
   // visual review before broadcasting to the whole audience.
-  const headersList = await headers();
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) return unauthorisedSendState(auth.reason);
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) return { status: "error", message: "Not authorised." };
 
   const editionId = String(data.get("editionId") ?? "").trim();
   const testRecipient = String(data.get("testRecipient") ?? "").trim();
@@ -392,12 +397,17 @@ export async function updateEdition(
   editionId: string,
   body: EditorPayload,
 ): Promise<EditState> {
-  const headersList = await headers();
-  const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
-    return { status: "error", message: "You must be signed in to edit." };
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) {
+    return {
+      status: "error",
+      message:
+        auth.reason === "unauthenticated"
+          ? "You must be signed in to edit."
+          : "Your account does not have a newsletter role.",
+    };
   }
+  const payload = await getPayloadClient();
   if (!editionId) {
     return { status: "error", message: "Missing edition id." };
   }
@@ -488,22 +498,29 @@ export async function updateEdition(
 
 // Flip the edition's status (e.g. draft → ready_to_send, or back to draft).
 // Used by the "Mark ready to send" / "Move back to draft" buttons in the
-// editor. Sending and post-send transitions are still owned by sendEdition.
+// editor. Sending and post-send transitions are normally owned by
+// sendEdition, but `sending → failed` is allowed manually so admins can
+// recover an edition whose function timed out mid-broadcast.
 const ALLOWED_STATUS_TRANSITIONS: Record<string, string[]> = {
   draft: ["ready_to_send", "skipped_no_posts"],
   ready_to_send: ["draft", "skipped_no_posts"],
   skipped_no_posts: ["draft"],
   failed: ["draft"],
+  // Manual escape hatch: when a send hangs (function timeout while Resend
+  // was processing) the edition is stuck in `sending`. Admins flip it to
+  // `failed`, which then unlocks the existing retry button. We do NOT
+  // allow `sending → sent` or `sending → ready_to_send` here — both could
+  // race with an in-flight broadcast.
+  sending: ["failed"],
 };
 
 export async function markEditionStatus(
   _prev: SendState,
   data: FormData,
 ): Promise<SendState> {
-  const headersList = await headers();
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) return unauthorisedSendState(auth.reason);
   const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) return { status: "error", message: "Not authorised." };
 
   const editionId = String(data.get("editionId") ?? "").trim();
   const next = String(data.get("nextStatus") ?? "").trim();
@@ -530,10 +547,32 @@ export async function markEditionStatus(
     };
   }
 
+  // Special-case: sending → failed is a recovery flip. Append an audit
+  // entry so the errors[] log captures who reset what and when, otherwise
+  // the recovery is silent.
+  const updatePayload: { status: NewsletterStatus; errors?: Array<{ at: string; kind: string; message: string }> } = {
+    status: next as NewsletterStatus,
+  };
+  if (current === "sending" && next === "failed") {
+    const previous = (
+      (edition as unknown as {
+        errors?: Array<{ at: string; kind: string; message: string }>;
+      }).errors ?? []
+    ).filter((e) => e && typeof e === "object");
+    updatePayload.errors = [
+      ...previous,
+      {
+        at: new Date().toISOString(),
+        kind: "manual_recover",
+        message: `Manually flipped from sending → failed by ${auth.user.email ?? auth.user.id}. The edition was likely stuck after a function timeout; click "Reset & retry" to broadcast again.`,
+      },
+    ];
+  }
+
   await payload.update({
     collection: "newsletter-editions",
     id: edition.id,
-    data: { status: next as NewsletterStatus },
+    data: updatePayload,
   });
   revalidatePath("/admin-tools/send-newsletter");
   revalidatePath(`/admin-tools/send-newsletter/${edition.id}`);
@@ -553,11 +592,15 @@ export async function rewritePostAction(input: {
   source: string;
   createdTime: string;
 }): Promise<RewriteState> {
-  const headersList = await headers();
-  const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
-    return { status: "error", message: "You must be signed in to rewrite." };
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) {
+    return {
+      status: "error",
+      message:
+        auth.reason === "unauthenticated"
+          ? "You must be signed in to rewrite."
+          : "Your account does not have a newsletter role.",
+    };
   }
   const source = input.source?.trim() ?? "";
   if (!source) {
@@ -605,11 +648,15 @@ export async function generateLeadAction(input: {
   editionDate: string;
   posts: Array<{ message: string; createdTime: string }>;
 }): Promise<RewriteState> {
-  const headersList = await headers();
-  const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
-    return { status: "error", message: "You must be signed in." };
+  const auth = await requireRole(NEWSLETTER_ROLES);
+  if (!auth.ok) {
+    return {
+      status: "error",
+      message:
+        auth.reason === "unauthenticated"
+          ? "You must be signed in."
+          : "Your account does not have a newsletter role.",
+    };
   }
   const editionDate = new Date(input.editionDate);
   if (Number.isNaN(editionDate.getTime())) {

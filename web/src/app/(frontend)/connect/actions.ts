@@ -5,6 +5,7 @@ import { getLang } from "@/lib/lang";
 import { getDict, type Lang } from "@/lib/i18n";
 import { renderConfirmationHtml } from "@/lib/email-templates";
 import { createNewsletterToken } from "@/lib/newsletter-token";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { SITE_URL } from "@/lib/site";
 import type { FormState } from "./form-state";
 
@@ -183,6 +184,40 @@ export async function subscribeNewsletter(
   }
   if (!resendConfigured() || !process.env.RESEND_AUDIENCE_ID) {
     return notConfiguredError();
+  }
+
+  // Block bursts of confirmation-email sends from the same IP or to the
+  // same address. The window is generous on purpose — a real subscriber
+  // who mistypes their email once still gets through, but a bot scripting
+  // confirmations to harass random addresses gets stopped.
+  const ip = await getClientIp();
+  const ipCheck = await checkRateLimit({
+    action: "newsletter-subscribe-ip",
+    identifier: ip,
+    max: 5,
+    windowSec: 600,
+  });
+  if (!ipCheck.ok) {
+    return {
+      status: "error",
+      message:
+        "Too many subscription attempts from this device. Please wait a few minutes and try again.",
+    };
+  }
+  const emailCheck = await checkRateLimit({
+    action: "newsletter-subscribe-email",
+    identifier: email,
+    max: 3,
+    windowSec: 3600,
+  });
+  if (!emailCheck.ok) {
+    // We've already sent a recent confirmation to this address — pretend
+    // success rather than confirm/deny that the address is in flight.
+    return {
+      status: "success",
+      message:
+        "Almost done — please check your inbox and click the confirmation link to complete your subscription.",
+    };
   }
 
   try {

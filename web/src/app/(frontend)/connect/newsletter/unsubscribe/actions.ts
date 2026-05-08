@@ -1,5 +1,6 @@
 "use server";
 
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { resendConfigured, unsubscribeAudienceContact } from "@/lib/resend";
 
 export type UnsubscribeState =
@@ -15,7 +16,9 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // still type their email here. We don't require the HMAC token in this case
 // — Resend's contacts endpoint is idempotent, so the worst-case is that
 // somebody else types in your email and removes you, which is the desired
-// outcome anyway (you wanted off the list).
+// outcome anyway (you wanted off the list). The IP rate limit below caps
+// how fast a single device can do this so the form can't be scripted to
+// pre-emptively unsubscribe arbitrary addresses en masse.
 export async function submitUnsubscribe(
   _prev: UnsubscribeState,
   data: FormData,
@@ -23,6 +26,20 @@ export async function submitUnsubscribe(
   const email = String(data.get("email") ?? "").trim().toLowerCase();
   if (!EMAIL_RE.test(email)) {
     return { status: "error", message: "Please enter a valid email address." };
+  }
+  const ip = await getClientIp();
+  const ipCheck = await checkRateLimit({
+    action: "newsletter-unsubscribe-ip",
+    identifier: ip,
+    max: 10,
+    windowSec: 600,
+  });
+  if (!ipCheck.ok) {
+    return {
+      status: "error",
+      message:
+        "Too many unsubscribe attempts from this device. Please wait a few minutes and try again.",
+    };
   }
   if (!resendConfigured()) {
     return {

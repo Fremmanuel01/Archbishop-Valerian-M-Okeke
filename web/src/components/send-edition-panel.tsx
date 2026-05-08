@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import {
   initialSendState,
+  markEditionStatus,
   retryFailedEdition,
   sendEdition,
   sendTestEdition,
@@ -69,20 +70,52 @@ export function SendEditionPanel({
     retryFailedEdition,
     initialSendState,
   );
+  const [recoverState, recoverAction] = useActionState(
+    markEditionStatus,
+    initialSendState,
+  );
   const [confirmText, setConfirmText] = useState("");
 
   // A failed edition is locked against direct broadcast until retry resets
   // it. This avoids accidentally re-sending the broken render twice.
   const isFailed = status === "failed";
+  // A `sending` edition normally clears itself within a few seconds when
+  // sendEdition completes. If it's been stuck longer, the function probably
+  // timed out — surface a manual recovery path.
+  const isSending = status === "sending";
   const broadcastDisabled =
     !hasPosts ||
     status === "sent" ||
-    status === "sending" ||
+    isSending ||
     isFailed ||
     confirmText !== "SEND";
 
   return (
     <div className="mt-5 space-y-7">
+      {isSending ? (
+        <form
+          action={recoverAction}
+          className="border border-[#e8b8b0] bg-[#fbf3f1] p-4"
+        >
+          <input type="hidden" name="editionId" value={editionId} />
+          <input type="hidden" name="nextStatus" value="failed" />
+          <p className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-[#7a2f22]">
+            Stuck in sending
+          </p>
+          <p className="mt-2 max-w-[560px] text-[14px] leading-[1.6] text-[#7a2f22]">
+            This edition has been in the &ldquo;sending&rdquo; state long enough
+            to look stuck — most likely the send function timed out before
+            Resend acknowledged. Mark it failed to unlock the retry button.
+            Only do this if you have confirmed in the Resend dashboard that no
+            broadcast was actually delivered, otherwise you risk re-sending.
+          </p>
+          <div className="mt-4">
+            <StatusButton variant="outline">Mark failed (unstick)</StatusButton>
+          </div>
+          <StatusMessage state={recoverState} />
+        </form>
+      ) : null}
+
       {isFailed ? (
         <form
           action={retryAction}

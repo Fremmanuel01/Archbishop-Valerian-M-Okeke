@@ -36,9 +36,10 @@ export type FBPost = {
   message: string;
   createdTime: Date;
   permalinkUrl: string;
-  /** First image URL on the post. May be a temporary FB CDN URL — the cron
-   *  mirrors it to Vercel Blob before the edition is sent (see
-   *  lib/blob-mirror.ts in phase 4). */
+  /** First image URL on the post. Returned as the original FB CDN URL —
+   *  the cron handler at /api/cron/newsletter mirrors it to Vercel Blob
+   *  via `lib/blob-mirror.ts` before persisting the edition, so the
+   *  long-term archived URL is stable. */
   imageUrl: string | null;
 };
 

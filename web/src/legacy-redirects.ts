@@ -39,7 +39,6 @@ export const LEGACY_REDIRECTS: Redirect[] = [
   // ── Appointments ───────────────────────────────────────────────────
   { source: "/appointment", destination: "/connect/appointment-laity", permanent: true },
   { source: "/appointment-2", destination: "/connect/appointment-clergy", permanent: true },
-  { source: "/appointments", destination: "/appointments", permanent: false },
 
   // ── Pastoral letters (each old slug → archive page) ────────────────
   { source: "/and-the-two-become-onetowards-a-christian-marriage", destination: "/pastoral-letters", permanent: true },

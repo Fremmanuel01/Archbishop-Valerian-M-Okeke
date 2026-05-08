@@ -31,6 +31,7 @@ type EditionDoc = {
     permalinkUrl?: string | null;
     createdTime: string;
     message?: string | null;
+    originalMessage?: string | null;
     imageUrl?: string | null;
   }> | null;
   status?: string;
@@ -64,6 +65,7 @@ export default async function EditEditionPage({
     fbPostId: p.fbPostId ?? null,
     permalinkUrl: p.permalinkUrl ?? null,
     message: p.message ?? "",
+    originalMessage: p.originalMessage ?? null,
     imageUrl: p.imageUrl ?? null,
     createdTime: p.createdTime,
   }));
@@ -132,6 +134,7 @@ export default async function EditEditionPage({
 
           <EditionEditor
             editionId={String(edition.id)}
+            editionDate={edition.editionDate}
             initialHtml={initialHtml}
             initialStatus={status}
             initial={{

@@ -444,6 +444,10 @@ export interface NewsletterEdition {
          */
         message?: string | null;
         /**
+         * Raw FB caption as fetched, preserved so 'Reset to original' and 'Rewrite editorially' can both reference it. Read-only.
+         */
+        originalMessage?: string | null;
+        /**
          * Permanent image URL (mirrored from FB to Vercel Blob). Empty if the post has no image.
          */
         imageUrl?: string | null;
@@ -753,6 +757,7 @@ export interface NewsletterEditionsSelect<T extends boolean = true> {
         permalinkUrl?: T;
         createdTime?: T;
         message?: T;
+        originalMessage?: T;
         imageUrl?: T;
         id?: T;
       };

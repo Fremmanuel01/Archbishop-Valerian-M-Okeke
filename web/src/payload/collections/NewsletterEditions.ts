@@ -122,6 +122,15 @@ export const NewsletterEditions: CollectionConfig = {
           },
         },
         {
+          name: "originalMessage",
+          type: "textarea",
+          admin: {
+            description:
+              "Raw FB caption as fetched, preserved so 'Reset to original' and 'Rewrite editorially' can both reference it. Read-only.",
+            readOnly: true,
+          },
+        },
+        {
           name: "imageUrl",
           type: "text",
           admin: {

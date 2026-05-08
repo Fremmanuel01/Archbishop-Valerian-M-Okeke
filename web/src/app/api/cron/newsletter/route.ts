@@ -133,6 +133,7 @@ async function draft(today: Date) {
       permalinkUrl: string;
       createdTime: string;
       message: string;
+      originalMessage: string;
       imageUrl: string | null;
     }>;
     status: "draft" | "skipped_no_posts";
@@ -150,6 +151,7 @@ async function draft(today: Date) {
       permalinkUrl: p.permalinkUrl,
       createdTime: p.createdTime.toISOString(),
       message: p.message,
+      originalMessage: p.message,
       imageUrl: p.imageUrl,
     })),
     status: posts.length > 0 ? "draft" : "skipped_no_posts",

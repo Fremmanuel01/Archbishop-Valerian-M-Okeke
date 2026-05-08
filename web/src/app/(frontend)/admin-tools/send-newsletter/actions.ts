@@ -38,8 +38,16 @@ export type EditorPostInput = {
   permalinkUrl?: string | null;
   createdTime: string;
   message?: string | null;
+  originalMessage?: string | null;
   imageUrl?: string | null;
 };
+
+export type RewriteState =
+  | { status: "idle" }
+  | { status: "success"; text: string }
+  | { status: "error"; message: string };
+
+export const initialRewriteState: RewriteState = { status: "idle" };
 
 export type EditorPayload = {
   subjectLine: string;
@@ -415,12 +423,14 @@ export async function updateEdition(
   }
 
   // Drop empty posts (no message AND no image) so the admin can clear a row
-  // by blanking both fields. Preserve fbPostId for de-duplication.
+  // by blanking both fields. Preserve fbPostId and originalMessage so the
+  // raw FB caption is never lost across saves.
   const cleanPosts = body.posts
     .map((p) => ({
       fbPostId: p.fbPostId?.trim() || null,
       permalinkUrl: p.permalinkUrl?.trim() || null,
       message: p.message?.trim() || "",
+      originalMessage: p.originalMessage ?? null,
       imageUrl: p.imageUrl?.trim() || null,
       createdTime: p.createdTime,
     }))
@@ -533,4 +543,115 @@ export async function markEditionStatus(
     broadcastId: "",
     sentCount: 0,
   };
+}
+
+// AI editorial rewriter for a single post. Returns only the rewritten text;
+// the caller (the editor) holds form state and persists via updateEdition.
+// This keeps the action cheap and idempotent — re-clicking "Rewrite" just
+// generates a fresh draft against the same source without touching Payload.
+export async function rewritePostAction(input: {
+  source: string;
+  createdTime: string;
+}): Promise<RewriteState> {
+  const headersList = await headers();
+  const payload = await getPayloadClient();
+  const { user } = await payload.auth({ headers: headersList });
+  if (!user) {
+    return { status: "error", message: "You must be signed in to rewrite." };
+  }
+  const source = input.source?.trim() ?? "";
+  if (!source) {
+    return {
+      status: "error",
+      message: "No source caption to rewrite. Add the original message first.",
+    };
+  }
+  const createdTime = new Date(input.createdTime);
+  if (Number.isNaN(createdTime.getTime())) {
+    return { status: "error", message: "Invalid post date." };
+  }
+  try {
+    const { aiConfigured, rewritePostEditorially } = await import(
+      "@/lib/newsletter-ai"
+    );
+    if (!aiConfigured()) {
+      return {
+        status: "error",
+        message:
+          "Editorial AI is not configured (ANTHROPIC_API_KEY missing).",
+      };
+    }
+    const text = await rewritePostEditorially({ source, createdTime });
+    if (!text) {
+      return {
+        status: "error",
+        message:
+          "The source caption is too sparse to rewrite. Edit it manually instead.",
+      };
+    }
+    return { status: "success", text };
+  } catch (err) {
+    return {
+      status: "error",
+      message: `Rewrite failed: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
+// AI lead-sentence generator. Reads the current set of posts (whichever
+// version the admin has in their editor — raw, edited, or rewritten) and
+// returns one italic sentence for the edition's `lead` field.
+export async function generateLeadAction(input: {
+  editionDate: string;
+  posts: Array<{ message: string; createdTime: string }>;
+}): Promise<RewriteState> {
+  const headersList = await headers();
+  const payload = await getPayloadClient();
+  const { user } = await payload.auth({ headers: headersList });
+  if (!user) {
+    return { status: "error", message: "You must be signed in." };
+  }
+  const editionDate = new Date(input.editionDate);
+  if (Number.isNaN(editionDate.getTime())) {
+    return { status: "error", message: "Invalid edition date." };
+  }
+  const posts = (input.posts ?? [])
+    .map((p) => ({
+      message: (p.message ?? "").trim(),
+      createdTime: new Date(p.createdTime),
+    }))
+    .filter((p) => p.message.length > 0 && !Number.isNaN(p.createdTime.getTime()));
+  if (posts.length === 0) {
+    return {
+      status: "error",
+      message:
+        "No posts with content to summarise. Add at least one post first.",
+    };
+  }
+  try {
+    const { aiConfigured, generateMonthlyLead } = await import(
+      "@/lib/newsletter-ai"
+    );
+    if (!aiConfigured()) {
+      return {
+        status: "error",
+        message:
+          "Editorial AI is not configured (ANTHROPIC_API_KEY missing).",
+      };
+    }
+    const text = await generateMonthlyLead({ posts, editionDate });
+    if (!text) {
+      return {
+        status: "error",
+        message:
+          "Posts too sparse to characterise the month. Write a lead manually.",
+      };
+    }
+    return { status: "success", text };
+  } catch (err) {
+    return {
+      status: "error",
+      message: `Lead generation failed: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
 }

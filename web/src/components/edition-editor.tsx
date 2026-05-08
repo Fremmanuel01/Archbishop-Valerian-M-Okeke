@@ -3,9 +3,11 @@
 import { useActionState, useId, useState, useTransition } from "react";
 import { NewsletterIframe } from "@/components/newsletter-iframe";
 import {
+  generateLeadAction,
   initialEditState,
   initialSendState,
   markEditionStatus,
+  rewritePostAction,
   updateEdition,
   type EditState,
   type EditorPostInput,
@@ -25,6 +27,7 @@ type Post = EditorPostInput & {
 
 type Props = {
   editionId: string;
+  editionDate: string;
   initialHtml: string;
   initialStatus: string;
   initial: {
@@ -82,6 +85,7 @@ function StatusBanner({ state }: { state: EditState | SendState }) {
 
 export function EditionEditor({
   editionId,
+  editionDate,
   initialHtml,
   initialStatus,
   initial,
@@ -104,6 +108,16 @@ export function EditionEditor({
     markEditionStatus,
     initialSendState,
   );
+  // Per-post rewrite is exclusive: at most one post is being rewritten at
+  // a time. Track which key is in flight + the last-error message keyed by
+  // post so the inline message lands next to the right post.
+  const [rewritingKey, setRewritingKey] = useState<string | null>(null);
+  const [rewriteErrors, setRewriteErrors] = useState<Record<string, string>>({});
+  const [leadPending, setLeadPending] = useState(false);
+  const [leadMessage, setLeadMessage] = useState<{
+    kind: "success" | "error";
+    text: string;
+  } | null>(null);
 
   // Editions in `sending` or `sent` state are read-only.
   const locked = status === "sending" || status === "sent";
@@ -136,10 +150,85 @@ export function EditionEditor({
         fbPostId: null,
         permalinkUrl: null,
         message: "",
+        originalMessage: null,
         imageUrl: null,
         createdTime: new Date().toISOString(),
       },
     ]);
+  }
+
+  function rewritePost(post: Post) {
+    const source = (post.originalMessage ?? post.message ?? "").trim();
+    if (!source) {
+      setRewriteErrors((prev) => ({
+        ...prev,
+        [post._key]: "Add the original caption first.",
+      }));
+      return;
+    }
+    setRewriteErrors((prev) => {
+      const next = { ...prev };
+      delete next[post._key];
+      return next;
+    });
+    setRewritingKey(post._key);
+    startTransition(async () => {
+      const result = await rewritePostAction({
+        source,
+        createdTime: post.createdTime,
+      });
+      if (result.status === "success") {
+        // Lock in the originalMessage on first rewrite so future "Reset"
+        // buttons have something to fall back to even on legacy editions.
+        patchPost(post._key, {
+          message: result.text,
+          originalMessage: post.originalMessage ?? source,
+        });
+      } else if (result.status === "error") {
+        setRewriteErrors((prev) => ({
+          ...prev,
+          [post._key]: result.message,
+        }));
+      }
+      setRewritingKey(null);
+    });
+  }
+
+  function resetPostToOriginal(post: Post) {
+    if (!post.originalMessage) return;
+    patchPost(post._key, { message: post.originalMessage });
+    setRewriteErrors((prev) => {
+      const next = { ...prev };
+      delete next[post._key];
+      return next;
+    });
+  }
+
+  function generateLead() {
+    setLeadMessage(null);
+    setLeadPending(true);
+    const payload = {
+      editionDate,
+      posts: posts
+        .map((p) => ({
+          message: (p.message ?? "").trim(),
+          createdTime: p.createdTime,
+        }))
+        .filter((p) => p.message.length > 0),
+    };
+    startTransition(async () => {
+      const result = await generateLeadAction(payload);
+      if (result.status === "success") {
+        setLead(result.text);
+        setLeadMessage({
+          kind: "success",
+          text: "Lead drafted. Review, edit if needed, then Save.",
+        });
+      } else if (result.status === "error") {
+        setLeadMessage({ kind: "error", text: result.message });
+      }
+      setLeadPending(false);
+    });
   }
 
   function onSave(e: React.FormEvent<HTMLFormElement>) {
@@ -153,6 +242,7 @@ export function EditionEditor({
         fbPostId: p.fbPostId ?? null,
         permalinkUrl: p.permalinkUrl ?? null,
         message: p.message ?? "",
+        originalMessage: p.originalMessage ?? null,
         imageUrl: p.imageUrl ?? null,
         createdTime: p.createdTime,
       })),
@@ -212,10 +302,23 @@ export function EditionEditor({
             />
           </label>
 
-          <label htmlFor={leadId} className="block">
-            <span className="block font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold-text">
-              Italic lead
-            </span>
+          <div className="block">
+            <div className="flex items-center justify-between gap-3">
+              <label
+                htmlFor={leadId}
+                className="block font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2.4px] text-gold-text"
+              >
+                Italic lead
+              </label>
+              <button
+                type="button"
+                onClick={generateLead}
+                disabled={locked || leadPending || isPending}
+                className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.8px] text-ink underline decoration-[color:var(--rule)] underline-offset-4 hover:decoration-gold disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {leadPending ? "Generating…" : "Generate with AI"}
+              </button>
+            </div>
             <textarea
               id={leadId}
               value={lead}
@@ -225,7 +328,20 @@ export function EditionEditor({
               placeholder="One short sentence describing the month."
               className="mt-2 block w-full border border-[color:var(--rule)] bg-bone px-3 py-2 font-[family-name:var(--font-body)] italic text-[16px] leading-[1.5] text-ink focus:outline-none focus:ring-2 focus:ring-gold-soft disabled:cursor-not-allowed disabled:opacity-60"
             />
-          </label>
+            {leadMessage ? (
+              <p
+                role="status"
+                aria-live="polite"
+                className={`mt-2 border-l-2 pl-3 text-[12px] leading-[1.55] ${
+                  leadMessage.kind === "success"
+                    ? "border-gold text-ink-soft"
+                    : "border-[#a84233] text-[#7a2f22]"
+                }`}
+              >
+                {leadMessage.text}
+              </p>
+            ) : null}
+          </div>
         </section>
 
         {/* Posts */}
@@ -309,10 +425,52 @@ export function EditionEditor({
                     />
                   </label>
 
-                  <label className="block">
-                    <span className="block font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink-soft">
-                      Message
-                    </span>
+                  {post.originalMessage &&
+                  post.originalMessage !== post.message ? (
+                    <details className="group border border-dashed border-[color:var(--rule)] bg-bone-deep p-3">
+                      <summary className="cursor-pointer font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.8px] text-ink-soft">
+                        Original FB caption · click to view
+                      </summary>
+                      <p className="mt-2 whitespace-pre-wrap font-[family-name:var(--font-body)] text-[13px] leading-[1.55] text-ink-soft">
+                        {post.originalMessage}
+                      </p>
+                    </details>
+                  ) : null}
+
+                  <div className="block">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <span className="block font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink-soft">
+                        Message
+                      </span>
+                      <div className="flex flex-wrap gap-3">
+                        <button
+                          type="button"
+                          onClick={() => rewritePost(post)}
+                          disabled={
+                            locked ||
+                            isPending ||
+                            rewritingKey !== null ||
+                            !((post.originalMessage ?? post.message ?? "").trim())
+                          }
+                          className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.8px] text-ink underline decoration-[color:var(--rule)] underline-offset-4 hover:decoration-gold disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {rewritingKey === post._key
+                            ? "Rewriting…"
+                            : "Rewrite editorially"}
+                        </button>
+                        {post.originalMessage &&
+                        post.originalMessage !== post.message ? (
+                          <button
+                            type="button"
+                            onClick={() => resetPostToOriginal(post)}
+                            disabled={locked}
+                            className="font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[1.8px] text-ink-soft underline decoration-[color:var(--rule)] underline-offset-4 hover:decoration-gold disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            Reset to original
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
                     <textarea
                       value={post.message ?? ""}
                       onChange={(e) =>
@@ -322,7 +480,16 @@ export function EditionEditor({
                       rows={6}
                       className="mt-1 block w-full border border-[color:var(--rule)] bg-bone px-3 py-2 font-[family-name:var(--font-body)] text-[15px] leading-[1.6] text-ink focus:outline-none focus:ring-2 focus:ring-gold-soft disabled:cursor-not-allowed disabled:opacity-60"
                     />
-                  </label>
+                    {rewriteErrors[post._key] ? (
+                      <p
+                        role="status"
+                        aria-live="polite"
+                        className="mt-2 border-l-2 border-[#a84233] pl-3 text-[12px] leading-[1.55] text-[#7a2f22]"
+                      >
+                        {rewriteErrors[post._key]}
+                      </p>
+                    ) : null}
+                  </div>
 
                   <label className="block">
                     <span className="block font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-ink-soft">

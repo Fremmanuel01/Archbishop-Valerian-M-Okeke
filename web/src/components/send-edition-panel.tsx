@@ -104,7 +104,7 @@ export function SendEditionPanel({
           </p>
           <p className="mt-2 max-w-[560px] text-[14px] leading-[1.6] text-[#7a2f22]">
             This edition has been in the &ldquo;sending&rdquo; state long enough
-            to look stuck — most likely the send function timed out before
+            to look stuck. Most likely the send function timed out before
             Resend acknowledged. Mark it failed to unlock the retry button.
             Only do this if you have confirmed in the Resend dashboard that no
             broadcast was actually delivered, otherwise you risk re-sending.
@@ -163,7 +163,7 @@ export function SendEditionPanel({
           Broadcast to all subscribers
         </p>
         <p className="mt-2 max-w-[560px] text-[14px] leading-[1.6] text-ink-soft">
-          This sends the edition to every active contact in the &quot;Archbishop&apos;s Office&quot; Resend audience. It cannot be undone — Resend processes the broadcast asynchronously and there is no &quot;cancel after send&quot; flow.
+          This sends the edition to every active contact in the &quot;Archbishop&apos;s Office&quot; Resend audience. It cannot be undone. Resend processes the broadcast asynchronously and there is no &quot;cancel after send&quot; flow.
         </p>
         <label className="mt-4 block">
           <span className="block font-[family-name:var(--font-ui)] text-[10px] font-semibold uppercase tracking-[2px] text-gold-text">
@@ -185,7 +185,7 @@ export function SendEditionPanel({
         <StatusMessage state={sendState} />
         {!hasPosts ? (
           <p className="mt-3 text-[13px] italic text-ink-soft">
-            This edition has no posts. Add posts in Payload before broadcasting, or set status to &quot;Skipped — no posts this month.&quot;
+            This edition has no posts. Add posts in Payload before broadcasting, or set status to &quot;Skipped: no posts this month.&quot;
           </p>
         ) : null}
       </form>

@@ -7,7 +7,7 @@ export const Homepage: GlobalConfig = {
   admin: {
     group: "Site",
     description:
-      "Editable copy on the homepage hero, daily reflection block, and pull-quote section. The Archbishop's name itself is not editable here — it is part of the brand mark.",
+      "Editable copy on the homepage hero, daily reflection block, and pull-quote section. The Archbishop's name itself is not editable here; it is part of the brand mark.",
   },
   hooks: {
     afterChange: [
@@ -60,7 +60,7 @@ export const Homepage: GlobalConfig = {
       type: "richText",
       admin: {
         description:
-          "Rotating quote shown in the bone band. The date stamp updates automatically — only the quote text is editable here.",
+          "Rotating quote shown in the bone band. The date stamp updates automatically; only the quote text is editable here.",
       },
     },
     {
@@ -76,7 +76,7 @@ export const Homepage: GlobalConfig = {
       label: "Featured Quote Attribution",
       type: "text",
       admin: {
-        description: "e.g. '— Most Rev. Valerian M. Okeke'.",
+        description: "e.g. 'Most Rev. Valerian M. Okeke'.",
       },
     },
   ],

@@ -21,7 +21,7 @@ const STATUS_OPTIONS = [
   { label: "Sending…", value: "sending" },
   { label: "Sent", value: "sent" },
   { label: "Failed", value: "failed" },
-  { label: "Skipped — no posts this month", value: "skipped_no_posts" },
+  { label: "Skipped: no posts this month", value: "skipped_no_posts" },
 ] as const;
 
 export const NewsletterEditions: CollectionConfig = {
@@ -88,7 +88,7 @@ export const NewsletterEditions: CollectionConfig = {
       labels: { singular: "Post", plural: "Posts" },
       admin: {
         description:
-          "Posts pulled from the FB page (chronological). The first post is the lead — it gets the full-bleed photo treatment.",
+          "Posts pulled from the FB page (chronological). The first post is the lead and gets the full-bleed photo treatment.",
         initCollapsed: true,
       },
       fields: [
@@ -118,7 +118,7 @@ export const NewsletterEditions: CollectionConfig = {
           type: "textarea",
           admin: {
             description:
-              "Post text from the FB caption. Edited copy is OK — this is what readers will see in the email.",
+              "Post text from the FB caption. Edited copy is OK; this is what readers will see in the email.",
           },
         },
         {
@@ -145,7 +145,7 @@ export const NewsletterEditions: CollectionConfig = {
       type: "textarea",
       admin: {
         description:
-          "Final HTML rendered at send-time. Read-only — populated by the send action.",
+          "Final HTML rendered at send-time. Read-only; populated by the send action.",
         readOnly: true,
         rows: 4,
       },

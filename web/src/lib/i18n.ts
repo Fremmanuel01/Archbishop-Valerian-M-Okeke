@@ -210,7 +210,7 @@ export const dict: Record<Lang, Dict> = {
       libraryEyebrow: "The Library",
       libraryTitle: "Pastoral Letters",
       libraryLead:
-        "Twenty-four years of teaching — the annual letters of His Grace.",
+        "Twenty-four years of teaching: the annual letters of His Grace.",
       libraryBrowse: "Browse all letters →",
       reflectionsEyebrow: "Homilies & Reflections",
       reflectionsTitle: "Spoken from the Cathedra",
@@ -241,7 +241,7 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "About His Grace",
         title: "A Life in the",
         titleAccent: "Lord's Vineyard",
-        lead: "Shepherd, teacher, and servant of the Church of Onitsha — a ministry formed by scripture, prayer, and the lived faith of his people.",
+        lead: "Shepherd, teacher, and servant of the Church of Onitsha; a ministry formed by scripture, prayer, and the lived faith of his people.",
       },
       hisEpiscopacy: {
         eyebrow: "His Episcopacy",
@@ -253,7 +253,7 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "His Heraldry",
         title: "The Coat",
         titleAccent: "of Arms",
-        lead: "The Good Shepherd and the episcopal motto — Ut Vitam Habeant.",
+        lead: "The Good Shepherd and the episcopal motto: Ut Vitam Habeant.",
       },
       photoGallery: {
         eyebrow: "Pastoral Archive",
@@ -265,13 +265,13 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "The Library",
         title: "Pastoral",
         titleAccent: "Letters",
-        lead: "Over twenty years of teaching and shepherding the faithful of the Archdiocese — a living archive of pastoral wisdom.",
+        lead: "Over twenty years of teaching and shepherding the faithful of the Archdiocese: a living archive of pastoral wisdom.",
       },
       reflections: {
         eyebrow: "Homilies & Reflections",
         title: "Spoken from the",
         titleAccent: "Cathedra",
-        lead: "Homilies at solemnities, feasts, and ordinary time — the living voice of His Grace.",
+        lead: "Homilies at solemnities, feasts, and ordinary time: the living voice of His Grace.",
       },
       messages: {
         eyebrow: "Easter & Christmas",
@@ -301,7 +301,7 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "Audience with His Grace",
         title: "Book an",
         titleAccent: "Appointment",
-        lead: "Tuesdays for the lay faithful, Wednesdays for priests and religious — choose a thirty-minute window in the office of the Archbishop.",
+        lead: "Tuesdays for the lay faithful, Wednesdays for priests and religious. Choose a thirty-minute window in the office of the Archbishop.",
       },
       connect: {
         eyebrow: "Domus Episcopalis",
@@ -333,7 +333,7 @@ export const dict: Record<Lang, Dict> = {
       hisGraceHeading: "His Grace",
       connectHeading: "Connect",
       motto:
-        "“Ut Vitam Habeant — that they may have life, and have it more abundantly.” · John 10:10",
+        "“Ut Vitam Habeant: that they may have life, and have it more abundantly.” · John 10:10",
       archbishopOfOnitsha: "Archbishop of Onitsha",
       copyrightSuffix: "· The Office of His Grace",
       domus: "Domus Episcopalis · Onitsha · Anambra · Nigeria",
@@ -348,16 +348,16 @@ export const dict: Record<Lang, Dict> = {
       prayer: {
         subject: "Your intention has been received",
         bodyTemplate:
-          "Dear {name},\n\nYour intention has been received and added to those read at the altar of the Basilica of the Most Holy Trinity, Onitsha, where Mass is offered each day for the people of this Archdiocese.\n\nWhat you have asked, the Lord — who looks upon the heart and not upon the multitude of words — has already heard. The Church only adds her voice to yours.\n\nIn Christo,\nThe Office of the Archbishop of Onitsha",
+          "Dear {name},\n\nYour intention has been received and added to those read at the altar of the Basilica of the Most Holy Trinity, Onitsha, where Mass is offered each day for the people of this Archdiocese.\n\nWhat you have asked, the Lord, who looks upon the heart and not upon the multitude of words, has already heard. The Church only adds her voice to yours.\n\nIn Christo,\nThe Office of the Archbishop of Onitsha",
       },
       newsletter: {
         subject: "Please confirm your subscription",
         bodyTemplate:
-          "Dear {name},\n\nThank you for asking to receive letters from the Office of His Grace.\n\nTo complete your subscription, please confirm that this email address belongs to you by clicking the link below. Until you confirm, your address is not added to our list.\n\nIf you did not request this, no action is needed — simply ignore this message and you will hear nothing further.\n\nPax tecum,\nThe Office of the Archbishop of Onitsha",
+          "Dear {name},\n\nThank you for asking to receive letters from the Office of His Grace.\n\nTo complete your subscription, please confirm that this email address belongs to you by clicking the link below. Until you confirm, your address is not added to our list.\n\nIf you did not request this, no action is needed. Simply ignore this message and you will hear nothing further.\n\nPax tecum,\nThe Office of the Archbishop of Onitsha",
         ctaLabel: "Confirm subscription",
-        welcomeSubject: "Welcome — letters from the Office of His Grace",
+        welcomeSubject: "Welcome to the letters from the Office of His Grace",
         welcomeBodyTemplate:
-          "Dear {name},\n\nYour subscription is now confirmed. You are on the list to receive pastoral letters, reflections, and seasonal messages from this office.\n\nLetters arrive a few times a month, never more, and only when there is something to say. The list is kept here at the Domus Episcopalis and is not shared with anyone. An unsubscribe link is included in every message — it is honoured at once.\n\nUntil the next letter, the Lord be with you.\n\nThe Office of the Archbishop of Onitsha",
+          "Dear {name},\n\nYour subscription is now confirmed. You are on the list to receive pastoral letters, reflections, and seasonal messages from this office.\n\nLetters arrive a few times a month, never more, and only when there is something to say. The list is kept here at the Domus Episcopalis and is not shared with anyone. An unsubscribe link is included in every message; it is honoured at once.\n\nUntil the next letter, the Lord be with you.\n\nThe Office of the Archbishop of Onitsha",
       },
     },
 
@@ -420,7 +420,7 @@ export const dict: Record<Lang, Dict> = {
       libraryEyebrow: "Ụlọ Akwụkwọ",
       libraryTitle: "Akwụkwọ Ozi Ọchịchị",
       libraryLead:
-        "Iri afọ abụọ na anọ nke nkuzi — akwụkwọ ozi kwa afọ nke Ọdaa.",
+        "Iri afọ abụọ na anọ nke nkuzi: akwụkwọ ozi kwa afọ nke Ọdaa.",
       libraryBrowse: "Lelee akwụkwọ ozi niile →",
       reflectionsEyebrow: "Ozi Chinẹke & Ntụgharị Uche",
       reflectionsTitle: "Site n'Ocheeze Bishọp",
@@ -452,7 +452,7 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "Banyere Ọdaa",
         title: "Ndụ N'Ubi Vine",
         titleAccent: "Onyenwe Anyị",
-        lead: "Onye ọzụzụ atụrụ, onye nkuzi, na ohu nke Chọọchị Onitsha — ọrụ nke Akwụkwọ Nsọ, ekpere, na okwukwe ndị nke ya guzobere.",
+        lead: "Onye ọzụzụ atụrụ, onye nkuzi, na ohu nke Chọọchị Onitsha: ọrụ nke Akwụkwọ Nsọ, ekpere, na okwukwe ndị nke ya guzobere.",
       },
       hisEpiscopacy: {
         eyebrow: "Ọrụ Onye Isi Bishọp Ya",
@@ -464,7 +464,7 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "Akara Ya",
         title: "Akara",
         titleAccent: "Aka Ya",
-        lead: "Ezi Onye Ọzụzụ Atụrụ na okwu nke ọchịchị bishọp — Ut Vitam Habeant.",
+        lead: "Ezi Onye Ọzụzụ Atụrụ na okwu nke ọchịchị bishọp: Ut Vitam Habeant.",
       },
       photoGallery: {
         eyebrow: "Akwụkwọ Akụkọ Ọchịchị",
@@ -476,13 +476,13 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "Ụlọ Akwụkwọ",
         title: "Akwụkwọ",
         titleAccent: "Ozi Ọchịchị",
-        lead: "Ihe karịrị afọ iri abụọ nke nkuzi na ọzụzụ atụrụ ndị kwere ekwe na Archdiocese — akwụkwọ akụkọ ndụ nke amamihe ọchịchị.",
+        lead: "Ihe karịrị afọ iri abụọ nke nkuzi na ọzụzụ atụrụ ndị kwere ekwe na Archdiocese: akwụkwọ akụkọ ndụ nke amamihe ọchịchị.",
       },
       reflections: {
         eyebrow: "Ozi Chinẹke & Ntụgharị Uche",
         title: "Site n'",
         titleAccent: "Ocheeze Bishọp",
-        lead: "Ozi Chinẹke n'oge ememme, ụbọchị nsọ, na oge nkịtị — olu Ọdaa nke dị ndụ.",
+        lead: "Ozi Chinẹke n'oge ememme, ụbọchị nsọ, na oge nkịtị: olu Ọdaa nke dị ndụ.",
       },
       messages: {
         eyebrow: "Ista & Krismas",
@@ -512,7 +512,7 @@ export const dict: Record<Lang, Dict> = {
         eyebrow: "Ihu na Ọdaa",
         title: "Họrọ Oge",
         titleAccent: "Ihu",
-        lead: "Tuesday maka ndị otu, Wednesday maka ndị ụkọchukwu na ndị nzọcha — họrọ oge nkeji iri atọ n'ụlọ ọrụ Onye Isi Bishọp.",
+        lead: "Tuesday maka ndị otu, Wednesday maka ndị ụkọchukwu na ndị nzọcha. Họrọ oge nkeji iri atọ n'ụlọ ọrụ Onye Isi Bishọp.",
       },
       connect: {
         eyebrow: "Domus Episcopalis",
@@ -544,7 +544,7 @@ export const dict: Record<Lang, Dict> = {
       hisGraceHeading: "Ọdaa",
       connectHeading: "Kparịta Ụka",
       motto:
-        "“Ut Vitam Habeant — ka ha nwee ndụ, ka ha nweekwa ya n'ụba.” · Jọn 10:10",
+        "“Ut Vitam Habeant: ka ha nwee ndụ, ka ha nweekwa ya n'ụba.” · Jọn 10:10",
       archbishopOfOnitsha: "Onye Isi Bishọp nke Onitsha",
       copyrightSuffix: "· Ụlọ Ọrụ Ọdaa",
       domus: "Domus Episcopalis · Onicha · Anambra · Nigeria",
@@ -559,16 +559,16 @@ export const dict: Record<Lang, Dict> = {
       prayer: {
         subject: "Anatala arịrịọ gị",
         bodyTemplate:
-          "Ezigbo {name},\n\nAnatala arịrịọ gị ma tinye ya na ndị a na-agụ n'ebe ịchụ àjà nke Bazilika nke Atọ N'Otu Kachasị Nsọ, Onicha, ebe a na-eme Mass kwa ụbọchị maka ndị nke Archdiocese a.\n\nIhe ị rịọrọ, Onyenwe anyị — onye na-elele obi ọ bụghị ọtụtụ okwu — anụlarị. Ụka na-atụkwasị olu nke ya na nke gị.\n\nIn Christo,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
+          "Ezigbo {name},\n\nAnatala arịrịọ gị ma tinye ya na ndị a na-agụ n'ebe ịchụ àjà nke Bazilika nke Atọ N'Otu Kachasị Nsọ, Onicha, ebe a na-eme Mass kwa ụbọchị maka ndị nke Archdiocese a.\n\nIhe ị rịọrọ, Onyenwe anyị, onye na-elele obi ọ bụghị ọtụtụ okwu, anụlarị. Ụka na-atụkwasị olu nke ya na nke gị.\n\nIn Christo,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
       newsletter: {
         subject: "Biko gosi na ọ bụ gị debara aha",
         bodyTemplate:
-          "Ezigbo {name},\n\nDaalụ maka ịchọ ịnata akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa.\n\nIji mezue ndebanye aha gị, biko gosi na adres email a bụ nke gị site n'ịpị njikọ dị n'okpuru. Tutu ị gosipụtara nke a, anaghị etinye adres gị na ndepụta anyị.\n\nỌ bụrụ na ọ bụghị gị rịọrọ nke a, ọ dịghị ihe ị ga-eme — gafee ozi a ma ị gaghị anụkwa ihe ọzọ.\n\nPax tecum,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
+          "Ezigbo {name},\n\nDaalụ maka ịchọ ịnata akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa.\n\nIji mezue ndebanye aha gị, biko gosi na adres email a bụ nke gị site n'ịpị njikọ dị n'okpuru. Tutu ị gosipụtara nke a, anaghị etinye adres gị na ndepụta anyị.\n\nỌ bụrụ na ọ bụghị gị rịọrọ nke a, ọ dịghị ihe ị ga-eme. Gafee ozi a ma ị gaghị anụkwa ihe ọzọ.\n\nPax tecum,\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
         ctaLabel: "Gosi ndebanye aha",
-        welcomeSubject: "Nnọọ — akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa",
+        welcomeSubject: "Nnọọ. Akwụkwọ ozi sitere n'Ụlọ Ọrụ Ọdaa",
         welcomeBodyTemplate:
-          "Ezigbo {name},\n\nA gosipụtala ndebanye aha gị. Ị nọ ugbu a na ndepụta ndị na-anata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'ụlọ ọrụ a.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa, naanị mgbe e nwere ihe a ga-ekwu. Ndepụta a debere n'Ụlọ Ọrụ Ọdaa, ọ bụghị ihe a na-ekekọrịta. A ga-eso njikọ iji kwụsị ndebanye n'ozi ọ bụla — a na-asọpụrụ ya ozugbo.\n\nRuo akwụkwọ ozi na-esote, ka Onyenwe anyị nọnyere gị.\n\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
+          "Ezigbo {name},\n\nA gosipụtala ndebanye aha gị. Ị nọ ugbu a na ndepụta ndị na-anata akwụkwọ ozi ọchịchị, ntụgharị uche, na ozi mgbe ụfọdụ sitere n'ụlọ ọrụ a.\n\nAkwụkwọ ozi na-abịa ugboro ole na ole n'ọnwa, ọ dịghị karịa, naanị mgbe e nwere ihe a ga-ekwu. Ndepụta a debere n'Ụlọ Ọrụ Ọdaa, ọ bụghị ihe a na-ekekọrịta. A ga-eso njikọ iji kwụsị ndebanye n'ozi ọ bụla, a na-asọpụrụ ya ozugbo.\n\nRuo akwụkwọ ozi na-esote, ka Onyenwe anyị nọnyere gị.\n\nỤlọ Ọrụ Onye Isi Bishọp nke Onitsha",
       },
     },
 

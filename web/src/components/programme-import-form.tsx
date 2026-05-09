@@ -64,7 +64,7 @@ export function ProgrammeImportForm() {
               Append
             </span>
             <span className="block text-[13px] text-ink-soft">
-              Add the new rows to the existing programme. Safe — keeps everything currently scheduled.
+              Add the new rows to the existing programme. Safe; keeps everything currently scheduled.
             </span>
           </span>
         </label>

@@ -32,8 +32,8 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
-    template: "%s — Archbishop of Onitsha",
+    default: "His Grace Most Rev. Valerian M. Okeke, Archbishop of Onitsha",
+    template: "%s · Archbishop of Onitsha",
   },
   description:
     "The personal website of His Grace Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha. Pastoral letters, homilies, reflections, and the ministry of His Grace.",
@@ -41,13 +41,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_GB",
     siteName: "His Grace Most Rev. Valerian M. Okeke",
-    title: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
+    title: "His Grace Most Rev. Valerian M. Okeke, Archbishop of Onitsha",
     description:
       "Pastoral letters, homilies, reflections, and the ministry of His Grace the Metropolitan Archbishop of Onitsha.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "His Grace Most Rev. Valerian M. Okeke — Archbishop of Onitsha",
+    title: "His Grace Most Rev. Valerian M. Okeke, Archbishop of Onitsha",
     description:
       "Pastoral letters, homilies, reflections, and the ministry of His Grace.",
   },

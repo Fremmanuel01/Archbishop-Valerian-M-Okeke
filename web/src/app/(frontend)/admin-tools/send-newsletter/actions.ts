@@ -120,7 +120,7 @@ export async function sendEdition(
   if (!audienceId) {
     return {
       status: "error",
-      message: "RESEND_AUDIENCE_ID is not set — cannot target an audience.",
+      message: "RESEND_AUDIENCE_ID is not set; cannot target an audience.",
     };
   }
 
@@ -144,7 +144,7 @@ export async function sendEdition(
   if (edition.status === "sending") {
     return {
       status: "error",
-      message: "This edition is already being sent — wait for it to complete.",
+      message: "This edition is already being sent. Wait for it to complete.",
     };
   }
   const posts = edition.posts ?? [];
@@ -152,7 +152,7 @@ export async function sendEdition(
     return {
       status: "error",
       message:
-        "This edition has no posts. Add posts to the edition before sending, or set status to 'Skipped — no posts this month'.",
+        "This edition has no posts. Add posts to the edition before sending, or set status to 'Skipped: no posts this month'.",
     };
   }
 
@@ -428,7 +428,7 @@ export async function updateEdition(
   if (edition.status === "sent" || edition.status === "sending") {
     return {
       status: "error",
-      message: `This edition is ${edition.status} — edits are locked. Create a new edition for changes.`,
+      message: `This edition is ${edition.status}; edits are locked. Create a new edition for changes.`,
     };
   }
 

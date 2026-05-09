@@ -21,7 +21,7 @@ const FALLBACK: HomepageContent = {
     "Our finest gifts can become our worst sins or defects, if we do not act with love and allow ourselves to be guided by the Holy Spirit.",
   featuredQuote:
     "The Eucharist is not a doctrine we defend but a fire we receive, and into which we are continually drawn.",
-  featuredQuoteAttribution: "— Most Rev. Valerian M. Okeke",
+  featuredQuoteAttribution: "Most Rev. Valerian M. Okeke",
 };
 
 type LexicalNode = {

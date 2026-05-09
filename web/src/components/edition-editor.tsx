@@ -44,7 +44,7 @@ const STATUS_LABEL: Record<string, string> = {
   sending: "Sending…",
   sent: "Sent",
   failed: "Failed",
-  skipped_no_posts: "Skipped — no posts",
+  skipped_no_posts: "Skipped (no posts)",
 };
 
 // `<input type="datetime-local">` returns and accepts a "YYYY-MM-DDTHH:mm"
@@ -357,7 +357,7 @@ export function EditionEditor({
 
           {posts.length === 0 ? (
             <p className="border border-dashed border-[color:var(--rule)] bg-bone-deep p-6 text-center font-[family-name:var(--font-body)] italic text-ink-soft">
-              No posts yet. Add one below — or leave empty and mark this
+              No posts yet. Add one below, or leave empty and mark this
               edition &ldquo;Skipped&rdquo;.
             </p>
           ) : null}
@@ -545,7 +545,7 @@ export function EditionEditor({
         <div className="sticky bottom-4 z-10 flex items-center justify-between gap-4 border border-[color:var(--rule)] bg-bone-deep p-4 shadow-[0_8px_24px_rgba(10,27,51,0.08)]">
           <p className="font-[family-name:var(--font-body)] text-[13px] italic text-ink-soft">
             {locked
-              ? "Locked — this edition is sending or sent."
+              ? "Locked. This edition is sending or sent."
               : "Saving rebuilds the preview on the right."}
           </p>
           <button

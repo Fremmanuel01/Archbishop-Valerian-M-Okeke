@@ -10,7 +10,7 @@ import { getDict } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "Easter & Christmas Messages",
   description:
-    "Seasonal messages of His Grace Most Rev. Valerian Maduka Okeke — Easter and Christmas addresses to the faithful of the Archdiocese of Onitsha.",
+    "Seasonal messages of His Grace Most Rev. Valerian Maduka Okeke. Easter and Christmas addresses to the faithful of the Archdiocese of Onitsha.",
 };
 
 export const revalidate = 3600;

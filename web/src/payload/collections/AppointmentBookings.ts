@@ -33,7 +33,7 @@ export const AppointmentBookings: CollectionConfig = {
     defaultColumns: ["fullName", "audience", "slot", "status", "createdAt"],
     group: "Appointments",
     description:
-      "Bookings made through the storefront. To cancel a booking on behalf of the visitor (e.g. when His Grace is travelling), set its status to 'Cancelled' and save — the slot is released and the visitor receives a polite cancellation email automatically.",
+      "Bookings made through the storefront. To cancel a booking on behalf of the visitor (e.g. when His Grace is travelling), set its status to 'Cancelled' and save. The slot is released and the visitor receives a polite cancellation email automatically.",
   },
   hooks: {
     afterChange: [
@@ -89,7 +89,7 @@ export const AppointmentBookings: CollectionConfig = {
         const visitorBody = [
           `Dear ${visitorName},`,
           "",
-          "We're sorry — your appointment with His Grace Most Rev. Valerian M. Okeke could not be kept on the day you had scheduled:",
+          "We're sorry. Your appointment with His Grace Most Rev. Valerian M. Okeke could not be kept on the day you had scheduled:",
           "",
           `  When:  ${longDate} ${slotData.startTime ?? ""}–${slotData.endTime ?? ""}`,
           `  Group: ${audience}`,
@@ -212,7 +212,7 @@ export const AppointmentBookings: CollectionConfig = {
       name: "internalNotes",
       type: "textarea",
       admin: {
-        description: "Office-only — notes about the visitor or the meeting. Never shown to the visitor.",
+        description: "Office-only notes about the visitor or the meeting. Never shown to the visitor.",
       },
     },
   ],

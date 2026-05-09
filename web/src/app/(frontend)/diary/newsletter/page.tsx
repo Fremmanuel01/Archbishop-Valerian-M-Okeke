@@ -46,7 +46,7 @@ export default async function NewsletterArchivePage() {
       eyebrow={<Latin>Pastoral Diary · Archive</Latin>}
       title="From the Page"
       titleAccent="of His Grace"
-      lead="Past editions of the monthly Pastoral Diary — pastoral letters, reflections, and seasonal messages, as they were sent to subscribers."
+      lead="Past editions of the monthly Pastoral Diary: pastoral letters, reflections, and seasonal messages, as they were sent to subscribers."
     >
       <PageSection>
         <div className="mx-auto max-w-[880px]">

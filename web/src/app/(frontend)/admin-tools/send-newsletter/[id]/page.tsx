@@ -148,7 +148,7 @@ export default async function EditEditionPage({
 
           {sentLabel ? (
             <p className="mb-6 border-l-2 border-gold pl-4 text-[14px] italic text-ink-soft">
-              {sentLabel}. This edition is locked — create a new edition for
+              {sentLabel}. This edition is locked. Create a new edition for
               any further changes.
             </p>
           ) : null}

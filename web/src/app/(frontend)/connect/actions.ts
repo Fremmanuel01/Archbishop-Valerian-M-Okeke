@@ -216,7 +216,7 @@ export async function subscribeNewsletter(
     return {
       status: "success",
       message:
-        "Almost done — please check your inbox and click the confirmation link to complete your subscription.",
+        "Almost done. Please check your inbox and click the confirmation link to complete your subscription.",
     };
   }
 
@@ -245,7 +245,7 @@ export async function subscribeNewsletter(
     return {
       status: "success",
       message:
-        "Almost done — please check your inbox and click the confirmation link to complete your subscription.",
+        "Almost done. Please check your inbox and click the confirmation link to complete your subscription.",
     };
   } catch (err) {
     console.warn("[connect] newsletter confirmation send failed:", err);

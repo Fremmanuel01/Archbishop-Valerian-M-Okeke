@@ -117,7 +117,7 @@ export function NewsletterForm() {
       <p className="mt-6 text-center text-[13px] leading-[1.6] text-ink-soft">
         Your email is kept in confidence. You will only be added to the list
         after you click the confirmation link, and you may unsubscribe at any
-        time — the link is included in every message.
+        time; the link is included in every message.
       </p>
     </form>
   );

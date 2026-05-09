@@ -49,7 +49,7 @@ export async function AppHeader() {
       <div className="mx-auto flex max-w-[1440px] items-center gap-5 px-6 py-5 lg:gap-7 lg:px-8 xl:gap-10 xl:px-10 max-md:px-5 max-md:py-4">
         <Link
           href="/"
-          aria-label={`Home — ${t.brandTagline}`}
+          aria-label={`Home · ${t.brandTagline}`}
           className="flex items-center gap-3.5 text-ink"
         >
           <Crest size={56} className="h-14 w-14 max-md:h-11 max-md:w-11" />

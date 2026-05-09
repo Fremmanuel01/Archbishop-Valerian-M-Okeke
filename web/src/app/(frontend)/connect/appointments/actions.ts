@@ -92,7 +92,7 @@ export async function bookAppointment(
     return {
       ok: false,
       error:
-        "We couldn't find that slot — it may have been removed. Please refresh the page and pick a different time.",
+        "We couldn't find that slot. It may have been removed. Please refresh the page and pick a different time.",
     };
   }
 
@@ -229,7 +229,7 @@ export async function bookAppointment(
       "",
       "May God bless you.",
       "",
-      "— The Office of His Grace",
+      "The Office of His Grace",
     ].join("\n");
 
     const officeBody = [

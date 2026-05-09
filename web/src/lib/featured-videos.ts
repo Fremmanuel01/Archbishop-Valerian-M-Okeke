@@ -13,7 +13,7 @@ export type PastoralVideo = {
 export const PASTORAL_VIDEOS: PastoralVideo[] = [
   {
     id: "ZbrwZq-54hI",
-    title: "Priestly Ordination — Archdiocese of Onitsha",
+    title: "Priestly Ordination · Archdiocese of Onitsha",
     occasion: "Sacred Orders · Onitsha",
     date: "2023",
     iso: "2023-01-01",

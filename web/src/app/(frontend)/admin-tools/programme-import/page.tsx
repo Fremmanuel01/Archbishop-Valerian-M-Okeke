@@ -40,8 +40,8 @@ export default async function ProgrammeImportPage() {
             </summary>
             <pre className="mt-4 overflow-x-auto bg-ink p-4 font-mono text-[12px] leading-relaxed text-bone">{`date,title,location,notes
 2026-05-10,St Peter's Parish Nnokwa Pastoral Visit,St Peter's Parish Nnokwa,Sixth Sunday of Easter
-2026-05-17,Ascension of the Lord,,Solemnity — Seventh Sunday of Easter
-2026-05-24,Holy Spirit Parish Ogidi — Church Dedication,Holy Spirit Parish Ogidi,Pentecost Sunday
+2026-05-17,Ascension of the Lord,,Solemnity. Seventh Sunday of Easter
+2026-05-24,Holy Spirit Parish Ogidi: Church Dedication,Holy Spirit Parish Ogidi,Pentecost Sunday
 `}</pre>
             <ul className="mt-4 list-disc space-y-1 pl-5 text-[13px] leading-relaxed text-ink-soft">
               <li>

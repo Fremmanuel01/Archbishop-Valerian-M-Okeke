@@ -7,7 +7,7 @@ import { getDict } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "His Episcopacy",
   description:
-    "The missionary apostolate of the Archdiocese of Onitsha under the episcopate of His Grace Most Rev. Valerian Maduka Okeke — evangelisation, prison apostolate, riverine ministry, and education.",
+    "The missionary apostolate of the Archdiocese of Onitsha under the episcopate of His Grace Most Rev. Valerian Maduka Okeke: evangelisation, prison apostolate, riverine ministry, and education.",
 };
 
 type Stat = { figure: string; label: string };
@@ -31,7 +31,7 @@ const APOSTOLATES: Apostolate[] = [
     eyebrow: "Shanahan University Onitsha",
     title: "Education as Mission",
     paragraphs: [
-      "Every year, the Mission Cooperation Plan of the Archdiocese makes an increasing impact — more lives touched, more lives transformed. In 2024 the Archdiocese embarked on a new venture with the establishment of Shanahan University, an institution designed to foster positive change both locally and internationally.",
+      "Every year, the Mission Cooperation Plan of the Archdiocese makes an increasing impact: more lives touched, more lives transformed. In 2024 the Archdiocese embarked on a new venture with the establishment of Shanahan University, an institution designed to foster positive change both locally and internationally.",
       "In its first cohort the University proudly awarded full scholarships to over four hundred and twelve meritorious students, equipping them with the tools to thrive in a rapidly changing world and extending the Archdiocese's commitment to education among vulnerable populations.",
     ],
   },
@@ -40,15 +40,15 @@ const APOSTOLATES: Apostolate[] = [
     title: "\u201CI was in prison and you came to visit me\u201D",
     scripture: "Matthew XXV:36",
     paragraphs: [
-      "In response to the Lord's call, the Archdiocese has embraced the prison apostolate as a central work of mercy. Each year His Grace personally celebrates his birthday, Christmas, and Easter within the walls of Onitsha Prison — turning these occasions into memorable events for the inmates. During these celebrations the Archdiocese provides a variety of foodstuffs to sustain the prisoners for days.",
-      "Beyond these annual visits, the Archdiocese has transformed Onitsha Prison by establishing an ultra-modern Mega Skill Acquisition Centre. Equipped with computers, tailoring machines, and carpentry tools, the centre empowers inmates with practical skills that will serve them well upon their release. The Archdiocese has further improved the prison's infrastructure by sinking boreholes, renovating cells, tiling floors, painting walls, and upgrading the water system with overhead tanks — a benefit not only to the inmates but to the surrounding community.",
+      "In response to the Lord's call, the Archdiocese has embraced the prison apostolate as a central work of mercy. Each year His Grace personally celebrates his birthday, Christmas, and Easter within the walls of Onitsha Prison, turning these occasions into memorable events for the inmates. During these celebrations the Archdiocese provides a variety of foodstuffs to sustain the prisoners for days.",
+      "Beyond these annual visits, the Archdiocese has transformed Onitsha Prison by establishing an ultra-modern Mega Skill Acquisition Centre. Equipped with computers, tailoring machines, and carpentry tools, the centre empowers inmates with practical skills that will serve them well upon their release. The Archdiocese has further improved the prison's infrastructure by sinking boreholes, renovating cells, tiling floors, painting walls, and upgrading the water system with overhead tanks: a benefit not only to the inmates but to the surrounding community.",
     ],
   },
   {
     eyebrow: "The Riverine Apostolate",
     title: "Grass-root Evangelisation in Difficult Mission Grounds",
     paragraphs: [
-      "The Archdiocese faithfully carries out its primary mission of evangelisation by reaching out to communities in the riverine areas — regions that often face challenging conditions such as flood disasters and extreme weather. Every Sunday, during the Archbishop's pastoral visits, special attention is given to rural parishes in these mission grounds. In times of hardship, when community members are displaced or in need, the Archdiocese steps in to provide care, ensuring their welfare and well-being.",
+      "The Archdiocese faithfully carries out its primary mission of evangelisation by reaching out to communities in the riverine areas: regions that often face challenging conditions such as flood disasters and extreme weather. Every Sunday, during the Archbishop's pastoral visits, special attention is given to rural parishes in these mission grounds. In times of hardship, when community members are displaced or in need, the Archdiocese steps in to provide care, ensuring their welfare and well-being.",
       "In these vulnerable areas, the Archdiocese offers free education and scholarships to all children and supports the community by paying the salaries of local staff. This commitment reflects an ongoing dedication to nurturing the spiritual and material well-being of every child and family in the region.",
     ],
   },
@@ -87,9 +87,9 @@ export default async function HisEpiscopacyPage() {
         <div className="grid grid-cols-[1.2fr_1fr] items-start gap-20 max-lg:grid-cols-1 max-lg:gap-14">
           <div className="space-y-7 font-[family-name:var(--font-body)] text-[19px] leading-[1.8] text-ink">
             <p className="first-letter:float-left first-letter:mr-3 first-letter:font-[family-name:var(--font-display)] first-letter:text-[88px] first-letter:font-medium first-letter:leading-[0.85] first-letter:text-gold">
-              Guided by the pastoral motto of His Grace — &ldquo;
+              Guided by the pastoral motto of His Grace, &ldquo;
               <Latin>Ut Vitam Habeant</Latin>&rdquo;, that they may have life
-              (John X:10) — the Archdiocese of Onitsha is committed to
+              (John X:10), the Archdiocese of Onitsha is committed to
               fulfilling the mission of spreading the Gospel with truth and
               conviction, reaching across borders and cultures to bring the
               message of Christ&apos;s love and salvation to all people.
@@ -106,7 +106,7 @@ export default async function HisEpiscopacyPage() {
             <p>
               Its efforts span the vital works of catechesis, feeding the
               hungry, providing medical services, and ensuring quality
-              education for youth — particularly among vulnerable
+              education for youth, particularly among vulnerable
               populations. God&apos;s blessings are evident in the growing
               number of young men and women embracing priestly and religious
               vocations, and many of the Archdiocesan priests are pursuing
@@ -133,7 +133,7 @@ export default async function HisEpiscopacyPage() {
             </dl>
             <p className="pt-4 text-[12px] italic leading-[1.5] text-ink-soft opacity-70">
               Figures as published by the Archdiocese of Onitsha Mission
-              Office. Current approximate totals — updated periodically.
+              Office. Current approximate totals, updated periodically.
             </p>
           </aside>
         </div>
@@ -183,7 +183,7 @@ export default async function HisEpiscopacyPage() {
           </p>
           <p className="mt-6 max-w-[620px] mx-auto text-[17px] leading-[1.7] text-ink-soft">
             Together, let us proclaim the Gospel, serve the vulnerable, and
-            spread the light of Christ&apos;s love to the ends of the earth —
+            spread the light of Christ&apos;s love to the ends of the earth,
             sharing the fruits of our labour with dioceses in Nigeria,
             Africa, Europe, Asia, and the United States.
           </p>

@@ -24,7 +24,7 @@ const COLORS = {
   rule: "rgba(176,136,64,0.35)",
 } as const;
 
-const MOTTO = "Ut Vitam Habeant — that they may have life.";
+const MOTTO = "Ut Vitam Habeant: that they may have life.";
 const FOOTER_ADDRESS = "Domus Episcopalis · Onitsha · Anambra · Nigeria";
 
 const MONTH_NAMES_UPPER = [

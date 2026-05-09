@@ -9,7 +9,7 @@ import { getDict } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "Photo Gallery",
   description:
-    "A pastoral archive in photographs — feasts, visitations, ordinations, and the daily life of the Metropolitan See of Onitsha.",
+    "A pastoral archive in photographs: feasts, visitations, ordinations, and the daily life of the Metropolitan See of Onitsha.",
 };
 
 export const revalidate = 3600;

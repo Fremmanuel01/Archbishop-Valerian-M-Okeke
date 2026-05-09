@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const alt =
-  "His Grace Most Rev. Valerian M. Okeke — Metropolitan Archbishop of Onitsha";
+  "His Grace Most Rev. Valerian M. Okeke, Metropolitan Archbishop of Onitsha";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

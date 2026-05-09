@@ -48,7 +48,7 @@ export async function SiteHeader() {
     <header className="absolute inset-x-0 top-0 z-50 flex items-center gap-5 bg-[linear-gradient(180deg,rgba(247,244,238,0.92)_0%,rgba(247,244,238,0.6)_60%,transparent_100%)] px-6 pt-[22px] text-ink lg:gap-7 lg:px-8 xl:gap-10 xl:px-10 max-md:px-5 max-md:pt-4">
       <Link
         href="/"
-        aria-label={`Home — ${t.brandTagline}`}
+        aria-label={`Home · ${t.brandTagline}`}
         className="flex items-center gap-3.5 pb-5 pt-2.5 max-md:gap-2.5 max-md:pb-4 max-md:pt-1.5"
       >
         <Crest size={56} priority className="h-14 w-14 max-md:h-11 max-md:w-11" />

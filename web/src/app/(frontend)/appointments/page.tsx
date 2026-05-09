@@ -8,7 +8,7 @@ import { getDict } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "Appointments",
   description:
-    "Schedule a meeting with His Grace Most Rev. Valerian M. Okeke — Tuesdays for the lay faithful, Wednesdays for priests and religious.",
+    "Schedule a meeting with His Grace Most Rev. Valerian M. Okeke. Tuesdays for the lay faithful, Wednesdays for priests and religious.",
 };
 
 const OPTIONS = [
@@ -17,7 +17,7 @@ const OPTIONS = [
     eyebrow: "Lay Faithful",
     title: "Tuesdays",
     body:
-      "His Grace receives the lay faithful on Tuesdays at the Archbishop's House, Onitsha. Pick a free slot below and book it directly — confirmation arrives by email.",
+      "His Grace receives the lay faithful on Tuesdays at the Archbishop's House, Onitsha. Pick a free slot below and book it directly; confirmation arrives by email.",
     cta: "Book a Tuesday →",
   },
   {

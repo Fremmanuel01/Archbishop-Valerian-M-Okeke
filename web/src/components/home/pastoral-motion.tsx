@@ -23,7 +23,7 @@ export async function PastoralMotion() {
           Pastoral Activities in <em className="italic text-gold">Motion</em>
         </h2>
         <p className="max-w-[680px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.55] text-ink-soft">
-          Selected homilies, pastoral visits, and sacred liturgies — recorded
+          Selected homilies, pastoral visits, and sacred liturgies, recorded
           as they unfolded across the Archdiocese.
         </p>
 

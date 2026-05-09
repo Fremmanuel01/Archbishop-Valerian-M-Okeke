@@ -49,10 +49,10 @@ export default async function CoatOfArmsPage() {
               In other words, the shepherd carries with him the mission of
               giving life to the sheep. The Gospel of giving life is therefore
               central to the mission of Jesus Christ, our Redeemer. This
-              mission is summarised in the Lord&apos;s own words — &ldquo;I
+              mission is summarised in the Lord&apos;s own words: &ldquo;I
               came that they may have life in abundance.&rdquo; It is this
               statement that gave birth to the episcopal motto of the
-              Archbishop — <Latin>Ut Vitam Habeant</Latin>.
+              Archbishop, <Latin>Ut Vitam Habeant</Latin>.
             </p>
 
             <blockquote className="my-10 border-l-2 border-gold pl-7 font-[family-name:var(--font-display)] text-[28px] italic leading-[1.35] text-ink">
@@ -68,7 +68,7 @@ export default async function CoatOfArmsPage() {
               Sharing in the priesthood of Jesus, Archbishop Valerian Okeke
               desires to further the mission of Christ the eternal high
               priest. He recognises that life is the most elementary yet the
-              most fundamental — the basis of everything else we do. Life
+              most fundamental, the basis of everything else we do. Life
               itself is God (Jn 14:6); life comes from God (Jn 1:14); life has
               infinite value because it came from life itself (Gen 2:7).
             </p>
@@ -76,8 +76,8 @@ export default async function CoatOfArmsPage() {
               The Archbishop shares the conviction that if one is to live the
               abundance of life which Christ promised, one must desire to
               live like Christ. It is only to the extent that we actualise
-              this modelling to Christ that we are living the life of Christ
-              — the true Christian life, which ensures life in abundance.
+              this modelling to Christ that we are living the life of Christ:
+              the true Christian life, which ensures life in abundance.
               This Christ&apos;s life is life to the full; it is not partial
               life, it is life in abundance. Being life in abundance, no
               aspect of life is excluded from its sanctifying influence.
@@ -96,7 +96,7 @@ export default async function CoatOfArmsPage() {
             <Latin>Ut Vitam Habeant</Latin>
           </p>
           <p className="mt-6 font-[family-name:var(--font-display)] text-[26px] italic text-ink-soft">
-            — that they may have life, and have it more abundantly.
+            That they may have life, and have it more abundantly.
           </p>
           <p className="mt-4 font-[family-name:var(--font-ui)] text-[11px] font-semibold uppercase tracking-[2.4px] text-gold">
             John X:10

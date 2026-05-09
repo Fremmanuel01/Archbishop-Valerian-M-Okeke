@@ -27,7 +27,7 @@ export default async function GenerateSlotsPage() {
       eyebrow={<Latin>Instrumenta · Admin</Latin>}
       title="Appointment Slots"
       titleAccent="Generator"
-      lead="Pre-populate every Tuesday and Wednesday for a year with the default office-hours slots. Re-run any time — it only creates what's missing."
+      lead="Pre-populate every Tuesday and Wednesday for a year with the default office-hours slots. Re-run any time; it only creates what's missing."
     >
       <PageSection>
         <div className="mx-auto max-w-[760px]">
@@ -45,7 +45,7 @@ export default async function GenerateSlotsPage() {
                 <strong>Priests &amp; religious</strong> get the same six slots every <strong>Wednesday</strong>.
               </li>
               <li>
-                The generator is <strong>idempotent</strong> — slots that already exist (whether from a previous run, manual creation, or a booking) are left untouched. Re-running is always safe.
+                The generator is <strong>idempotent</strong>. Slots that already exist (whether from a previous run, manual creation, or a booking) are left untouched. Re-running is always safe.
               </li>
               <li>
                 Past dates are skipped, so you can pick the current year without worrying about phantom slots in January.

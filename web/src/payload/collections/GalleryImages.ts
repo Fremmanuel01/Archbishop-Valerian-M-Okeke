@@ -9,7 +9,7 @@ export const GalleryImages: CollectionConfig = {
     defaultColumns: ["caption", "category", "order"],
     group: "Content",
     description:
-      "Photographs displayed on /photo-gallery, ordered by the 'order' field (lower numbers first). Add a caption — it serves as alt text for accessibility.",
+      "Photographs displayed on /photo-gallery, ordered by the 'order' field (lower numbers first). Add a caption; it serves as alt text for accessibility.",
   },
   hooks: {
     afterChange: [

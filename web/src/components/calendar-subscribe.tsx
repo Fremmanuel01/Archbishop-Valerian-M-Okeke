@@ -146,7 +146,7 @@ export function CalendarSubscribe() {
 
           <p className="col-span-2 text-[12px] leading-[1.6] text-ink-soft max-md:col-span-1">
             Your calendar app will refresh roughly every hour. Cancellations
-            and additions made by the office propagate automatically — no
+            and additions made by the office propagate automatically; no
             re-subscribing.
           </p>
         </div>

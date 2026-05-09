@@ -26,7 +26,7 @@ const MILESTONES: Milestone[] = [
   {
     year: 1973,
     heading: "All Hallows' Seminary, Onitsha",
-    body: "Completed secondary education at All Hallows' Seminary, Onitsha — his studies having been interrupted by the Nigerian Civil War (1967–1970).",
+    body: "Completed secondary education at All Hallows' Seminary, Onitsha, his studies having been interrupted by the Nigerian Civil War (1967–1970).",
   },
   {
     year: 1981,
@@ -180,7 +180,7 @@ export default async function BiographyPage() {
       eyebrow="About His Grace"
       title="A Life in the"
       titleAccent="Lord's Vineyard"
-      lead="Shepherd, teacher, and servant of the Church of Onitsha — a ministry formed by scripture, prayer, and the lived faith of his people."
+      lead="Shepherd, teacher, and servant of the Church of Onitsha; a ministry formed by scripture, prayer, and the lived faith of his people."
       heroPortrait={{
         src: "/archbishop-portrait.jpg",
         alt: "His Grace Most Rev. Valerian Maduka Okeke",
@@ -203,8 +203,8 @@ export default async function BiographyPage() {
               Umudioka, and St. Gabriel&apos;s Catholic School, Ifitedunu
               (1959–1966). Secondary schooling at Christ the King College,
               Onitsha was interrupted by the Nigerian Civil War. Through the
-              inspiration of then Monsignor Emmanuel Otteh — later Emeritus
-              Bishop of Issele-Uku — he continued his studies at All
+              inspiration of then Monsignor Emmanuel Otteh, later Emeritus
+              Bishop of Issele-Uku, he continued his studies at All
               Hallows&apos; Seminary, Onitsha.
             </p>
             <p>

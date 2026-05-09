@@ -46,7 +46,7 @@ export function GenerateSlotsForm({ defaultYear }: { defaultYear: number }) {
           className="w-40 border border-stone bg-bone px-4 py-3 font-[family-name:var(--font-body)] text-[18px] text-ink focus:border-gold focus:outline-none"
         />
         <p className="mt-2 text-[13px] text-ink-soft">
-          The generator only creates slots for dates that are today or later — past dates are skipped automatically.
+          The generator only creates slots for dates that are today or later; past dates are skipped automatically.
         </p>
       </div>
 

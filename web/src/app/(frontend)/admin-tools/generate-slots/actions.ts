@@ -78,7 +78,7 @@ export async function generateSlotsForYear(
   if (yearEnd < today) {
     return {
       ok: false,
-      message: `${year} is fully in the past — nothing to generate.`,
+      message: `${year} is fully in the past. Nothing to generate.`,
       created: 0,
       skipped: 0,
       yearGenerated: year,
@@ -156,7 +156,7 @@ export async function generateSlotsForYear(
     ok: true,
     message:
       created === 0
-        ? `Nothing to do — every Tuesday/Wednesday slot for ${year} already exists.`
+        ? `Nothing to do. Every Tuesday/Wednesday slot for ${year} already exists.`
         : `Generated ${created} new slot${created === 1 ? "" : "s"} for ${year}. (${skipped} already existed.)`,
     created,
     skipped,

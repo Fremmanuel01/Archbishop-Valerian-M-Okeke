@@ -8,11 +8,11 @@ import { PullQuote } from "@/components/home/pull-quote";
 import { SiteFooter } from "@/components/home/site-footer";
 
 export const metadata: Metadata = {
-  title: "Most Rev. Valerian M. Okeke — Metropolitan Archbishop of Onitsha",
+  title: "Most Rev. Valerian M. Okeke, Metropolitan Archbishop of Onitsha",
   description:
     "The pastoral letters, homilies, reflections, and ministry of His Grace Most Rev. Valerian Maduka Okeke, Metropolitan Archbishop of Onitsha.",
   openGraph: {
-    title: "Most Rev. Valerian M. Okeke — Metropolitan Archbishop of Onitsha",
+    title: "Most Rev. Valerian M. Okeke, Metropolitan Archbishop of Onitsha",
     description:
       "The pastoral letters, homilies, reflections, and ministry of His Grace Most Rev. Valerian Maduka Okeke.",
     type: "website",

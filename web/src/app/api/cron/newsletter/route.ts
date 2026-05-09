@@ -173,7 +173,7 @@ async function draft(today: Date) {
     eyebrow: `PASTORAL DIARY · ${monthLabel.toUpperCase()}`,
     lead: posts.length
       ? `A few moments from ${monthLabel} on the page of His Grace.`
-      : "No posts were captured this month — review and either send an empty edition or skip.",
+      : "No posts were captured this month. Review and either send an empty edition or skip.",
     posts: posts.map((p) => ({
       fbPostId: p.id,
       permalinkUrl: p.permalinkUrl,
@@ -218,20 +218,20 @@ async function draft(today: Date) {
         to: recipient,
         subject: posts.length
           ? `[Newsletter] ${monthLabel} draft ready for review`
-          : `[Newsletter] ${monthLabel} skipped — no FB posts`,
+          : `[Newsletter] ${monthLabel} skipped: no FB posts`,
         text: posts.length
           ? `The ${monthLabel} Pastoral Diary edition has been drafted with ${posts.length} post${posts.length === 1 ? "" : "s"}.
 
 Review and send: ${reviewUrl}
 
-— Cron`
+The Cron`
           : `The ${monthLabel} edition has no posts (status: skipped_no_posts).
 
 Reason: ${fbError ?? "no posts in date range"}.
 
 If you'd like to populate the edition by hand, open ${reviewUrl} and add posts manually.
 
-— Cron`,
+The Cron`,
       });
     } catch (err) {
       console.warn("[cron/newsletter] admin notify failed:", err);
@@ -275,7 +275,7 @@ async function escalate(today: Date) {
       });
       await sendEmail({
         to: recipient,
-        subject: `[Newsletter] ESCALATION — ${monthLabel} edition not yet sent`,
+        subject: `[Newsletter] ESCALATION: ${monthLabel} edition not yet sent`,
         text: `Today is the last day of the month and the ${monthLabel} edition is still in status: ${status}.
 
 If the Office wishes to send, approve and trigger via:
@@ -283,7 +283,7 @@ ${SITE_URL}/admin-tools/send-newsletter
 
 If not, set status to 'skipped_no_posts' or 'failed' to silence this escalation.
 
-— Cron`,
+The Cron`,
       });
     } catch (err) {
       console.warn("[cron/newsletter] escalation notify failed:", err);

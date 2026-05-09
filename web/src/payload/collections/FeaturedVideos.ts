@@ -37,7 +37,7 @@ export const FeaturedVideos: CollectionConfig = {
       required: true,
       admin: {
         description:
-          "The 11-character video ID from the YouTube URL — e.g. 'ZbrwZq-54hI' from https://youtu.be/ZbrwZq-54hI. Do NOT paste the full URL.",
+          "The 11-character video ID from the YouTube URL (e.g. 'ZbrwZq-54hI' from https://youtu.be/ZbrwZq-54hI). Do NOT paste the full URL.",
       },
     },
     {
@@ -52,7 +52,7 @@ export const FeaturedVideos: CollectionConfig = {
       type: "date",
       admin: {
         description:
-          "Optional — formatted as 'Month Year' on the tile. Leave blank if no specific date applies.",
+          "Optional. Formatted as 'Month Year' on the tile. Leave blank if no specific date applies.",
       },
     },
     {

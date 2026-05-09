@@ -29,7 +29,7 @@ import {
 export const metadata: Metadata = {
   title: "Pastoral Diary",
   description:
-    "The Pastoral Programme of His Grace Most Rev. Valerian Maduka Okeke — Archbishop of Onitsha.",
+    "The Pastoral Programme of His Grace Most Rev. Valerian Maduka Okeke, Archbishop of Onitsha.",
 };
 
 const CATEGORY_CLASS: Record<ProgrammeCategory, string> = {

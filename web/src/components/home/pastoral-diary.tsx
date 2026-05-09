@@ -39,7 +39,7 @@ export async function PastoralDiary() {
           Upcoming <em className="italic text-gold">Engagements</em>
         </h2>
         <p className="max-w-[680px] font-[family-name:var(--font-display)] text-[22px] italic leading-[1.55] text-ink-soft">
-          Coming soon among the people of God — Masses, pastoral visits,
+          Coming soon among the people of God: Masses, pastoral visits,
           ordinations, and ministries scheduled across the Archdiocese.
         </p>
 

@@ -7,7 +7,7 @@ import { getDict } from "@/lib/i18n";
 export const metadata: Metadata = {
   title: "Connect",
   description:
-    "Ways to reach the Office of His Grace the Archbishop of Onitsha — prayer requests, correspondence, and newsletter.",
+    "Ways to reach the Office of His Grace the Archbishop of Onitsha: prayer requests, correspondence, and newsletter.",
 };
 
 const ROUTES = [

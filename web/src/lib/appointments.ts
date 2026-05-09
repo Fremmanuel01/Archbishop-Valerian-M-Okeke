@@ -136,7 +136,7 @@ export function audienceCopy(audience: Audience) {
         heading: "Schedule a Meeting",
         accent: "with His Grace",
         lead:
-          "His Grace meets with the lay faithful on Tuesdays. Choose a free slot below — confirmation arrives by email immediately.",
+          "His Grace meets with the lay faithful on Tuesdays. Choose a free slot below; confirmation arrives by email immediately.",
         weekday: "Tuesday",
         otherHref: "/connect/appointment-clergy",
         otherLabel: "Priests & Religious meet on Wednesdays →",
@@ -146,7 +146,7 @@ export function audienceCopy(audience: Audience) {
         heading: "Schedule a Meeting",
         accent: "with His Grace",
         lead:
-          "His Grace meets with priests and religious on Wednesdays. Choose a free slot below — confirmation arrives by email immediately.",
+          "His Grace meets with priests and religious on Wednesdays. Choose a free slot below; confirmation arrives by email immediately.",
         weekday: "Wednesday",
         otherHref: "/connect/appointment-laity",
         otherLabel: "← Lay faithful meet on Tuesdays",

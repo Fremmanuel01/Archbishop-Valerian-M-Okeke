@@ -100,7 +100,7 @@ export default async function SendNewsletterPage() {
       eyebrow={<Latin>Instrumenta · Admin</Latin>}
       title="Send"
       titleAccent="Newsletter"
-      lead="Review the monthly Pastoral Diary draft, send a test to your inbox, then broadcast to all subscribers via Resend. Approval-gated — nothing leaves this page automatically."
+      lead="Review the monthly Pastoral Diary draft, send a test to your inbox, then broadcast to all subscribers via Resend. Approval-gated; nothing leaves this page automatically."
     >
       <PageSection>
         <div className="mx-auto max-w-[960px]">
@@ -215,7 +215,7 @@ export default async function SendNewsletterPage() {
                 Open the edition in Payload to add, remove, or edit posts. Once you&apos;re happy, return here.
               </li>
               <li>
-                <strong>Send a test</strong> first — it goes only to the address you specify. Open it on a phone and on a desktop mail client.
+                <strong>Send a test</strong> first; it goes only to the address you specify. Open it on a phone and on a desktop mail client.
               </li>
               <li>
                 <strong>Send to all subscribers</strong> creates a Resend Broadcast targeting the &quot;Archbishop&apos;s Office&quot; audience and triggers it. Resend handles unsubscribe and per-recipient delivery.

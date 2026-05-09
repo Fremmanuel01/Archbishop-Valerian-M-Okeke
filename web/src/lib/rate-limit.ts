@@ -1,28 +1,24 @@
 import "server-only";
 import { headers } from "next/headers";
-import { getPayloadClient } from "@/lib/payload";
 
-// Sliding-window rate-limit helper backed by the `rate-limits` Payload
-// collection. Designed for low-volume public forms (newsletter signup,
-// unsubscribe, prayer requests) where a tiny amount of latency on each
-// submission is acceptable and request volume per IP is single-digit
-// per minute. Not appropriate for hot paths.
+// In-memory sliding-window rate limiter. Each function instance keeps its
+// own map of `<action>:<identifier>` → array of unexpired hit timestamps;
+// requests beyond `max` within `windowSec` are rejected.
 //
-// Each call:
-//   1. Prunes any expired rows for `key` (best-effort cleanup).
-//   2. Counts remaining rows for `key`.
-//   3. If count >= max, returns { ok: false, retryAfter }.
-//   4. Otherwise inserts a fresh row with `expiresAt = now + windowSec`.
-//
-// Failures are swallowed and treated as "ok" — a broken rate limiter must
-// never block a legitimate user. Logged via console.warn.
+// Trade-off: an attacker who can land requests on different serverless
+// instances will get up to `max × instances` allowed hits, not `max`. For
+// a low-traffic Catholic site this is fine — the goal is to stop a single
+// scripted form-submitter, not a distributed botnet. The previous
+// implementation used a Payload-backed table for cross-instance state but
+// that broke production updates when the new collection's column wasn't
+// migrated into `payload_locked_documents_rels`. If we ever need durable
+// rate-limit state again, store it in Upstash Redis (Vercel Marketplace)
+// instead of a Payload collection.
 
 export type RateLimitInput = {
-  /** Action name — combined with the identifier into the row's key.
-   *  Example: "newsletter-subscribe". */
+  /** Action name — combined with the identifier into the bucket key. */
   action: string;
-  /** A stable identifier such as the requester's IP or normalised email.
-   *  Pass an empty string and the rate limit becomes a global throttle. */
+  /** Stable identifier such as the requester's IP or normalised email. */
   identifier: string;
   /** Maximum number of allowed hits within the window (inclusive). */
   max: number;
@@ -34,108 +30,59 @@ export type RateLimitResult =
   | { ok: true }
   | { ok: false; retryAfterSec: number };
 
-const RATE_LIMITS_SLUG = "rate-limits" as const;
+type Bucket = number[];
 
-function buildKey(action: string, identifier: string): string {
-  // Lowercase the identifier so the rate limit keys consistently across
-  // case variations of email addresses or upper/lowercase IP letters.
+const buckets = new Map<string, Bucket>();
+
+// Cap memory usage even under sustained load. We never need more than a
+// few hundred unique buckets at peak — purge the oldest if we exceed.
+const MAX_BUCKETS = 5_000;
+
+function bucketKey(action: string, identifier: string): string {
   return `${action}:${identifier.toLowerCase()}`;
+}
+
+function evictIfTooLarge(): void {
+  if (buckets.size <= MAX_BUCKETS) return;
+  const overflow = buckets.size - MAX_BUCKETS;
+  const iterator = buckets.keys();
+  for (let i = 0; i < overflow; i++) {
+    const next = iterator.next();
+    if (next.done) break;
+    buckets.delete(next.value);
+  }
 }
 
 export async function checkRateLimit(
   input: RateLimitInput,
 ): Promise<RateLimitResult> {
   if (input.max <= 0 || input.windowSec <= 0) return { ok: true };
-  const key = buildKey(input.action, input.identifier);
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + input.windowSec * 1000);
 
-  let payload: Awaited<ReturnType<typeof getPayloadClient>>;
-  try {
-    payload = await getPayloadClient();
-  } catch (err) {
-    console.warn("[rate-limit] payload client unavailable, allowing:", err);
-    return { ok: true };
-  }
+  const key = bucketKey(input.action, input.identifier);
+  const now = Date.now();
+  const cutoff = now - input.windowSec * 1000;
 
-  // Best-effort cleanup. Errors are swallowed so a transient db blip can
-  // never escalate into a denial of service for legitimate visitors.
-  try {
-    const expired = await payload.find({
-      collection: RATE_LIMITS_SLUG,
-      where: {
-        and: [
-          { key: { equals: key } },
-          { expiresAt: { less_than: now.toISOString() } },
-        ],
-      },
-      limit: 100,
-      pagination: false,
-      depth: 0,
-    });
-    if (expired.docs.length > 0) {
-      await Promise.all(
-        expired.docs.map((doc) =>
-          payload
-            .delete({
-              collection: RATE_LIMITS_SLUG,
-              id: (doc as { id: string | number }).id,
-            })
-            .catch(() => null),
-        ),
-      );
-    }
-  } catch (err) {
-    console.warn("[rate-limit] cleanup failed:", err);
-  }
+  const existing = buckets.get(key) ?? [];
+  // Drop expired hits.
+  const fresh = existing.filter((ts) => ts > cutoff);
 
-  let activeCount: number;
-  let oldestExpiry: Date | null = null;
-  try {
-    const active = await payload.find({
-      collection: RATE_LIMITS_SLUG,
-      where: {
-        and: [
-          { key: { equals: key } },
-          { expiresAt: { greater_than_equal: now.toISOString() } },
-        ],
-      },
-      sort: "expiresAt",
-      limit: input.max + 1,
-      pagination: false,
-      depth: 0,
-    });
-    activeCount = active.docs.length;
-    const first = active.docs[0] as { expiresAt?: string } | undefined;
-    if (first?.expiresAt) oldestExpiry = new Date(first.expiresAt);
-  } catch (err) {
-    console.warn("[rate-limit] active count read failed, allowing:", err);
-    return { ok: true };
-  }
-
-  if (activeCount >= input.max) {
-    const retryMs = oldestExpiry
-      ? Math.max(0, oldestExpiry.getTime() - now.getTime())
-      : input.windowSec * 1000;
+  if (fresh.length >= input.max) {
+    buckets.set(key, fresh);
+    const oldest = fresh[0] ?? now;
+    const retryMs = Math.max(0, oldest + input.windowSec * 1000 - now);
     return { ok: false, retryAfterSec: Math.ceil(retryMs / 1000) };
   }
 
-  try {
-    await payload.create({
-      collection: RATE_LIMITS_SLUG,
-      data: { key, expiresAt: expiresAt.toISOString() },
-    });
-  } catch (err) {
-    console.warn("[rate-limit] write failed, allowing:", err);
-  }
-
+  fresh.push(now);
+  buckets.set(key, fresh);
+  evictIfTooLarge();
   return { ok: true };
 }
 
-// Best-effort client-IP extraction. Vercel forwards the original client IP
-// in `x-forwarded-for` (left-most entry); local development exposes
-// `x-real-ip`; we fall back to the literal string "unknown" so requests
-// without an inferable IP still get a consistent rate limit identifier.
+// Best-effort client-IP extraction. Vercel forwards the original client
+// IP in `x-forwarded-for` (left-most entry); local development exposes
+// `x-real-ip`. We fall back to "unknown" so requests without an
+// inferable IP still get a consistent bucket key.
 export async function getClientIp(): Promise<string> {
   try {
     const h = await headers();

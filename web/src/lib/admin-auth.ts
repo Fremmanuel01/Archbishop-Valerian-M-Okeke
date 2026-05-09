@@ -29,8 +29,13 @@ export async function requireRole(
   const { user } = await payload.auth({ headers: headersList });
   if (!user) return { ok: false, reason: "unauthenticated" };
 
-  const role = (user as { role?: string }).role;
-  if (!role || !allowedRoles.includes(role as UserRole)) {
+  // Treat a missing role as the default `admin` — the field's `defaultValue`
+  // is "admin", so any user that predates the migration (or any
+  // production environment where the column hasn't been added yet) should
+  // keep full access rather than be locked out of the admin tools.
+  const rawRole = (user as { role?: string }).role;
+  const role: UserRole = (rawRole as UserRole | undefined) ?? "admin";
+  if (!allowedRoles.includes(role)) {
     return { ok: false, reason: "forbidden" };
   }
   return {
@@ -39,7 +44,7 @@ export async function requireRole(
       id: (user as { id: string | number }).id,
       email: (user as { email?: string }).email,
       name: (user as { name?: string }).name,
-      role: role as UserRole,
+      role,
     },
   };
 }

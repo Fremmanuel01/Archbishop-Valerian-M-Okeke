@@ -29,8 +29,12 @@ export function VideoGrid({ videos }: { videos: PastoralVideo[] }) {
   useEffect(() => {
     const hover = window.matchMedia("(hover: hover) and (min-width: 1024px)");
     const motionPref = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setCanHover(hover.matches);
-    setReducedMotion(motionPref.matches);
+    // Defer initial setState by a microtask so this effect doesn't
+    // trigger a sync re-render from inside itself.
+    queueMicrotask(() => {
+      setCanHover(hover.matches);
+      setReducedMotion(motionPref.matches);
+    });
     const onHover = (e: MediaQueryListEvent) => setCanHover(e.matches);
     const onMotion = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     hover.addEventListener("change", onHover);

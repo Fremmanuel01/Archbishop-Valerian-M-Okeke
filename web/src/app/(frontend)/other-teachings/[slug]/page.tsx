@@ -39,6 +39,13 @@ export async function generateMetadata({
     return {
       title: w.title,
       description: w.occasion ?? undefined,
+      alternates: { canonical: `/other-teachings/${slug}` },
+      openGraph: {
+        title: w.title,
+        description: w.occasion ?? undefined,
+        type: "article",
+        url: `/other-teachings/${slug}`,
+      },
     };
   } catch {
     return { title: "Not found" };

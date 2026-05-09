@@ -39,10 +39,18 @@ export async function generateMetadata({
   if (!edition) {
     return { title: "Newsletter edition" };
   }
+  const description =
+    edition.lead ?? "An edition of the monthly Pastoral Diary newsletter.";
   return {
     title: `${edition.subjectLine} · Pastoral Diary`,
-    description:
-      edition.lead ?? "An edition of the monthly Pastoral Diary newsletter.",
+    description,
+    alternates: { canonical: `/diary/newsletter/${slug}` },
+    openGraph: {
+      title: `${edition.subjectLine} · Pastoral Diary`,
+      description,
+      type: "article",
+      url: `/diary/newsletter/${slug}`,
+    },
   };
 }
 

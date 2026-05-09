@@ -27,7 +27,15 @@ const STATUS_OPTIONS = [
 export const NewsletterEditions: CollectionConfig = {
   slug: "newsletter-editions",
   access: {
-    read: () => true,
+    // Editions carry the audit log of bounces / complaints (which leaks
+    // recipient email addresses) and the persisted htmlSnapshot. Lock
+    // every operation to authenticated users; the public archive at
+    // /diary/newsletter goes through `lib/newsletter-archive.ts`, which
+    // uses the local API with overrideAccess to bypass this gate.
+    read: ({ req }) => Boolean(req.user),
+    create: ({ req }) => Boolean(req.user),
+    update: ({ req }) => Boolean(req.user),
+    delete: ({ req }) => Boolean(req.user),
   },
   admin: {
     useAsTitle: "subjectLine",
@@ -160,6 +168,7 @@ export const NewsletterEditions: CollectionConfig = {
     {
       name: "resendBroadcastId",
       type: "text",
+      index: true,
       admin: {
         readOnly: true,
         description: "Resend Broadcast id, set on first successful create call.",

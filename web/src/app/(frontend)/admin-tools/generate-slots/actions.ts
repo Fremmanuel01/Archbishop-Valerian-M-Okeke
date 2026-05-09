@@ -1,8 +1,8 @@
 "use server";
 
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getPayloadClient } from "@/lib/payload";
+import { ADMIN_ONLY, requireRole } from "@/lib/admin-auth";
 import type { GenerateState } from "./types";
 
 // Default office hours. Six 30-minute windows per audience per office day.
@@ -40,19 +40,20 @@ export async function generateSlotsForYear(
   _prev: GenerateState,
   formData: FormData,
 ): Promise<GenerateState> {
-  // Auth: must be a logged-in Payload user.
-  const headersList = await headers();
-  const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
+  const auth = await requireRole(ADMIN_ONLY);
+  if (!auth.ok) {
     return {
       ok: false,
-      message: "You must be signed in to /admin to use this tool.",
+      message:
+        auth.reason === "unauthenticated"
+          ? "You must be signed in to /admin to use this tool."
+          : "Your account does not have admin role.",
       created: 0,
       skipped: 0,
       yearGenerated: null,
     };
   }
+  const payload = await getPayloadClient();
 
   const yearRaw = formData.get("year")?.toString().trim() ?? "";
   const year = Number.parseInt(yearRaw, 10);

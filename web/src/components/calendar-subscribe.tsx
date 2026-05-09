@@ -46,7 +46,10 @@ export function CalendarSubscribe() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    setOrigin(readOrigin());
+    // Defer the state update by a microtask so it doesn't fire
+    // synchronously inside the effect — the React lint rule guards
+    // against cascading renders from sync setState in effects.
+    queueMicrotask(() => setOrigin(readOrigin()));
   }, []);
 
   async function copyUrl() {

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Latin } from "@/components/editorial";
 import { GenerateSlotsForm } from "@/components/generate-slots-form";
-import { getPayloadClient } from "@/lib/payload";
+import { ADMIN_ONLY, getAdminUserOr403 } from "@/lib/admin-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -15,10 +14,29 @@ export const metadata: Metadata = {
 };
 
 export default async function GenerateSlotsPage() {
-  const headersList = await headers();
-  const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) redirect("/admin");
+  const auth = await getAdminUserOr403(ADMIN_ONLY);
+  if (!auth.user) {
+    if (auth.reason === "unauthenticated") redirect("/admin");
+    return (
+      <PageShell
+        eyebrow={<Latin>Instrumenta · Admin</Latin>}
+        title="Not"
+        titleAccent="Authorised"
+        lead="This page requires the admin role."
+      >
+        <PageSection>
+          <div className="mx-auto max-w-[600px] border border-[color:var(--rule)] bg-bone-deep p-8 text-center">
+            <Link
+              href="/admin"
+              className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink"
+            >
+              Return to Payload admin
+            </Link>
+          </div>
+        </PageSection>
+      </PageShell>
+    );
+  }
 
   const currentYear = new Date().getFullYear();
 

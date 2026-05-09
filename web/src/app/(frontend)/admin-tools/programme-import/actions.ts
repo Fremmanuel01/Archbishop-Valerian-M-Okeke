@@ -1,9 +1,9 @@
 "use server";
 
-import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import Papa from "papaparse";
 import { getPayloadClient } from "@/lib/payload";
+import { ADMIN_ONLY, requireRole } from "@/lib/admin-auth";
 import type { ImportState } from "./types";
 
 type ProgrammeRow = {
@@ -43,19 +43,20 @@ export async function importProgramme(
   _prev: ImportState,
   formData: FormData,
 ): Promise<ImportState> {
-  // 1. Auth: must be a logged-in Payload user.
-  const headersList = await headers();
-  const payload = await getPayloadClient();
-  const { user } = await payload.auth({ headers: headersList });
-  if (!user) {
+  const auth = await requireRole(ADMIN_ONLY);
+  if (!auth.ok) {
     return {
       ok: false,
-      message: "You must be signed in to /admin to use this tool.",
+      message:
+        auth.reason === "unauthenticated"
+          ? "You must be signed in to /admin to use this tool."
+          : "Your account does not have admin role.",
       added: 0,
       total: 0,
       skipped: [],
     };
   }
+  const payload = await getPayloadClient();
 
   const file = formData.get("file");
   const mode = formData.get("mode")?.toString() ?? "append";

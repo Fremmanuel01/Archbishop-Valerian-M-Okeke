@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageSection, PageShell } from "@/components/shell/page-shell";
 import { Latin } from "@/components/editorial";
-import { UnsubscribeForm } from "@/components/unsubscribe-forms";
+import {
+  ConfirmTokenUnsubscribeForm,
+  UnsubscribeForm,
+} from "@/components/unsubscribe-forms";
 import { verifyNewsletterToken } from "@/lib/newsletter-token";
-import { unsubscribeAudienceContact } from "@/lib/resend";
 
 export const dynamic = "force-dynamic";
 
@@ -13,35 +15,25 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// Email-security scanners (Outlook ATP, Mimecast, GSuite anti-phishing,
+// link-warmers in general) prefetch every URL in inbound mail. If we
+// performed the actual unsubscribe in this page's render path, those
+// prefetches would silently remove legitimate readers from the list.
+// Instead we VERIFY the token here (no side effects), then ask the
+// visitor to click a button that submits a server action via POST.
+// RFC 8058 one-click unsubscribe still works because POST on the
+// `List-Unsubscribe-Post` header is a separate path.
+
 type Outcome =
-  | { kind: "auto-ok"; email: string }
-  | { kind: "auto-failed"; email: string; reason: string }
+  | { kind: "token-valid"; token: string; email: string }
+  | { kind: "token-invalid"; prefill?: string }
   | { kind: "manual"; prefill?: string };
 
-async function processToken(token: string | undefined): Promise<Outcome> {
-  if (!token) return { kind: "manual" };
+function classifyToken(token: string | undefined, prefill?: string): Outcome {
+  if (!token) return { kind: "manual", prefill };
   const verified = verifyNewsletterToken(token, "unsubscribe");
-  if (!verified) return { kind: "manual" };
-  const audienceId = process.env.RESEND_AUDIENCE_ID;
-  if (!audienceId) {
-    return {
-      kind: "auto-failed",
-      email: verified.email,
-      reason: "Newsletter service is not configured.",
-    };
-  }
-  const result = await unsubscribeAudienceContact({
-    audienceId,
-    email: verified.email,
-  });
-  if (result.ok || result.status === 404) {
-    return { kind: "auto-ok", email: verified.email };
-  }
-  return {
-    kind: "auto-failed",
-    email: verified.email,
-    reason: `Resend returned ${result.status}.`,
-  };
+  if (!verified) return { kind: "token-invalid", prefill };
+  return { kind: "token-valid", token, email: verified.email };
 }
 
 export default async function UnsubscribePage({
@@ -50,54 +42,30 @@ export default async function UnsubscribePage({
   searchParams: Promise<{ token?: string; email?: string }>;
 }) {
   const { token, email } = await searchParams;
-  const outcome = await processToken(token);
+  const outcome = classifyToken(token, email);
 
   return (
     <PageShell
       eyebrow={<Latin>Newsletter · Unsubscribe</Latin>}
-      title={
-        outcome.kind === "auto-ok" ? "You have been" : "Unsubscribe from the"
-      }
-      titleAccent={outcome.kind === "auto-ok" ? "Removed" : "Newsletter"}
-      lead={
-        outcome.kind === "auto-ok"
-          ? "Your address has been removed from the list. We will not send you any further messages."
-          : "Enter the email address you wish to remove. We will not send you any further messages."
-      }
+      title="Unsubscribe from the"
+      titleAccent="Newsletter"
+      lead="Confirm below to remove your address from the Pastoral Diary list. We will not send you any further messages."
     >
       <PageSection>
         <div className="mx-auto max-w-[600px] border border-[color:var(--rule)] bg-bone-deep p-10 max-md:p-6">
-          {outcome.kind === "auto-ok" ? (
+          {outcome.kind === "token-valid" ? (
+            <ConfirmTokenUnsubscribeForm
+              token={outcome.token}
+              email={outcome.email}
+            />
+          ) : outcome.kind === "token-invalid" ? (
             <>
-              <p className="font-[family-name:var(--font-body)] text-[17px] leading-[1.7] text-ink">
-                <span className="font-medium">{outcome.email}</span> has been
-                removed from the Pastoral Diary list. If this was a mistake,
-                you may rejoin at any time from the newsletter page.
+              <p className="mb-6 font-[family-name:var(--font-body)] text-[16px] leading-[1.7] text-ink">
+                That unsubscribe link is invalid or has expired. Please type
+                the email address you wish to remove and we will take care of
+                it from here.
               </p>
-              <div className="mt-10 flex flex-wrap gap-4 border-t border-[color:var(--rule)] pt-6">
-                <Link
-                  href="/"
-                  className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink"
-                >
-                  Return home
-                </Link>
-                <Link
-                  href="/connect/newsletter"
-                  className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink-soft"
-                >
-                  Subscribe again
-                </Link>
-              </div>
-            </>
-          ) : outcome.kind === "auto-failed" ? (
-            <>
-              <p className="font-[family-name:var(--font-body)] text-[16px] leading-[1.7] text-ink">
-                We could not remove <span className="font-medium">{outcome.email}</span>{" "}
-                automatically: <span className="italic">{outcome.reason}</span>{" "}
-                Please use the form below to try again, or write to the
-                Chancery and we will remove the address by hand.
-              </p>
-              <UnsubscribeForm defaultEmail={outcome.email} />
+              <UnsubscribeForm defaultEmail={outcome.prefill} />
             </>
           ) : (
             <>
@@ -106,9 +74,24 @@ export default async function UnsubscribePage({
                 emails, that is the simplest path. Otherwise, type your email
                 below and we will remove you.
               </p>
-              <UnsubscribeForm defaultEmail={email} />
+              <UnsubscribeForm defaultEmail={outcome.prefill} />
             </>
           )}
+
+          <div className="mt-10 flex flex-wrap gap-4 border-t border-[color:var(--rule)] pt-6">
+            <Link
+              href="/"
+              className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink"
+            >
+              Return home
+            </Link>
+            <Link
+              href="/connect/newsletter"
+              className="link-underline font-[family-name:var(--font-ui)] text-[11px] uppercase tracking-[1.5px] text-ink-soft"
+            >
+              Back to the newsletter page
+            </Link>
+          </div>
         </div>
       </PageSection>
     </PageShell>

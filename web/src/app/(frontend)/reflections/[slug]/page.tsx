@@ -37,11 +37,19 @@ export async function generateMetadata({
   if (!id) return { title: "Not found" };
   try {
     const homily = await getHomily(id);
+    const description = homily.description
+      ? plainExcerpt(homily.description, 160)
+      : homily.occasion ?? undefined;
     return {
       title: homily.title,
-      description: homily.description
-        ? plainExcerpt(homily.description, 160)
-        : homily.occasion ?? undefined,
+      description,
+      alternates: { canonical: `/reflections/${slug}` },
+      openGraph: {
+        title: homily.title,
+        description,
+        type: "article",
+        url: `/reflections/${slug}`,
+      },
     };
   } catch {
     return { title: "Not found" };

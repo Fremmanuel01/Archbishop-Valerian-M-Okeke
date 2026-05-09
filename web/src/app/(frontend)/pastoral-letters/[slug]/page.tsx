@@ -49,10 +49,12 @@ export async function generateMetadata({
     return {
       title: letter.title,
       description: summary,
+      alternates: { canonical: `/pastoral-letters/${slug}` },
       openGraph: {
         title: letter.title,
         description: summary,
         type: "article",
+        url: `/pastoral-letters/${slug}`,
         images: cover
           ? [{ url: cover, width: 1200, height: 1500, alt: `Cover of ${letter.title}` }]
           : undefined,

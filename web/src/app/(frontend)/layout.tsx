@@ -44,6 +44,7 @@ export const metadata: Metadata = {
     title: "His Grace Most Rev. Valerian M. Okeke, Archbishop of Onitsha",
     description:
       "Pastoral letters, homilies, reflections, and the ministry of His Grace the Metropolitan Archbishop of Onitsha.",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",

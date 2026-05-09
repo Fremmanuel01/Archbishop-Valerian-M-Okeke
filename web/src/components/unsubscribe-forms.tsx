@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import {
+  confirmTokenUnsubscribe,
   initialUnsubscribeState,
   submitUnsubscribe,
   type UnsubscribeState,
@@ -44,6 +45,55 @@ function StatusMessage({ state }: { state: UnsubscribeState }) {
     >
       {state.message}
     </p>
+  );
+}
+
+export function ConfirmTokenUnsubscribeForm({
+  token,
+  email,
+}: {
+  token: string;
+  email: string;
+}) {
+  const [state, formAction] = useActionState(
+    confirmTokenUnsubscribe,
+    initialUnsubscribeState,
+  );
+  if (state.status === "success") {
+    return (
+      <p
+        role="status"
+        aria-live="polite"
+        className="border-l-2 border-gold pl-4 font-[family-name:var(--font-body)] text-[16px] leading-[1.7] text-ink"
+      >
+        <span className="font-medium">{state.email}</span> has been removed
+        from the Pastoral Diary list. We will not send you any further
+        messages. If this was a mistake, you may rejoin at any time from the
+        newsletter page.
+      </p>
+    );
+  }
+  return (
+    <form action={formAction} className="flex flex-col gap-5">
+      <input type="hidden" name="token" value={token} />
+      <p className="font-[family-name:var(--font-body)] text-[17px] leading-[1.7] text-ink">
+        Confirm that you would like to remove{" "}
+        <span className="font-medium">{email}</span> from the Pastoral Diary
+        list.
+      </p>
+      <div className="flex flex-wrap gap-4">
+        <StatusButton>Yes, unsubscribe me</StatusButton>
+      </div>
+      {state.status === "error" ? (
+        <p
+          role="status"
+          aria-live="polite"
+          className="border-l-2 border-[#a84233] pl-4 text-[14px] leading-[1.6] text-[#7a2f22]"
+        >
+          {state.message}
+        </p>
+      ) : null}
+    </form>
   );
 }
 

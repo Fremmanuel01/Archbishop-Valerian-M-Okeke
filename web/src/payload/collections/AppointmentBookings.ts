@@ -144,6 +144,7 @@ export const AppointmentBookings: CollectionConfig = {
       type: "relationship",
       relationTo: "appointment-slots",
       required: true,
+      index: true,
       admin: {
         description: "The reserved slot.",
       },

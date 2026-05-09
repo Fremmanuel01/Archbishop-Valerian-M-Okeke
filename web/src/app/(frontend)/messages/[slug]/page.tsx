@@ -40,6 +40,13 @@ export async function generateMetadata({
     return {
       title: msg.title,
       description: msg.occasion ?? undefined,
+      alternates: { canonical: `/messages/${slug}` },
+      openGraph: {
+        title: msg.title,
+        description: msg.occasion ?? undefined,
+        type: "article",
+        url: `/messages/${slug}`,
+      },
     };
   } catch {
     return { title: "Not found" };

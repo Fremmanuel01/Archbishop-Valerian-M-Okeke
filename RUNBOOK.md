@@ -137,6 +137,64 @@ To switch to managed migrations long-term (recommended):
    `prodMigrations: migrations` (importing from `./migrations/index.ts`).
 4. Deploy. Payload will run only NEW migrations from now on.
 
+### `archbishopvalokeke.org` is not loading
+
+If the apex domain times out or refuses to connect while the
+`*.vercel.app` alias works, the issue is DNS, not the deployment.
+
+**Symptoms:**
+- `https://archbishop-valerian-m-okeke.vercel.app/` returns 200.
+- `https://archbishopvalokeke.org/` hangs or fails with no response.
+
+**Diagnose:**
+```bash
+# 1. Verify the Vercel deploy is healthy.
+curl -I https://archbishop-valerian-m-okeke.vercel.app/
+
+# 2. Inspect the domain's DNS posture.
+dig +short NS archbishopvalokeke.org   # nameservers
+dig +short A  archbishopvalokeke.org   # apex IP
+npx vercel domains inspect archbishopvalokeke.org
+```
+
+In Vercel's output, the **Intended** and **Current** nameservers must
+match. If they don't, the registrar's DNS is still authoritative and
+Vercel can't manage the cert / A record.
+
+**Fix:**
+
+The domain is registered at **Hostinger** (the parking nameservers
+end in `dns-parking.com`). Log in to Hostinger:
+
+1. Domains → archbishopvalokeke.org → DNS / Nameservers.
+2. Click **Change Nameservers** and set:
+   - `ns1.vercel-dns.com`
+   - `ns2.vercel-dns.com`
+3. Save. Hostinger shows a "Nameservers changed" confirmation.
+
+Once propagation completes Vercel re-issues the TLS certificate
+automatically and the site is reachable again. Propagation is usually
+15–60 minutes on public resolvers (Cloudflare 1.1.1.1, Google 8.8.8.8),
+up to 24 hours on corporate networks with longer cache TTLs.
+
+**Monitor progress:**
+```bash
+# Until this stops returning 76.76.21.21 (the stale apex IP), public
+# DNS is still pointing at the old delegation:
+watch -n 60 'dig +short A archbishopvalokeke.org @1.1.1.1'
+
+# Vercel's nameservers will return live IPs (216.198.79.x, 64.29.17.x)
+# the moment the project is provisioned; they were correct long before
+# Hostinger flipped delegation:
+dig +short A archbishopvalokeke.org @ns1.vercel-dns.com
+```
+
+**While DNS is propagating** the Vercel alias is the canonical URL:
+share `https://archbishop-valerian-m-okeke.vercel.app/` with anyone
+who needs the site immediately. Do not edit `NEXT_PUBLIC_SITE_URL`
+to the alias just to dodge the DNS gap — the cron, email links,
+and OG cards rely on the apex being canonical.
+
 ### Rebuild the Resend audience after a deliverability incident
 
 If a hard-bounce wave or spam complaint pushes the sender reputation
@@ -178,6 +236,7 @@ To manually redeploy without code change:
 | Welcome email never arrives | Check Resend dashboard "Logs". Confirm the domain's SPF/DKIM/DMARC are still passing. |
 | Webhook 401s | RESEND_WEBHOOK_SECRET unset, or rotated and not deployed |
 | Editor 403s on a non-admin user | Their `role` field is not `admin` or `newsletter_editor` — set it in Payload admin |
+| Apex domain refuses to load while `*.vercel.app` works | Nameserver delegation broke. See "archbishopvalokeke.org is not loading" above |
 
 ---
 
